@@ -1,14 +1,14 @@
 import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { MainLayout } from '@/presentation/components/Layout/MainLayout';
-import { Dashboard } from './pages/Dashboard';
-import { Books } from './pages/Books';
-import { Loans } from './pages/Loans';
-import { Users } from './pages/Users';
-import { Reservations } from './pages/Reservations';
-import { Reports } from './pages/Reports';
-import { Settings } from './pages/Settings';
+import { MainLayout } from '@/presentation/components/layout';
+import { Dashboard } from '@/presentation/pages/dashboard/dashboard';
+import { Books } from '@/presentation/pages/books/books';
+import { Loans } from '@/presentation/pages/loans/loans';
+import { Reservations } from '@/presentation/pages/reservations/reservations';
+import { Reports } from '@/presentation/pages/reports/reports';
+import { Settings } from '@/presentation/pages/settings/settings';
 import { MakeLogin } from '@/main/factories/pages/login/login-factory';
+import { MakeUserList } from '@/main/factories/pages/user-list/user-list-factory';
 import { PrivateRoute } from '@/presentation/components/private-route';
 
 const App: React.FC = () => {
@@ -22,7 +22,7 @@ const App: React.FC = () => {
                         <Route index element={<Dashboard />} />
                         <Route path="books" element={<Books />} />
                         <Route path="loans" element={<Loans />} />
-                        <Route path="users" element={<Users />} />
+                        <Route path="users" element={<MakeUserList />} />
                         <Route path="reservations" element={<Reservations />} />
                         <Route path="reports" element={<Reports />} />
                         <Route path="settings" element={<Settings />} />
