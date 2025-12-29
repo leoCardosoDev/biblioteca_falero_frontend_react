@@ -1,0 +1,33 @@
+﻿
+> frontend@0.0.0 lint
+> eslint .
+
+
+C:\Users\leosi\OneDrive\Documentos\SoftwareHouse\app\frontend\src\infra\http\http-user-repository.ts
+  1:8  error  'axios' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\leosi\OneDrive\Documentos\SoftwareHouse\app\frontend\src\presentation\components\forms\user-form.tsx
+  11:48  error  Unnecessary escape character: \-  no-useless-escape
+
+C:\Users\leosi\OneDrive\Documentos\SoftwareHouse\app\frontend\src\presentation\hooks\use-user-management.ts
+  26:14  error  'err' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+  38:14  error  'err' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+  49:14  error  'err' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+  60:14  error  'err' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\leosi\OneDrive\Documentos\SoftwareHouse\app\frontend\src\presentation\pages\user-list\user-list-page.tsx
+  75:22  error  'error' is defined but never used. Allowed unused caught errors must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\leosi\OneDrive\Documentos\SoftwareHouse\app\frontend\tests\application\usecases\db-add-user.spec.ts
+   6:15  error  'UpdateUserParams' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  33:18  error  'id' is defined but never used. Allowed unused args must match /^_/u                @typescript-eslint/no-unused-vars
+  33:30  error  'params' is defined but never used. Allowed unused args must match /^_/u            @typescript-eslint/no-unused-vars
+  33:38  error  Unexpected any. Specify a different type                                            @typescript-eslint/no-explicit-any
+  36:18  error  'id' is defined but never used. Allowed unused args must match /^_/u                @typescript-eslint/no-unused-vars
+
+C:\Users\leosi\OneDrive\Documentos\SoftwareHouse\app\frontend\tests\application\usecases\db-update-user.spec.ts
+  4:15  error  'UserModel' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  5:15  error  'AddUserParams' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+Ô£û 14 problems (14 errors, 0 warnings)
+

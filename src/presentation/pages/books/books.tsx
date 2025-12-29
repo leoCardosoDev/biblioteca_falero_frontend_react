@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { MOCK_BOOKS } from '../services/mockData';
-import { Button, Card, Icon, Badge } from '@/presentation/components/UI/Components';
-import { Modal } from '@/presentation/components/UI/Modal';
-import { BookForm } from '@/presentation/components/Forms/BookForm';
+import { MOCK_BOOKS } from '@/services/mock-data';
+import { Button, Card, Icon, Badge } from '@/presentation/components/ui';
+import { Modal } from '@/presentation/components/ui';
+import { BookForm } from '@/presentation/components/forms';
 
 export const Books: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);

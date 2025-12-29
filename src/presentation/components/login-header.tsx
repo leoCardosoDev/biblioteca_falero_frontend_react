@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from '@/presentation/components/UI/Components';
+import { Icon } from '@/presentation/components/ui';
 
 export const LoginHeader: React.FC = () => (
   <div>

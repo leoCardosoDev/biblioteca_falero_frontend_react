@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Icon, Avatar, Switch } from '@/presentation/components/UI/Components';
+import { Button, Card, Icon, Avatar, Switch } from '@/presentation/components/ui';
 
 // --- Sub-components for Sections ---
 
@@ -194,8 +194,8 @@ export const Settings: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('profile')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left ${activeTab === 'profile'
-                                ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                            ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                            : 'text-slate-400 hover:text-white hover:bg-white/5'
                             }`}
                     >
                         <Icon name="person" className={activeTab === 'profile' ? 'text-white' : ''} />
@@ -204,8 +204,8 @@ export const Settings: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('notifications')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left ${activeTab === 'notifications'
-                                ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                            ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                            : 'text-slate-400 hover:text-white hover:bg-white/5'
                             }`}
                     >
                         <Icon name="notifications" className={activeTab === 'notifications' ? 'text-white' : ''} />
@@ -214,8 +214,8 @@ export const Settings: React.FC = () => {
                     <button
                         onClick={() => setActiveTab('system')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-left ${activeTab === 'system'
-                                ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                                : 'text-slate-400 hover:text-white hover:bg-white/5'
+                            ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                            : 'text-slate-400 hover:text-white hover:bg-white/5'
                             }`}
                     >
                         <Icon name="settings" className={activeTab === 'system' ? 'text-white' : ''} />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, Avatar } from '../UI/Components';
+import { Icon, Avatar } from '@/presentation/components/ui';
 
 export const Header: React.FC = () => {
     return (
@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
                     />
                 </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
                 <div className="flex gap-2">
                     <button className="relative flex items-center justify-center size-10 rounded-full hover:bg-card-hover text-slate-400 hover:text-white transition-colors">
@@ -37,8 +37,8 @@ export const Header: React.FC = () => {
                         <p className="text-sm font-semibold text-white group-hover:text-primary transition-colors">Admin Falero</p>
                         <p className="text-xs text-slate-500">Administrador</p>
                     </div>
-                    <Avatar 
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgS8E4UNjwCOwPAn2NQrSkwKFOFobY5P2AmjYrrCZEC4GQNrwZZM6hXOm4_68GTIgrRo6CKYCDC1mW6Igy52vsCB1SlqXqpen0vTpo_PORgkdShCWztX7aQKCncjZlz5IqN7TN4WfalmWcPDpPM9clz4-7AAMauY2aEWa1gWTA0oInr5LKwl_osCiCVRBQCrab3RidlyNJ-3NdnwlQCAVRKGNSUiqt4X_FTSaDUghasqlPpVGifozcUzCMKXlqGfjPR0mnvxqAdH9n" 
+                    <Avatar
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgS8E4UNjwCOwPAn2NQrSkwKFOFobY5P2AmjYrrCZEC4GQNrwZZM6hXOm4_68GTIgrRo6CKYCDC1mW6Igy52vsCB1SlqXqpen0vTpo_PORgkdShCWztX7aQKCncjZlz5IqN7TN4WfalmWcPDpPM9clz4-7AAMauY2aEWa1gWTA0oInr5LKwl_osCiCVRBQCrab3RidlyNJ-3NdnwlQCAVRKGNSUiqt4X_FTSaDUghasqlPpVGifozcUzCMKXlqGfjPR0mnvxqAdH9n"
                     />
                 </div>
             </div>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Icon } from './Components';
+import { Icon } from './icon';
 
 interface ModalProps {
     isOpen: boolean;
@@ -23,8 +23,8 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, subtitle, 
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div 
-                className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity" 
+            <div
+                className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
                 onClick={onClose}
             ></div>
             <div className={`relative w-full ${maxWidth} bg-[#111a22] border border-[#324d67] rounded-xl shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200`}>
@@ -33,7 +33,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, subtitle, 
                         <h2 className="text-white text-xl font-bold leading-tight tracking-tight">{title}</h2>
                         {subtitle && <p className="text-[#92adc9] text-sm mt-1">{subtitle}</p>}
                     </div>
-                    <button 
+                    <button
                         onClick={onClose}
                         className="text-[#92adc9] hover:text-white transition-colors p-1.5 rounded-lg hover:bg-[#324d67]/50"
                     >

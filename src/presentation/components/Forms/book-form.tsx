@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from '../UI/Components';
+import { Icon } from '../ui';
 
 interface BookFormProps {
     onCancel: () => void;
@@ -106,13 +106,13 @@ export const BookForm: React.FC<BookFormProps> = ({ onCancel, onSave }) => {
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-6 border-t border-[#324d67]">
-                <button 
+                <button
                     onClick={onCancel}
                     className="px-6 h-11 rounded-lg border border-[#324d67] text-[#92adc9] hover:text-white hover:bg-[#192633] transition-colors font-medium"
                 >
                     Cancelar
                 </button>
-                <button 
+                <button
                     onClick={onSave}
                     className="flex items-center gap-2 px-6 h-11 rounded-lg bg-primary hover:bg-blue-600 text-white font-medium shadow-lg shadow-primary/20 transition-all"
                 >

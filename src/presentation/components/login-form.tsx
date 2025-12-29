@@ -1,7 +1,7 @@
 import React from 'react';
 import type { UseFormRegister, FieldErrors } from 'react-hook-form';
-import { Input } from '@/presentation/components/UI/Input';
-import { Button } from '@/presentation/components/UI/Components';
+import { Input } from '@/presentation/components/ui';
+import { Button } from '@/presentation/components/ui';
 import type { LoginFormData } from '../hooks/use-auth';
 
 type LoginFormProps = {

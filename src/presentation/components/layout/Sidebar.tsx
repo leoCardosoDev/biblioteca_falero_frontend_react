@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Icon } from '@/presentation/components/UI/Components';
+import { Icon } from '@/presentation/components/ui';
 import type { SidebarItem } from '@/types';
 
 const NAV_ITEMS: { category: string; items: SidebarItem[] }[] = [

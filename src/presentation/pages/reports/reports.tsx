@@ -2,8 +2,8 @@ import React from 'react';
 import {
     BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
 } from 'recharts';
-import { Button, Card, Icon } from '@/presentation/components/UI/Components';
-import { CHART_LOANS_BY_CATEGORY, CHART_ACTIVITY_TRENDS, AVAILABLE_REPORTS } from '../services/mockData';
+import { Button, Card, Icon } from '@/presentation/components/ui';
+import { CHART_LOANS_BY_CATEGORY, CHART_ACTIVITY_TRENDS, AVAILABLE_REPORTS } from '@/services/mock-data';
 
 export const Reports: React.FC = () => {
     return (

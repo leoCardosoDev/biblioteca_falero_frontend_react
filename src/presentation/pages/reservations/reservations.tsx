@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { MOCK_RESERVATIONS } from '../services/mockData';
-import { Button, Card, Icon, Avatar, Badge } from '@/presentation/components/UI/Components';
-import { Modal } from '@/presentation/components/UI/Modal';
-import { ReservationForm } from '@/presentation/components/Forms/ReservationForm';
+import { MOCK_RESERVATIONS } from '@/services/mock-data';
+import { Button, Card, Icon, Avatar, Badge } from '@/presentation/components/ui';
+import { Modal } from '@/presentation/components/ui';
+import { ReservationForm } from '@/presentation/components/forms';
 
 export const Reservations: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Card, Button, Icon, Badge } from '@/presentation/components/UI/Components';
-import { DASHBOARD_STATS } from '../services/mockData';
+import { Card, Button, Icon, Badge } from '@/presentation/components/ui';
+import { DASHBOARD_STATS } from '@/services/mock-data';
 
 const data = [
   { name: '01 Nov', loans: 400 },
@@ -36,8 +36,8 @@ export const Dashboard: React.FC = () => {
               </div>
               {stat.trend && (
                 <span className={`flex items-center text-xs font-bold px-2 py-1 rounded-full ${stat.trendDirection === 'up' ? 'text-success bg-success/10' :
-                    stat.trendDirection === 'neutral' ? 'text-slate-500 bg-slate-700/30' :
-                      'text-warning bg-warning/10'
+                  stat.trendDirection === 'neutral' ? 'text-slate-500 bg-slate-700/30' :
+                    'text-warning bg-warning/10'
                   }`}>
                   {stat.trend}
                 </span>

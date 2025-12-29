@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from '../UI/Components';
+import { Icon } from '../ui';
 
 interface ReservationFormProps {
     onCancel: () => void;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { MOCK_LOANS } from '../services/mockData';
-import { Button, Card, Icon, Avatar, Badge } from '@/presentation/components/UI/Components';
-import { Modal } from '@/presentation/components/UI/Modal';
-import { LoanForm } from '@/presentation/components/Forms/LoanForm';
+import { MOCK_LOANS } from '@/services/mock-data';
+import { Button, Card, Icon, Avatar, Badge } from '@/presentation/components/ui';
+import { Modal } from '@/presentation/components/ui';
+import { LoanForm } from '@/presentation/components/forms';
 
 export const Loans: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
