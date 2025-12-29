@@ -2,40 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
-  background: #101922;
-}
-::-webkit-scrollbar-thumb {
-  background: #2a3b4d;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #137fec;
-}
-
-.material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
-}
-.icon-fill {
-  font-variation-settings: "FILL" 1;
-}
-
-/* Premium Dark Theme Overrides */
-input,
-select,
-textarea {
-  @apply bg-surface-dark border-transparent text-white focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all;
-}
-
-.glass-card {
-  @apply bg-surface-dark/50 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl;
+@layer base {
+  body {
+    @apply bg-background-light text-slate-900 dark:bg-background-dark dark:text-white transition-colors duration-200;
+  }
 }

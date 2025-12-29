@@ -1,30 +1,38 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ProtectedRoute } from './presentation/components/auth/ProtectedRoute';
-import { makeLoginPage } from './main/factories/makeLoginPage';
-import { UserList } from './presentation/pages/UserList';
-import { BaseLayout } from './presentation/components/layout/BaseLayout';
+import React from 'react';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { MainLayout } from '@/presentation/components/Layout/MainLayout';
+import { Dashboard } from './pages/Dashboard';
+import { Books } from './pages/Books';
+import { Loans } from './pages/Loans';
+import { Users } from './pages/Users';
+import { Reservations } from './pages/Reservations';
+import { Reports } from './pages/Reports';
+import { Settings } from './pages/Settings';
+import { MakeLogin } from '@/main/factories/pages/login/login-factory';
+import { PrivateRoute } from '@/presentation/components/private-route';
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={makeLoginPage()} />
+const App: React.FC = () => {
+    return (
+        <HashRouter>
+            <Routes>
+                <Route path="/login" element={<MakeLogin />} />
 
-        <Route element={<ProtectedRoute />}>
-          <Route element={<BaseLayout />}>
-            <Route path="/users" element={<UserList />} />
-            <Route path="/dashboard" element={
-              <div className="min-h-screen bg-background flex items-center justify-center text-white">
-                <h1 className="text-4xl font-bold">Dashboard (Logado com sucesso!)</h1>
-              </div>
-            } />
-          </Route>
-        </Route>
+                <Route element={<PrivateRoute />}>
+                    <Route path="/" element={<MainLayout />}>
+                        <Route index element={<Dashboard />} />
+                        <Route path="books" element={<Books />} />
+                        <Route path="loans" element={<Loans />} />
+                        <Route path="users" element={<Users />} />
+                        <Route path="reservations" element={<Reservations />} />
+                        <Route path="reports" element={<Reports />} />
+                        <Route path="settings" element={<Settings />} />
+                    </Route>
+                </Route>
 
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </BrowserRouter>
-  );
-}
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+        </HashRouter>
+    );
+};
 
 export default App;
