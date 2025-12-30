@@ -63,8 +63,15 @@ describe('RemoteAuthentication UseCase', () => {
   test('Should call CacheRepository with correct values on success', async () => {
     const { sut, cacheRepoSpy } = makeSut()
     const setSpy = vi.spyOn(cacheRepoSpy, 'set')
+    const account = {
+      accessToken: 'any_token',
+      name: 'any_name',
+      role: 'any_role',
+      refreshToken: 'any_refresh_token'
+    }
     await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
-    expect(setSpy).toHaveBeenCalledWith('accessToken', 'any_token')
+    expect(setSpy).toHaveBeenCalledWith('accessToken', account.accessToken)
+    expect(setSpy).toHaveBeenCalledWith('account', JSON.stringify(account))
   })
 
   test('Should return an AccountModel on success', async () => {

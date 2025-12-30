@@ -9,6 +9,7 @@ import { AddUser } from '@/domain/usecases/add-user';
 import { UpdateUser } from '@/domain/usecases/update-user';
 import { DeleteUser } from '@/domain/usecases/delete-user';
 import { AddUserLogin } from '@/domain/usecases/add-user-login';
+import { LoadUserById } from '@/domain/usecases/load-user-by-id';
 import { UserModel } from '@/domain/models/user-model';
 import { formatUserRole, getUserRoleColor, formatUserStatus, formatEnrollmentId } from '@/presentation/helpers/user-serializers';
 
@@ -18,11 +19,12 @@ interface UsersProps {
     updateUser: UpdateUser;
     deleteUser: DeleteUser;
     addUserLogin: AddUserLogin;
+    loadUserById: LoadUserById;
 }
 
-export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, deleteUser, addUserLogin }) => {
-    const { users, isLoading, error, handleAddUser, handleUpdateUser, handleDeleteUser } = useUserManagement({
-        loadUsers, addUser, updateUser, deleteUser
+export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, deleteUser, addUserLogin, loadUserById }) => {
+    const { users, isLoading, error, handleAddUser, handleUpdateUser, handleDeleteUser, handleLoadUserById } = useUserManagement({
+        loadUsers, addUser, updateUser, deleteUser, loadUserById
     });
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
@@ -35,9 +37,12 @@ export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, de
         setIsUserModalOpen(true);
     };
 
-    const handleOpenEdit = (user: UserModel) => {
-        setSelectedUser(user);
-        setIsUserModalOpen(true);
+    const handleOpenEdit = async (user: UserModel) => {
+        const fullUser = await handleLoadUserById(user.id);
+        if (fullUser) {
+            setSelectedUser(fullUser);
+            setIsUserModalOpen(true);
+        }
     };
 
     const handleOpenCredentials = (user: UserModel) => {

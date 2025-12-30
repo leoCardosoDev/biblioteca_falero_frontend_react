@@ -15,7 +15,7 @@ export class HttpAuthenticationRepository implements AuthenticationRepository {
     try {
       const result = await axios.post(this.url, params)
       return result.data
-    } catch (error) {
+    } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         const status = error.response?.status
         if (status === 401 || status === 403) {

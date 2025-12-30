@@ -5,6 +5,7 @@ import { z } from 'zod'
 import type { Authentication } from '@/domain/usecases'
 import type { AccountModel } from '@/domain/models'
 import { InvalidCredentialsError } from '@/domain/errors'
+import { useAuthContext } from '@/presentation/contexts/auth-context'
 
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),
@@ -14,6 +15,7 @@ const loginSchema = z.object({
 export type LoginFormData = z.infer<typeof loginSchema>
 
 export const useAuth = (authentication: Authentication) => {
+  const { signIn } = useAuthContext()
   const [error, setError] = useState<string>()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -32,6 +34,7 @@ export const useAuth = (authentication: Authentication) => {
         setError('Erro inesperado: Token de acesso não recebido')
         return undefined
       }
+      signIn(account)
       return account
     } catch (error: unknown) {
       if (error instanceof InvalidCredentialsError) {

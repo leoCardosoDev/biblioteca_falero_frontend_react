@@ -6,14 +6,13 @@ import { DbAddUser } from '@/application/usecases/db-add-user';
 import { DbUpdateUser } from '@/application/usecases/db-update-user';
 import { DbDeleteUser } from '@/application/usecases/db-delete-user';
 import { DbAddUserLogin } from '@/application/usecases/db-add-user-login';
+import { DbLoadUserById } from '@/application/usecases/db-load-user-by-id';
 import { HttpUserRepository } from '@/infra/http/http-user-repository';
 import { HttpUserLoginRepository } from '@/infra/http/http-user-login-repository';
+import { makeHttpClient } from '../../http/api-client-factory';
 
 export const MakeUserList: React.FC = () => {
-  // In a real app, use env var
-  const httpClient = axios.create({
-    baseURL: 'http://localhost:3000/api' // Adjust as needed
-  });
+  const httpClient = makeHttpClient();
 
   const userRepository = new HttpUserRepository(httpClient);
   const userLoginRepository = new HttpUserLoginRepository(httpClient);
@@ -23,6 +22,7 @@ export const MakeUserList: React.FC = () => {
   const updateUser = new DbUpdateUser(userRepository);
   const deleteUser = new DbDeleteUser(userRepository);
   const addUserLogin = new DbAddUserLogin(userLoginRepository);
+  const loadUserById = new DbLoadUserById(userRepository);
 
   return (
     <Users
@@ -31,6 +31,7 @@ export const MakeUserList: React.FC = () => {
       updateUser={updateUser}
       deleteUser={deleteUser}
       addUserLogin={addUserLogin}
+      loadUserById={loadUserById}
     />
   );
 };

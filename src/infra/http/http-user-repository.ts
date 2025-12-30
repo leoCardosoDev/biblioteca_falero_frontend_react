@@ -12,6 +12,11 @@ export class HttpUserRepository implements UserRepository {
     return response.data;
   }
 
+  async loadById(id: string): Promise<UserModel> {
+    const response = await this.httpClient.get<UserModel>(`/users/${id}`);
+    return response.data;
+  }
+
   async add(params: AddUserParams): Promise<UserModel> {
     const response = await this.httpClient.post<UserModel>('/users', params);
     return response.data;

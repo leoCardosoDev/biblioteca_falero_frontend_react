@@ -1,5 +1,5 @@
-import React from 'react';
 import { Icon, Avatar } from '@/presentation/components/ui';
+import { ProfileDisplay } from '@/presentation/components/profile-display/profile-display';
 
 export const Header: React.FC = () => {
     return (
@@ -32,15 +32,7 @@ export const Header: React.FC = () => {
                     </button>
                 </div>
                 <div className="h-8 w-px bg-white/10 mx-1"></div>
-                <div className="flex items-center gap-3 cursor-pointer group">
-                    <div className="text-right hidden sm:block">
-                        <p className="text-sm font-semibold text-white group-hover:text-primary transition-colors">Admin Falero</p>
-                        <p className="text-xs text-slate-500">Administrador</p>
-                    </div>
-                    <Avatar
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgS8E4UNjwCOwPAn2NQrSkwKFOFobY5P2AmjYrrCZEC4GQNrwZZM6hXOm4_68GTIgrRo6CKYCDC1mW6Igy52vsCB1SlqXqpen0vTpo_PORgkdShCWztX7aQKCncjZlz5IqN7TN4WfalmWcPDpPM9clz4-7AAMauY2aEWa1gWTA0oInr5LKwl_osCiCVRBQCrab3RidlyNJ-3NdnwlQCAVRKGNSUiqt4X_FTSaDUghasqlPpVGifozcUzCMKXlqGfjPR0mnvxqAdH9n"
-                    />
-                </div>
+                <ProfileDisplay />
             </div>
         </header>
     );

@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Icon } from '../ui';
 import { UserModel } from '@/domain/models/user-model';
+import { maskCpf, maskRg, maskZipCode } from '@/presentation/helpers/mask-utils';
 
 const userSchema = z.object({
     name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
@@ -33,13 +34,25 @@ interface UserFormProps {
 }
 
 export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSave }) => {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<UserFormData>({
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<UserFormData>({
         resolver: zodResolver(userSchema),
         defaultValues: {
             role: 'user',
             status: 'active'
         }
     });
+
+    const handleCpfChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue('cpf', maskCpf(event.target.value));
+    };
+
+    const handleRgChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue('rg', maskRg(event.target.value));
+    };
+
+    const handleZipCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue('address.zipCode', maskZipCode(event.target.value));
+    };
 
     useEffect(() => {
         if (initialData) {
@@ -82,7 +95,12 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSav
                             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <Icon name="id_card" className="text-[#92adc9] text-[20px] group-focus-within:text-primary transition-colors" />
                             </div>
-                            <input {...register('cpf')} className="w-full h-12 pl-11 pr-4 bg-[#192633] border border-[#324d67] rounded-lg text-white placeholder:text-[#58738e] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="000.000.000-00" />
+                            <input
+                                {...register('cpf')}
+                                onChange={handleCpfChange}
+                                className="w-full h-12 pl-11 pr-4 bg-[#192633] border border-[#324d67] rounded-lg text-white placeholder:text-[#58738e] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                                placeholder="000.000.000-00"
+                            />
                         </div>
                         {errors.cpf && <span className="text-xs text-red-400">{errors.cpf.message}</span>}
                     </div>
@@ -90,7 +108,12 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSav
                     {/* RG */}
                     <div className="flex flex-col gap-2">
                         <label className="text-white text-sm font-medium flex items-center gap-1">RG <span className="text-red-400">*</span></label>
-                        <input {...register('rg')} className="w-full h-12 px-4 bg-[#192633] border border-[#324d67] rounded-lg text-white placeholder:text-[#58738e] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="00.000.000-0" />
+                        <input
+                            {...register('rg')}
+                            onChange={handleRgChange}
+                            className="w-full h-12 px-4 bg-[#192633] border border-[#324d67] rounded-lg text-white placeholder:text-[#58738e] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                            placeholder="00.000.000-0"
+                        />
                         {errors.rg && <span className="text-xs text-red-400">{errors.rg.message}</span>}
                     </div>
 
@@ -120,7 +143,12 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSav
                     {/* ZipCode */}
                     <div className="flex flex-col gap-2">
                         <label className="text-white text-sm font-medium">CEP <span className="text-red-400">*</span></label>
-                        <input {...register('address.zipCode')} className="w-full h-12 px-4 bg-[#192633] border border-[#324d67] rounded-lg text-white placeholder:text-[#58738e] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all" placeholder="00000-000" />
+                        <input
+                            {...register('address.zipCode')}
+                            onChange={handleZipCodeChange}
+                            className="w-full h-12 px-4 bg-[#192633] border border-[#324d67] rounded-lg text-white placeholder:text-[#58738e] focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all"
+                            placeholder="00000-000"
+                        />
                         {errors.address?.zipCode && <span className="text-xs text-red-400">{errors.address.zipCode.message}</span>}
                     </div>
 
