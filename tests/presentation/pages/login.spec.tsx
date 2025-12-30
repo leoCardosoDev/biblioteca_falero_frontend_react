@@ -17,6 +17,16 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
+vi.mock('@/presentation/contexts/auth-context', () => ({
+  useAuthContext: () => ({
+    signIn: vi.fn(),
+    signOut: vi.fn(),
+    user: undefined,
+    isAuthenticated: false,
+    isLoading: false
+  })
+}))
+
 // Mock Authentication
 class AuthSpy implements Authentication {
   params: AuthenticationParams | undefined
