@@ -16,6 +16,8 @@ export interface UpdateUserParams {
     state: string;
     zipCode: string;
   };
+  role?: UserModel['role'];
+  status?: UserModel['status'];
 }
 
 export interface UpdateUser {

@@ -4,14 +4,14 @@ export const formatUserRole = (role: UserModel['role']): string => {
   const roleMap: Record<UserModel['role'], string> = {
     admin: 'Administrador',
     librarian: 'Bibliotecário',
-    user: 'Usuário',
+    professor: 'Professor',
   };
   return roleMap[role] || role;
 };
 
 export const getUserRoleColor = (role: UserModel['role']): 'primary' | 'success' | 'warning' | 'neutral' | 'danger' => {
   const colorMap: Record<UserModel['role'], 'primary' | 'success' | 'warning' | 'neutral' | 'danger'> = {
-    user: 'primary',
+    professor: 'primary',
     librarian: 'warning',
     admin: 'success',
   };
@@ -19,11 +19,11 @@ export const getUserRoleColor = (role: UserModel['role']): 'primary' | 'success'
 };
 
 export const formatUserStatus = (status: UserModel['status']): string => {
-  return status === 'active' ? 'Ativo' : 'Bloqueado';
+  return (status as string)?.toLowerCase() === 'active' ? 'Ativo' : 'Inativo';
 };
 
 export const getUserStatusColor = (status: UserModel['status']): 'success' | 'danger' => {
-  return status === 'active' ? 'success' : 'danger';
+  return (status as string)?.toLowerCase() === 'active' ? 'success' : 'danger';
 };
 
 export const formatEnrollmentId = (enrollmentId?: string): string => {

@@ -15,6 +15,8 @@ export interface AddUserParams {
     state: string;
     zipCode: string;
   };
+  role: UserModel['role'];
+  status: UserModel['status'];
 }
 
 export interface AddUser {

@@ -1,6 +1,6 @@
-export type UserRole = 'admin' | 'librarian' | 'user';
+export type UserRole = 'admin' | 'librarian' | 'professor';
 
-export type UserStatus = 'active' | 'blocked';
+export type UserStatus = 'active' | 'inactive';
 
 export interface Address {
   street: string;

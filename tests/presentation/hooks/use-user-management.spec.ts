@@ -113,7 +113,7 @@ test('Should add user and reload list', async () => {
   await waitFor(() => expect(result.current.isLoading).toBe(false))
 
   await act(async () => {
-    const success = await result.current.handleAddUser({ name: 'New User', email: 'new@mail.com', role: 'user' })
+    const success = await result.current.handleAddUser({ name: 'New User', email: 'new@mail.com', role: 'professor' })
     expect(success).toBe(true)
   })
 
