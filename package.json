@@ -10,7 +10,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docker:dev": "docker compose -f ../docker-compose.dev.yml up -d --build frontend",
+    "docker:prod": "docker build -t app-frontend-prod . && docker run --rm -p 3000:80 app-frontend-prod"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-// TODO: Replace with HttpRepository when Backend Task (Circulation/Loans) is complete
-import { MOCK_LOANS } from '@/infra/mocks/mock-data';
+import React, { useState, useEffect } from 'react';
+import { LoadLoans } from '@/domain/usecases/load-loans';
+import { Loan } from '@/domain/models/loan';
 import { Button, Card, Icon, Avatar, Badge } from '@/presentation/react/components/ui';
 import { Modal } from '@/presentation/react/components/ui';
 import { LoanForm } from '@/presentation/react/components/forms';
 
-export const Loans: React.FC = () => {
+type Props = {
+    loadLoans: LoadLoans;
+};
+
+export const Loans: React.FC<Props> = ({ loadLoans }) => {
+    const [loans, setLoans] = useState<Loan[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        loadLoans.load().then(setLoans).catch(console.error);
+    }, [loadLoans]);
 
     return (
         <div className="flex h-full">
@@ -83,7 +92,7 @@ export const Loans: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5 text-sm">
-                            {MOCK_LOANS.map((loan) => (
+                            {loans.map((loan) => (
                                 <tr key={loan.id} className="group hover:bg-surface-highlight/20 transition-colors">
                                     <td className="p-4">
                                         <div className="flex items-center gap-3">

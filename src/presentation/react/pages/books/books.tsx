@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
-// TODO: Replace with HttpRepository when Backend Task (Catalog/Books) is complete
-import { MOCK_BOOKS } from '@/infra/mocks/mock-data';
+import React, { useState, useEffect } from 'react';
+import { LoadBooks } from '@/domain/usecases/load-books';
+import { Book } from '@/domain/models/book';
 import { Button, Card, Icon, Badge } from '@/presentation/react/components/ui';
 import { Modal } from '@/presentation/react/components/ui';
 import { BookForm } from '@/presentation/react/components/forms';
 
-export const Books: React.FC = () => {
+type Props = {
+    loadBooks: LoadBooks;
+};
+
+export const Books: React.FC<Props> = ({ loadBooks }) => {
+    const [books, setBooks] = useState<Book[]>([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    useEffect(() => {
+        loadBooks.load().then(setBooks).catch(console.error);
+    }, [loadBooks]);
 
     return (
         <div className="max-w-[1200px] mx-auto flex flex-col gap-8">
@@ -69,7 +78,7 @@ export const Books: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-white/5">
-                            {MOCK_BOOKS.map((book) => (
+                            {books.map((book) => (
                                 <tr key={book.id} className="group hover:bg-[#1e2e3e] transition-colors">
                                     <td className="px-6 py-4">
                                         <div className="h-16 w-12 rounded bg-cover bg-center shadow-md group-hover:scale-110 transition-transform" style={{ backgroundImage: `url('${book.coverUrl}')` }}></div>
