@@ -1,6 +1,6 @@
 import { describe, test, expect, vi } from 'vitest'
-import { HttpAuthentication } from '../../../src/infra/http/http-authentication'
-import axios from 'axios'
+import { HttpAuthenticationRepository } from '../../../src/infra/http/http-authentication-repository'
+import axios, { type AxiosInstance } from 'axios'
 import { type AuthenticationParams } from '../../../src/domain/usecases/authentication'
 import { InvalidCredentialsError } from '../../../src/domain/errors/invalid-credentials-error'
 import { UnexpectedError } from '../../../src/domain/errors/unexpected-error'
@@ -9,8 +9,7 @@ vi.mock('axios')
 
 describe('HttpAuthentication', () => {
   test('Should call axios with correct values', async () => {
-    const url = 'any_url'
-    const sut = new HttpAuthentication(url)
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
 
     vi.mocked(axios.post).mockResolvedValue({
@@ -23,12 +22,11 @@ describe('HttpAuthentication', () => {
     })
 
     await sut.auth(params)
-
-    expect(axios.post).toHaveBeenCalledWith(url, params)
+    expect(axios.post).toHaveBeenCalledWith('/login', params)
   })
 
   test('Should return an AccountModel on success', async () => {
-    const sut = new HttpAuthentication('any_url')
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
     const mockAccount = {
       accessToken: 'any_token',
@@ -47,7 +45,7 @@ describe('HttpAuthentication', () => {
   })
 
   test('Should throw InvalidCredentialsError on 401', async () => {
-    const sut = new HttpAuthentication('any_url')
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
 
     vi.mocked(axios.isAxiosError).mockReturnValue(true)
@@ -61,7 +59,7 @@ describe('HttpAuthentication', () => {
   })
 
   test('Should throw InvalidCredentialsError on 403', async () => {
-    const sut = new HttpAuthentication('any_url')
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
 
     vi.mocked(axios.isAxiosError).mockReturnValue(true)
@@ -75,7 +73,7 @@ describe('HttpAuthentication', () => {
   })
 
   test('Should throw UnexpectedError on 400', async () => {
-    const sut = new HttpAuthentication('any_url')
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
 
     vi.mocked(axios.isAxiosError).mockReturnValue(true)
@@ -89,7 +87,7 @@ describe('HttpAuthentication', () => {
   })
 
   test('Should throw UnexpectedError on 500', async () => {
-    const sut = new HttpAuthentication('any_url')
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
 
     vi.mocked(axios.isAxiosError).mockReturnValue(true)
@@ -103,7 +101,7 @@ describe('HttpAuthentication', () => {
   })
 
   test('Should throw UnexpectedError if axios throws generic Error', async () => {
-    const sut = new HttpAuthentication('any_url')
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
 
     vi.mocked(axios.post).mockRejectedValue(new Error())
