@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import type { Authentication } from '@/domain/usecases'
 import type { AccountModel } from '@/domain/models'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
@@ -14,8 +13,8 @@ const loginSchema = z.object({
 
 export type LoginFormData = z.infer<typeof loginSchema>
 
-export const useAuth = (authentication: Authentication) => {
-  const { signIn } = useAuthContext()
+export const useAuth = () => {
+  const { login } = useAuthContext()
   const [error, setError] = useState<string>()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -29,12 +28,11 @@ export const useAuth = (authentication: Authentication) => {
     try {
       setIsLoading(true)
       setError(undefined)
-      const account = await authentication.auth(data)
-      if (!account?.accessToken) {
-        setError('Erro inesperado: Token de acesso não recebido')
+      const account = await login(data)
+      if (!account) {
+        setError('Erro inesperado: Falha no login')
         return undefined
       }
-      signIn(account)
       return account
     } catch (error: unknown) {
       if (error instanceof InvalidCredentialsError) {

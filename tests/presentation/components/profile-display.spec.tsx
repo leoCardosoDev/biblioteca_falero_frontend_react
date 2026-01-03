@@ -21,7 +21,7 @@ describe('ProfileDisplay', () => {
       user: mockUser,
       isAuthenticated: true,
       isLoading: false,
-      signIn: vi.fn(),
+      login: vi.fn(),
       signOut: vi.fn()
     })
   })
@@ -45,7 +45,7 @@ describe('ProfileDisplay', () => {
       user: undefined,
       isAuthenticated: false,
       isLoading: false,
-      signIn: vi.fn(),
+      login: vi.fn(),
       signOut: vi.fn()
     } as AuthContextData)
 

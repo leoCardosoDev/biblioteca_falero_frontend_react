@@ -1,14 +1,16 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { AuthProvider } from '@/presentation/react/contexts/auth-context'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
-import type { CacheRepository } from '@/application/protocols/cache-repository'
+import { type AuthFacade } from '@/application/facades/auth-facade'
+import { type AccountModel } from '@/domain/models'
 
-const makeCacheRepositorySpy = (): CacheRepository => {
+const makeAuthFacadeSpy = (): AuthFacade => {
   return {
-    get: vi.fn(),
-    set: vi.fn()
-  }
+    getCurrentUser: vi.fn(),
+    login: vi.fn(),
+    logout: vi.fn()
+  } as unknown as AuthFacade
 }
 
 const TestComponent = () => {
@@ -22,36 +24,40 @@ const TestComponent = () => {
 }
 
 describe('AuthContext', () => {
-  let cacheRepoSpy: CacheRepository
+  let authFacadeSpy: AuthFacade
 
   beforeEach(() => {
-    cacheRepoSpy = makeCacheRepositorySpy()
+    authFacadeSpy = makeAuthFacadeSpy()
   })
 
-  test('Should initialize with user from cache', async () => {
-    const account = { name: 'any_name', role: 'any_role', accessToken: 'any_token' }
-    vi.spyOn(cacheRepoSpy, 'get').mockResolvedValueOnce(JSON.stringify(account))
+  test('Should initialize with user from cache (via facade)', async () => {
+    const account = { name: 'any_name', role: 'any_role', accessToken: 'any_token' } as AccountModel
+    vi.spyOn(authFacadeSpy, 'getCurrentUser').mockResolvedValueOnce(account)
 
     render(
-      <AuthProvider cacheRepository={cacheRepoSpy}>
+      <AuthProvider authFacade={authFacadeSpy}>
         <TestComponent />
       </AuthProvider>
     )
 
-    expect(await screen.findByTestId('user-name')).toHaveTextContent('any_name')
-    expect(await screen.findByTestId('auth-status')).toHaveTextContent('true')
+    await waitFor(() => {
+      expect(screen.getByTestId('user-name')).toHaveTextContent('any_name')
+      expect(screen.getByTestId('auth-status')).toHaveTextContent('true')
+    })
   })
 
-  test('Should initialize with null if cache is empty', async () => {
-    vi.spyOn(cacheRepoSpy, 'get').mockResolvedValueOnce(null)
+  test('Should initialize with null if cache is empty (via facade)', async () => {
+    vi.spyOn(authFacadeSpy, 'getCurrentUser').mockResolvedValueOnce(null)
 
     render(
-      <AuthProvider cacheRepository={cacheRepoSpy}>
+      <AuthProvider authFacade={authFacadeSpy}>
         <TestComponent />
       </AuthProvider>
     )
 
-    expect(await screen.findByTestId('user-name')).toHaveTextContent('none')
-    expect(await screen.findByTestId('auth-status')).toHaveTextContent('false')
+    await waitFor(() => {
+      expect(screen.getByTestId('user-name')).toHaveTextContent('none')
+      expect(screen.getByTestId('auth-status')).toHaveTextContent('false')
+    })
   })
 })

@@ -1,25 +1,20 @@
 import React from 'react'
 import { useAuth } from '@/presentation/react/hooks/use-auth'
-import type { Authentication } from '@/domain/usecases'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { LoginForm } from '@/presentation/react/components/login-form'
+import { AccountModel } from '@/domain/models'
 
-type Props = {
-  authentication: Authentication
-  className?: string
-}
-
-export const Login: React.FC<Props> = ({ authentication, className }) => {
+export const Login: React.FC = () => {
   const navigate = useNavigate()
-  const { register, loginHandler, isLoading, error, errors } = useAuth(authentication)
+  const { register, loginHandler, isLoading, error, errors, isValid } = useAuth()
 
   const handleLoginSuccess = () => {
     navigate('/')
   }
 
   return (
-    <div className={cn("min-h-screen flex flex-col md:flex-row bg-slate-950", className)}>
+    <div className="min-h-screen flex flex-col md:flex-row bg-slate-950">
       {/* Left Section - Form */}
       <div className="w-full md:w-[40%] flex flex-col justify-center p-8 md:p-16 lg:p-24 z-10 bg-slate-950">
         <div className="max-w-md w-full mx-auto space-y-12">

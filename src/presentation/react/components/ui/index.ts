@@ -4,5 +4,6 @@ export * from './badge';
 export * from './card';
 export * from './avatar';
 export * from './switch';
+export * from './error-boundary';
 export * from './Input';
 export * from './Modal';
