@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { maskCpf, maskRg, maskZipCode, maskBirthDate } from '@/presentation/helpers/mask-utils'
+import { maskCpf, maskRg, maskZipCode, maskBirthDate } from '@/presentation/react/helpers/mask-utils'
 
 describe('MaskUtils', () => {
   describe('maskCpf', () => {

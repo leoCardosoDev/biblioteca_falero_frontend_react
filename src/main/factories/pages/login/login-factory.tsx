@@ -1,5 +1,5 @@
 import React from 'react'
-import { Login } from '@/presentation/pages'
+import { Login } from '@/presentation/react/pages'
 import { RemoteAuthentication } from '@/application/usecases/remote-authentication'
 import { HttpAuthenticationRepository } from '@/infra/http/http-authentication-repository'
 import { LocalStorageAdapter } from '@/infra/cache/local-storage-adapter'

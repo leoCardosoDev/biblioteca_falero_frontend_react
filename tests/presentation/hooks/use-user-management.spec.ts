@@ -1,12 +1,12 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
-import { useUserManagement } from '@/presentation/hooks/use-user-management'
+import { useUserManagement } from '@/presentation/react/hooks/use-user-management'
 import { describe, test, expect, vi } from 'vitest'
 import type { LoadUsers } from '@/domain/usecases/load-users'
 import type { LoadUserById } from '@/domain/usecases/load-user-by-id'
 import type { AddUser } from '@/domain/usecases/add-user'
 import type { UpdateUser } from '@/domain/usecases/update-user'
 import type { DeleteUser } from '@/domain/usecases/delete-user'
-import { UserModel } from '@/domain/models/user-model'
+import type { UserModel } from '@/domain/models/user-model'
 
 // Mocks
 const makeLoadUserById = (): LoadUserById => {

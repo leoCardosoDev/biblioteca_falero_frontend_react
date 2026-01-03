@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { ProfileDisplay } from '@/presentation/components/profile-display/profile-display'
-import { useAuthContext } from '@/presentation/hooks/use-auth-context'
-import type { AuthContextData } from '@/presentation/contexts/auth-context-base'
+import { ProfileDisplay } from '@/presentation/react/components/profile-display/profile-display'
+import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
+import type { AuthContextData } from '@/presentation/react/contexts/auth-context-base'
 import type { AccountModel } from '@/domain/models/account-model'
 
-vi.mock('@/presentation/hooks/use-auth-context')
+vi.mock('@/presentation/react/hooks/use-auth-context')
 
 describe('ProfileDisplay', () => {
   const mockUser: AccountModel = {

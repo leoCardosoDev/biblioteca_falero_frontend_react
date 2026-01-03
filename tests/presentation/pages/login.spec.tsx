@@ -1,7 +1,7 @@
 
 import { describe, test, expect, vi } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { Login } from '@/presentation/pages/login/login'
+import { Login } from '@/presentation/react/pages/login/login'
 import { type Authentication, type AuthenticationParams } from '@/domain/usecases/authentication'
 import { BrowserRouter } from 'react-router-dom'
 import { type AccountModel } from '@/domain/models/account-model'
@@ -17,7 +17,7 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-vi.mock('@/presentation/hooks/use-auth-context', () => ({
+vi.mock('@/presentation/react/hooks/use-auth-context', () => ({
   useAuthContext: () => ({
     signIn: vi.fn(),
     signOut: vi.fn(),

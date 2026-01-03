@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { AuthProvider } from '@/presentation/contexts/auth-context'
-import { useAuthContext } from '@/presentation/hooks/use-auth-context'
+import { AuthProvider } from '@/presentation/react/contexts/auth-context'
+import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import type { CacheRepository } from '@/application/protocols/cache-repository'
 
 const makeCacheRepositorySpy = (): CacheRepository => {

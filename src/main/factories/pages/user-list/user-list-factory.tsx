@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users } from '@/presentation/pages/user-list/user-list-page';
+import { Users } from '@/presentation/react/pages/user-list/user-list-page';
 import { DbLoadUsers } from '@/application/usecases/db-load-users';
 import { DbAddUser } from '@/application/usecases/db-add-user';
 import { DbUpdateUser } from '@/application/usecases/db-update-user';
