@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { Users } from '@/presentation/pages/user-list/user-list-page';
 import { DbLoadUsers } from '@/application/usecases/db-load-users';
 import { DbAddUser } from '@/application/usecases/db-add-user';

@@ -5,7 +5,7 @@ import { z } from 'zod'
 import type { Authentication } from '@/domain/usecases'
 import type { AccountModel } from '@/domain/models'
 import { InvalidCredentialsError } from '@/domain/errors'
-import { useAuthContext } from '@/presentation/contexts/auth-context'
+import { useAuthContext } from '@/presentation/hooks/use-auth-context'
 
 const loginSchema = z.object({
   email: z.string().email('Email inválido'),

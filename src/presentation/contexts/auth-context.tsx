@@ -1,16 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { useEffect, useState, ReactNode } from 'react';
 import { CacheRepository } from '@/application/protocols/cache-repository';
 import { AccountModel } from '@/domain/models/account-model';
-
-type AuthContextData = {
-  user: AccountModel | undefined;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  signIn: (account: AccountModel) => void;
-  signOut: () => void;
-};
-
-const AuthContext = createContext<AuthContextData>({} as AuthContextData);
+import { AuthContext } from './auth-context-base';
 
 type Props = {
   children: ReactNode;
@@ -55,5 +46,3 @@ export const AuthProvider: React.FC<Props> = ({ children, cacheRepository }) => 
     </AuthContext.Provider>
   );
 };
-
-export const useAuthContext = () => useContext(AuthContext);

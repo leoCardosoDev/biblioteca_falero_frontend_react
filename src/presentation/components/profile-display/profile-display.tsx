@@ -1,4 +1,4 @@
-import { useAuthContext } from '@/presentation/contexts/auth-context';
+import { useAuthContext } from '@/presentation/hooks/use-auth-context';
 import { Avatar } from '@/presentation/components/ui';
 import { formatUserRole } from '@/presentation/helpers/user-serializers';
 import { UserModel } from '@/domain/models/user-model';

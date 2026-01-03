@@ -1,10 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { ProfileDisplay } from '@/presentation/components/profile-display/profile-display'
-import { useAuthContext } from '@/presentation/contexts/auth-context'
+import { useAuthContext } from '@/presentation/hooks/use-auth-context'
+import type { AuthContextData } from '@/presentation/contexts/auth-context-base'
 import type { AccountModel } from '@/domain/models/account-model'
 
-vi.mock('@/presentation/contexts/auth-context')
+vi.mock('@/presentation/hooks/use-auth-context')
 
 describe('ProfileDisplay', () => {
   const mockUser: AccountModel = {
@@ -46,7 +47,7 @@ describe('ProfileDisplay', () => {
       isLoading: false,
       signIn: vi.fn(),
       signOut: vi.fn()
-    } as any)
+    } as AuthContextData)
 
     const { container } = render(<ProfileDisplay />)
     expect(container).toBeEmptyDOMElement()

@@ -1,4 +1,4 @@
-import { Icon, Avatar } from '@/presentation/components/ui';
+import { Icon } from '@/presentation/components/ui';
 import { ProfileDisplay } from '@/presentation/components/profile-display/profile-display';
 
 export const Header: React.FC = () => {
