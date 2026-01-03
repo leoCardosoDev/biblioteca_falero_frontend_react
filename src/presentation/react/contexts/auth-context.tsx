@@ -30,15 +30,11 @@ export const AuthProvider: React.FC<Props> = ({ children, authFacade }) => {
   }, [authFacade]);
 
   const login = async (params: AuthenticationParams): Promise<AccountModel | null> => {
-    try {
-      const account = await authFacade.login(params);
-      if (account) {
-        setUser(account);
-      }
-      return account;
-    } catch (error) {
-      throw error;
+    const account = await authFacade.login(params);
+    if (account) {
+      setUser(account);
     }
+    return account;
   };
 
   const signOut = async () => {

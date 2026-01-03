@@ -2,7 +2,7 @@ import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Card, Button, Icon, Badge } from '@/presentation/react/components/ui';
 // TODO: Replace with HttpRepository when Backend Dashboard Task is complete
-import { DASHBOARD_STATS } from '@/infra/mocks/mock-data';
+import { DASHBOARD_STATS } from '@/infra';
 
 const data = [
   { name: '01 Nov', loans: 400 },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Icon } from '@/presentation/react/components/ui';
-import type { SidebarItem } from '@/presentation/types';
+import { SidebarItem } from '../../types';
 
 const NAV_ITEMS: { category: string; items: SidebarItem[] }[] = [
     {
@@ -47,10 +47,10 @@ export const Sidebar: React.FC = () => {
                                 key={item.path}
                                 to={item.path}
                                 className={({ isActive }) =>
-                                    `flex items-center gap-3 px-3 py-3 rounded-lg transition-all group ${isActive
+                                    `flex items - center gap - 3 px - 3 py - 3 rounded - lg transition - all group ${isActive
                                         ? "bg-primary text-white shadow-lg shadow-primary/20"
                                         : "text-slate-400 hover:text-white hover:bg-card-hover"
-                                    }`
+                                    } `
                                 }
                             >
                                 {({ isActive }) => (

@@ -4,7 +4,7 @@ import {
 } from 'recharts';
 import { Button, Card, Icon } from '@/presentation/react/components/ui';
 // TODO: Replace with HttpRepository when Backend Reporting Task is complete
-import { CHART_LOANS_BY_CATEGORY, CHART_ACTIVITY_TRENDS, AVAILABLE_REPORTS } from '@/infra/mocks/mock-data';
+import { CHART_LOANS_BY_CATEGORY, CHART_ACTIVITY_TRENDS, AVAILABLE_REPORTS } from '@/infra';
 
 export const Reports: React.FC = () => {
     return (

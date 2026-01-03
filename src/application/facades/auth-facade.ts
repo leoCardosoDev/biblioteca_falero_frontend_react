@@ -9,17 +9,13 @@ export class AuthFacade {
   ) { }
 
   async login(params: AuthenticationParams): Promise<AccountModel | null> {
-    try {
-      const account = await this.authentication.auth(params);
-      if (account) {
-        await this.cacheRepository.set('account', JSON.stringify(account));
-        await this.cacheRepository.set('accessToken', account.accessToken);
-        return account;
-      }
-      return null;
-    } catch (error) {
-      throw error;
+    const account = await this.authentication.auth(params);
+    if (account) {
+      await this.cacheRepository.set('account', JSON.stringify(account));
+      await this.cacheRepository.set('accessToken', account.accessToken);
+      return account;
     }
+    return null;
   }
 
   async logout(): Promise<void> {
