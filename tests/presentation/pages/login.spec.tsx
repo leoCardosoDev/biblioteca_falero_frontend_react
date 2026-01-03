@@ -5,20 +5,13 @@ import { Login } from '@/presentation/react/pages/login/login'
 import { BrowserRouter } from 'react-router-dom'
 import { InvalidCredentialsError } from '@/domain/errors'
 
-// Prepare spies using vi.hoisted so they can be referenced inside vi.mock
+// Prepare spies
 const mocks = vi.hoisted(() => ({
-  navigate: vi.fn(),
+  router: {
+    navigate: vi.fn()
+  },
   login: vi.fn()
 }))
-
-// Mock React Router
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
-  return {
-    ...actual,
-    useNavigate: () => mocks.navigate
-  }
-})
 
 // Mock AuthContext
 vi.mock('@/presentation/react/hooks/use-auth-context', () => ({
@@ -35,7 +28,7 @@ vi.mock('@/presentation/react/hooks/use-auth-context', () => ({
 const makeSut = () => {
   render(
     <BrowserRouter>
-      <Login />
+      <Login router={mocks.router} />
     </BrowserRouter>
   )
 }
@@ -92,7 +85,7 @@ describe('Login Page', () => {
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(mocks.navigate).toHaveBeenCalledWith('/')
+      expect(mocks.router.navigate).toHaveBeenCalledWith('/')
     })
   })
 

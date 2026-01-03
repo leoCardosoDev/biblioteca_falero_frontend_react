@@ -1,14 +1,17 @@
 import React from 'react'
 import { useAuth } from '@/presentation/react/hooks/use-auth'
-import { useNavigate } from 'react-router-dom'
+import { Router } from '@/presentation/protocols/router-protocol'
 import { LoginForm } from '@/presentation/react/components/login-form'
 
-export const Login: React.FC = () => {
-  const navigate = useNavigate()
+type Props = {
+  router: Router
+}
+
+export const Login: React.FC<Props> = ({ router }: Props) => {
   const { register, loginHandler, isLoading, error, errors } = useAuth()
 
   const handleLoginSuccess = () => {
-    navigate('/')
+    router.navigate('/')
   }
 
   return (
