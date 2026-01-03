@@ -2,21 +2,17 @@ import type { AuthenticationRepository } from '@/domain/contracts/authentication
 import type { AuthenticationParams } from '@/domain/usecases/authentication'
 import type { AccountModel } from '@/domain/models/account-model'
 import { InvalidCredentialsError, UnexpectedError } from '@/domain/errors'
-import axios from 'axios'
+import { AxiosInstance, isAxiosError } from 'axios'
 
 export class HttpAuthenticationRepository implements AuthenticationRepository {
-  private readonly url: string
-
-  constructor(url: string) {
-    this.url = url
-  }
+  constructor(private readonly httpClient: AxiosInstance) { }
 
   async auth(params: AuthenticationParams): Promise<AccountModel> {
     try {
-      const result = await axios.post(this.url, params)
+      const result = await this.httpClient.post('/login', params)
       return result.data
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
         const status = error.response?.status
         if (status === 401 || status === 403) {
           throw new InvalidCredentialsError()

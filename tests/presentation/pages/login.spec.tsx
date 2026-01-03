@@ -1,59 +1,59 @@
 
-import { describe, test, expect, vi } from 'vitest'
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { Login } from '@/presentation/pages/login/login'
-import { type Authentication, type AuthenticationParams } from '@/domain/usecases/authentication'
+import { Login } from '@/presentation/react/pages/login/login'
 import { BrowserRouter } from 'react-router-dom'
-import { type AccountModel } from '@/domain/models/account-model'
 import { InvalidCredentialsError } from '@/domain/errors'
 
-// Mock useNavigate
-const mockNavigate = vi.fn()
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom')
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate
-  }
-})
+// Prepare spies
+const mocks = vi.hoisted(() => ({
+  router: {
+    navigate: vi.fn()
+  },
+  login: vi.fn()
+}))
 
-// Mock Authentication
-class AuthSpy implements Authentication {
-  params: AuthenticationParams | undefined
-  callsCount = 0
-  account: AccountModel = { accessToken: 'any_token', name: 'any_name', role: 'any_role', refreshToken: 'any_refresh_token' }
-
-  async auth(params: AuthenticationParams): Promise<AccountModel> {
-    this.params = params
-    this.callsCount++
-    return this.account
-  }
-}
+// Mock AuthContext
+vi.mock('@/presentation/react/hooks/use-auth-context', () => ({
+  useAuthContext: () => ({
+    login: mocks.login,
+    signIn: vi.fn(),
+    signOut: vi.fn(),
+    user: undefined,
+    isAuthenticated: false,
+    isLoading: false
+  })
+}))
 
 const makeSut = () => {
-  const authSpy = new AuthSpy()
   render(
     <BrowserRouter>
-      <Login authentication={authSpy} />
+      <Login router={mocks.router} />
     </BrowserRouter>
   )
-  return {
-    authSpy
-  }
 }
 
 describe('Login Page', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    // Default success behavior
+    mocks.login.mockResolvedValue({
+      accessToken: 'valid_token',
+      name: 'valid_name',
+      role: 'valid_role',
+      refreshToken: 'valid_refresh_token'
+    })
+  })
+
   test('Should start with correct initial state', () => {
     makeSut()
-    // Check if inputs are empty
     expect(screen.getByPlaceholderText('Digite seu login')).toHaveValue('')
     expect(screen.getByPlaceholderText('Digite sua senha')).toHaveValue('')
-    // specific button state if needed
     expect(screen.getByRole('button', { name: /entrar/i })).toBeEnabled()
   })
 
-  test('Should call Authentication with correct values', async () => {
-    const { authSpy } = makeSut()
+  test('Should call AuthContext.login with correct values', async () => {
+    makeSut()
 
     const emailInput = screen.getByPlaceholderText('Digite seu login')
     const passwordInput = screen.getByPlaceholderText('Digite sua senha')
@@ -65,8 +65,8 @@ describe('Login Page', () => {
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(authSpy.callsCount).toBe(1)
-      expect(authSpy.params).toEqual({
+      expect(mocks.login).toHaveBeenCalledTimes(1)
+      expect(mocks.login).toHaveBeenCalledWith({
         email: 'any_email@mail.com',
         password: 'any_password'
       })
@@ -74,13 +74,7 @@ describe('Login Page', () => {
   })
 
   test('Should navigate to / on success', async () => {
-    const { authSpy } = makeSut()
-    authSpy.account = {
-      accessToken: 'valid_token',
-      name: 'valid_name',
-      role: 'valid_role',
-      refreshToken: 'valid_refresh_token'
-    }
+    makeSut()
 
     const emailInput = screen.getByPlaceholderText('Digite seu login')
     const passwordInput = screen.getByPlaceholderText('Digite sua senha')
@@ -91,14 +85,14 @@ describe('Login Page', () => {
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/')
+      expect(mocks.router.navigate).toHaveBeenCalledWith('/')
     })
   })
 
   test('Should display InvalidCredentialsError message on authentication failure', async () => {
-    const { authSpy } = makeSut()
     const error = new InvalidCredentialsError()
-    vi.spyOn(authSpy, 'auth').mockRejectedValueOnce(error)
+    mocks.login.mockRejectedValueOnce(error)
+    makeSut()
 
     const emailInput = screen.getByPlaceholderText('Digite seu login')
     const passwordInput = screen.getByPlaceholderText('Digite sua senha')
@@ -114,9 +108,9 @@ describe('Login Page', () => {
   })
 
   test('Should display UnexpectedError message on other failures', async () => {
-    const { authSpy } = makeSut()
     const error = new Error('Something went wrong')
-    vi.spyOn(authSpy, 'auth').mockRejectedValueOnce(error)
+    mocks.login.mockRejectedValueOnce(error)
+    makeSut()
 
     const emailInput = screen.getByPlaceholderText('Digite seu login')
     const passwordInput = screen.getByPlaceholderText('Digite sua senha')

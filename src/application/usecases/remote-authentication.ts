@@ -12,8 +12,13 @@ export class RemoteAuthentication implements Authentication {
   async auth(params: AuthenticationParams): Promise<AccountModel> {
     const account = await this.authenticationRepository.auth(params)
     if (account?.accessToken) {
+      // Clear legacy/redundant keys as requested by the user
+      await this.cacheRepository.remove('auth_session')
+
       await this.cacheRepository.set('accessToken', account.accessToken)
+      await this.cacheRepository.set('account', JSON.stringify(account))
     }
     return account
   }
+
 }
