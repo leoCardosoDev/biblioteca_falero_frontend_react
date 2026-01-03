@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MOCK_RESERVATIONS } from '@/services/mock-data';
+// TODO: Replace with HttpRepository when Backend Task (Circulation/Reservations) is complete
+import { MOCK_RESERVATIONS } from '@/infra/mocks/mock-data';
 import { Button, Card, Icon, Avatar, Badge } from '@/presentation/components/ui';
 import { Modal } from '@/presentation/components/ui';
 import { ReservationForm } from '@/presentation/components/forms';

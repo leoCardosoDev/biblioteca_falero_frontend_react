@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MOCK_BOOKS } from '@/services/mock-data';
+// TODO: Replace with HttpRepository when Backend Task (Catalog/Books) is complete
+import { MOCK_BOOKS } from '@/infra/mocks/mock-data';
 import { Button, Card, Icon, Badge } from '@/presentation/components/ui';
 import { Modal } from '@/presentation/components/ui';
 import { BookForm } from '@/presentation/components/forms';

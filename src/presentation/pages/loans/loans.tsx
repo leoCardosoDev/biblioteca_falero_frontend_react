@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { MOCK_LOANS } from '@/services/mock-data';
+// TODO: Replace with HttpRepository when Backend Task (Circulation/Loans) is complete
+import { MOCK_LOANS } from '@/infra/mocks/mock-data';
 import { Button, Card, Icon, Avatar, Badge } from '@/presentation/components/ui';
 import { Modal } from '@/presentation/components/ui';
 import { LoanForm } from '@/presentation/components/forms';
