@@ -1,11 +1,11 @@
-import { UserModel } from '../models/user-model';
+import { User } from '../models/user';
 import { AddUserParams } from '../usecases/add-user';
 import { UpdateUserParams } from '../usecases/update-user';
 
 export interface UserRepository {
-  loadAll: () => Promise<UserModel[]>;
-  loadById: (id: string) => Promise<UserModel>;
-  add: (params: AddUserParams) => Promise<UserModel>;
-  update: (params: UpdateUserParams) => Promise<UserModel>;
+  loadAll: () => Promise<User[]>;
+  loadById: (id: string) => Promise<User>;
+  add: (params: AddUserParams) => Promise<User>;
+  update: (params: UpdateUserParams) => Promise<User>;
   delete: (id: string) => Promise<void>;
 }
