@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Icon } from '../ui';
-import { UserModel } from '@/domain/models/user-model';
+import { User } from '@/domain/models/user';
 import { maskCpf, maskRg, maskZipCode } from '@/presentation/react/helpers/mask-utils';
 
 const userSchema = z.object({
@@ -12,8 +12,8 @@ const userSchema = z.object({
     cpf: z.string().regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'CPF inválido (000.000.000-00)'),
     rg: z.string().min(5, 'RG inválido'),
     birthDate: z.string().refine((date) => !isNaN(Date.parse(date)), 'Data inválida'),
-    role: z.enum(['admin', 'librarian', 'professor']),
-    status: z.enum(['active', 'inactive']),
+    role: z.enum(['ADMIN', 'LIBRARIAN', 'PROFESSOR', 'STUDENT']),
+    status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
     address: z.object({
         street: z.string().min(1, 'Rua obrigatória'),
         number: z.string().min(1, 'Número obrigatório'),
@@ -28,7 +28,7 @@ const userSchema = z.object({
 export type UserFormData = z.infer<typeof userSchema>;
 
 interface UserFormProps {
-    initialData?: UserModel;
+    initialData?: User;
     onCancel: () => void;
     onSave: (data: UserFormData) => void;
 }
@@ -37,8 +37,8 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSav
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<UserFormData>({
         resolver: zodResolver(userSchema),
         defaultValues: {
-            role: 'professor',
-            status: 'active'
+            role: 'PROFESSOR',
+            status: 'ACTIVE'
         }
     });
 
@@ -62,8 +62,8 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSav
                 cpf: initialData.cpf,
                 rg: initialData.rg,
                 birthDate: initialData.birthDate,
-                role: initialData.role as 'admin' | 'librarian' | 'professor',
-                status: initialData.status as 'active' | 'inactive',
+                role: initialData.role as 'ADMIN' | 'LIBRARIAN' | 'PROFESSOR' | 'STUDENT',
+                status: initialData.status as 'ACTIVE' | 'INACTIVE' | 'BLOCKED',
                 address: initialData.address || { street: '', number: '', neighborhood: '', city: '', state: '', zipCode: '' },
             });
         }
@@ -195,9 +195,10 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSav
                     <div className="flex flex-col gap-2">
                         <label className="text-white text-sm font-medium">Perfil <span className="text-red-400">*</span></label>
                         <select {...register('role')} className="w-full h-12 px-4 bg-[#192633] border border-[#324d67] rounded-lg text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer">
-                            <option value="professor">Professor</option>
-                            <option value="librarian">Bibliotecário</option>
-                            <option value="admin">Administrador</option>
+                            <option value="PROFESSOR">Professor</option>
+                            <option value="LIBRARIAN">Bibliotecário</option>
+                            <option value="ADMIN">Administrador</option>
+                            <option value="STUDENT">Estudante</option>
                         </select>
                         {errors.role && <span className="text-xs text-red-400">{errors.role.message}</span>}
                     </div>
@@ -205,8 +206,9 @@ export const UserForm: React.FC<UserFormProps> = ({ initialData, onCancel, onSav
                     <div className="flex flex-col gap-2">
                         <label className="text-white text-sm font-medium">Status <span className="text-red-400">*</span></label>
                         <select {...register('status')} className="w-full h-12 px-4 bg-[#192633] border border-[#324d67] rounded-lg text-white focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none cursor-pointer">
-                            <option value="active">Ativo</option>
-                            <option value="inactive">Inativo</option>
+                            <option value="ACTIVE">Ativo</option>
+                            <option value="INACTIVE">Inativo</option>
+                            <option value="BLOCKED">Bloqueado</option>
                         </select>
                         {errors.status && <span className="text-xs text-red-400">{errors.status.message}</span>}
                     </div>

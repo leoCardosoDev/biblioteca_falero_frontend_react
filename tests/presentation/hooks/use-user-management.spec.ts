@@ -6,12 +6,12 @@ import type { LoadUserById } from '@/domain/usecases/load-user-by-id'
 import type { AddUser } from '@/domain/usecases/add-user'
 import type { UpdateUser } from '@/domain/usecases/update-user'
 import type { DeleteUser } from '@/domain/usecases/delete-user'
-import type { UserModel } from '@/domain/models/user-model'
+import type { User } from '@/domain/models/user'
 
 // Mocks
 const makeLoadUserById = (): LoadUserById => {
   return {
-    perform: vi.fn(async () => ({ id: 'any_id', name: 'any_name' } as UserModel))
+    perform: vi.fn(async () => ({ id: 'any_id', name: 'any_name' } as User))
   }
 }
 
@@ -23,13 +23,13 @@ const makeLoadUsers = (): LoadUsers => {
 
 const makeAddUser = (): AddUser => {
   return {
-    perform: vi.fn(async (params) => ({ id: 'new_id', ...params, status: 'active' } as UserModel))
+    perform: vi.fn(async (params) => ({ id: 'new_id', ...params, status: 'active' } as User))
   }
 }
 
 const makeUpdateUser = (): UpdateUser => {
   return {
-    perform: vi.fn(async (params) => ({ id: params.id, name: 'updated', email: 'updated@mail.com', status: 'active' } as UserModel))
+    perform: vi.fn(async (params) => ({ id: params.id, name: 'updated', email: 'updated@mail.com', status: 'active' } as User))
   }
 }
 
@@ -63,7 +63,7 @@ describe('useUserManagement Hook', () => {
 
 test('Should load users on mount', async () => {
   const loadUsers = makeLoadUsers()
-  const mockUsers = [{ id: '1', name: 'User 1' }] as UserModel[]
+  const mockUsers = [{ id: '1', name: 'User 1' }] as User[]
   vi.spyOn(loadUsers, 'perform').mockResolvedValueOnce(mockUsers)
 
   const addUser = makeAddUser()
@@ -113,7 +113,16 @@ test('Should add user and reload list', async () => {
   await waitFor(() => expect(result.current.isLoading).toBe(false))
 
   await act(async () => {
-    const success = await result.current.handleAddUser({ name: 'New User', email: 'new@mail.com', role: 'professor' })
+    const success = await result.current.handleAddUser({
+      name: 'New User',
+      email: 'new@mail.com',
+      rg: '123',
+      cpf: '123',
+      birthDate: '2000-01-01',
+      address: { street: '', number: '', neighborhood: '', city: '', state: '', zipCode: '' },
+      role: 'PROFESSOR',
+      status: 'ACTIVE'
+    })
     expect(success).toBe(true)
   })
 
@@ -128,7 +137,7 @@ test('Should load user by id correctly', async () => {
   const updateUser = makeUpdateUser()
   const deleteUser = makeDeleteUser()
 
-  const mockUser = { id: 'any_id', name: 'Full User Profile' } as UserModel
+  const mockUser = { id: 'any_id', name: 'Full User Profile' } as User
   vi.spyOn(loadUserById, 'perform').mockResolvedValueOnce(mockUser)
 
   const { result } = renderHook(() => useUserManagement({
