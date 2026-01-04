@@ -1,5 +1,5 @@
-import { UserModel } from '../models/user-model';
+import { User } from '../models/user';
 
 export interface LoadUserById {
-  perform: (id: string) => Promise<UserModel>;
+  perform: (id: string) => Promise<User>;
 }

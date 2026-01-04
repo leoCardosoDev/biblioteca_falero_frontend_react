@@ -1,4 +1,4 @@
-import { UserModel } from '../models/user-model';
+import { User } from '../models/user';
 
 export interface AddUserParams {
   name: string;
@@ -15,10 +15,10 @@ export interface AddUserParams {
     state: string;
     zipCode: string;
   };
-  role: UserModel['role'];
-  status: UserModel['status'];
+  role: User['role'];
+  status: User['status'];
 }
 
 export interface AddUser {
-  perform: (params: AddUserParams) => Promise<UserModel>;
+  perform: (params: AddUserParams) => Promise<User>;
 }
