@@ -1,31 +1,45 @@
-import { UserModel } from '@/domain/models/user-model';
+import { User } from '@/domain/models/user';
 
-export const formatUserRole = (role: UserModel['role']): string => {
-  const roleMap: Record<UserModel['role'], string> = {
-    admin: 'Administrador',
-    librarian: 'Bibliotecário',
-    professor: 'Professor',
+export const formatUserRole = (role: User['role']): string => {
+  if (!role) return 'Desconhecido';
+  const roleMap: Record<User['role'], string> = {
+    ADMIN: 'Administrador',
+    LIBRARIAN: 'Bibliotecário',
+    PROFESSOR: 'Professor',
+    STUDENT: 'Estudante'
   };
   return roleMap[role] || role;
 };
 
-export const getUserRoleColor = (role: UserModel['role']): 'primary' | 'success' | 'warning' | 'neutral' | 'danger' => {
-  const colorMap: Record<UserModel['role'], 'primary' | 'success' | 'warning' | 'neutral' | 'danger'> = {
-    professor: 'primary',
-    librarian: 'warning',
-    admin: 'success',
+export const getUserRoleColor = (role: User['role']): 'primary' | 'success' | 'warning' | 'neutral' | 'danger' | 'purple' | 'cyan' => {
+  const colorMap: Record<User['role'], 'primary' | 'success' | 'warning' | 'neutral' | 'danger' | 'purple' | 'cyan'> = {
+    PROFESSOR: 'purple',
+    LIBRARIAN: 'warning',
+    ADMIN: 'success',
+    STUDENT: 'cyan'
   };
   return colorMap[role] || 'neutral';
 };
 
-export const formatUserStatus = (status: UserModel['status']): string => {
-  return (status as string)?.toLowerCase() === 'active' ? 'Ativo' : 'Inativo';
+export const formatUserStatus = (status: User['status']): string => {
+  const statusMap: Record<User['status'], string> = {
+    ACTIVE: 'Ativo',
+    INACTIVE: 'Inativo',
+    BLOCKED: 'Bloqueado'
+  };
+  return statusMap[status] || status;
 };
 
-export const getUserStatusColor = (status: UserModel['status']): 'success' | 'danger' => {
-  return (status as string)?.toLowerCase() === 'active' ? 'success' : 'danger';
+export const getUserStatusColor = (status: User['status']): 'success' | 'danger' => {
+  return status === 'ACTIVE' ? 'success' : 'danger';
 };
 
 export const formatEnrollmentId = (enrollmentId?: string): string => {
   return enrollmentId || '-';
+};
+
+export const formatCpf = (cpf?: string): string => {
+  if (!cpf) return '-';
+  const cleanCpf = cpf.replace(/\D/g, '');
+  return cleanCpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 };

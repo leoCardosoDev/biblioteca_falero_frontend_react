@@ -10,8 +10,8 @@ import { UpdateUser } from '@/domain/usecases/update-user';
 import { DeleteUser } from '@/domain/usecases/delete-user';
 import { AddUserLogin } from '@/domain/usecases/add-user-login';
 import { LoadUserById } from '@/domain/usecases/load-user-by-id';
-import { UserModel } from '@/domain/models/user-model';
-import { formatUserRole, getUserRoleColor, formatUserStatus, formatEnrollmentId } from '@/presentation/react/helpers/user-serializers';
+import { User } from '@/domain/models/user';
+import { formatUserRole, getUserRoleColor, formatUserStatus, formatEnrollmentId, formatCpf } from '@/presentation/react/helpers/user-serializers';
 
 interface UsersProps {
     loadUsers: LoadUsers;
@@ -29,15 +29,32 @@ export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, de
 
     const [isUserModalOpen, setIsUserModalOpen] = useState(false);
     const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<UserModel | undefined>(undefined);
-    const [userForCredentials, setUserForCredentials] = useState<UserModel | null>(null);
+    const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
+    const [userForCredentials, setUserForCredentials] = useState<User | null>(null);
+
+    // Filter State
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('ALL');
+    const [roleFilter, setRoleFilter] = useState('ALL');
+
+    const filteredUsers = users.filter(user => {
+        const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (user.cpf && user.cpf.includes(searchTerm)) ||
+            (user.enrollmentId && user.enrollmentId.includes(searchTerm));
+
+        const matchesStatus = statusFilter === 'ALL' || user.status === statusFilter;
+        const matchesRole = roleFilter === 'ALL' || user.role === roleFilter;
+
+        return matchesSearch && matchesStatus && matchesRole;
+    });
 
     const handleOpenCreate = () => {
         setSelectedUser(undefined);
         setIsUserModalOpen(true);
     };
 
-    const handleOpenEdit = async (user: UserModel) => {
+    const handleOpenEdit = async (user: User) => {
         const fullUser = await handleLoadUserById(user.id);
         if (fullUser) {
             setSelectedUser(fullUser);
@@ -45,7 +62,7 @@ export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, de
         }
     };
 
-    const handleOpenCredentials = (user: UserModel) => {
+    const handleOpenCredentials = (user: User) => {
         setUserForCredentials(user);
         setIsCredentialModalOpen(true);
     };
@@ -83,7 +100,7 @@ export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, de
         }
     };
 
-    const onDeleteClick = async (user: UserModel) => {
+    const onDeleteClick = async (user: User) => {
         if (confirm(`Tem certeza que deseja excluir ${user.name}?`)) {
             await handleDeleteUser(user.id);
         }
@@ -126,65 +143,138 @@ export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, de
                 </div>
             </div>
 
-            {/* Stats Cards - Mocked for now or calculate from users */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="p-5 flex items-center gap-4 hover:border-primary/30 transition-colors">
-                    <div className="size-12 rounded-lg bg-primary/20 text-primary flex items-center justify-center">
-                        <Icon name="group" className="text-2xl" />
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Card className="p-5 flex flex-col justify-between gap-2 border-slate-800 bg-[#161f2c]">
+                    <div className="flex justify-between items-start">
+                        <span className="text-slate-400 font-medium">Total de Usuários</span>
+                        <Icon name="group" className="text-slate-400" />
                     </div>
                     <div>
-                        <p className="text-slate-400 text-sm font-medium">Total de Usuários</p>
-                        <h3 className="text-2xl font-bold text-white">{users.length}</h3>
+                        <div className="flex items-center gap-2">
+                            <h3 className="text-3xl font-bold text-white">{users.length}</h3>
+                            <span className="text-sm font-medium text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                                <Icon name="trending_up" className="inline mr-1 size-3" />
+                                5%
+                            </span>
+                        </div>
                     </div>
                 </Card>
-                {/* Other stats... */}
+
+                <Card className="p-5 flex flex-col justify-between gap-2 border-slate-800 bg-[#161f2c]">
+                    <div className="flex justify-between items-start">
+                        <span className="text-slate-400 font-medium">Novos (Mês)</span>
+                        <Icon name="person_add" className="text-slate-400" />
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <h3 className="text-3xl font-bold text-white">85</h3>
+                            <span className="text-sm font-medium text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                                <Icon name="trending_up" className="inline mr-1 size-3" />
+                                12%
+                            </span>
+                        </div>
+                    </div>
+                </Card>
+
+                <Card className="p-5 flex flex-col justify-between gap-2 border-slate-800 bg-[#161f2c]">
+                    <div className="flex justify-between items-start">
+                        <span className="text-slate-400 font-medium">Bloqueados</span>
+                        <Icon name="block" className="text-slate-400" />
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <h3 className="text-3xl font-bold text-white">{users.filter(u => u.status === 'BLOCKED').length}</h3>
+                            <span className="text-sm font-medium text-amber-500 bg-amber-500/10 px-1.5 py-0.5 rounded">
+                                <Icon name="trending_down" className="inline mr-1 size-3" />
+                                2%
+                            </span>
+                        </div>
+                    </div>
+                </Card>
             </div>
 
             {/* Filters */}
-            <div className="flex flex-col lg:flex-row gap-4">
-                <div className="flex-1 relative">
+            <div className="flex flex-col lg:flex-row gap-4 items-center">
+                <div className="flex-1 relative w-full">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-500">
                         <Icon name="search" />
                     </div>
                     <input
-                        className="w-full h-12 rounded-xl bg-surface-dark border border-white/10 text-white placeholder-text-secondary pl-12 pr-4 focus:ring-2 focus:ring-primary/50"
-                        placeholder="Buscar por nome, email ou matrícula..."
+                        className="w-full h-12 rounded-xl bg-[#161f2c] border border-white/5 text-white placeholder-slate-500 pl-12 pr-4 focus:ring-1 focus:ring-primary/50 focus:border-primary/50 transition-all outline-none"
+                        placeholder="Buscar por nome, CPF ou email..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                {/* Dropdowns */}
+                <div className="flex gap-2 w-full lg:w-auto">
+                    <select
+                        className="h-12 bg-[#161f2c] border border-white/5 text-slate-300 rounded-xl px-4 outline-none focus:border-primary/50 cursor-pointer appearance-none min-w-[120px]"
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                    >
+                        <option value="ALL">Status</option>
+                        <option value="ACTIVE">Ativo</option>
+                        <option value="INACTIVE">Inativo</option>
+                        <option value="BLOCKED">Bloqueado</option>
+                    </select>
+                    <select
+                        className="h-12 bg-[#161f2c] border border-white/5 text-slate-300 rounded-xl px-4 outline-none focus:border-primary/50 cursor-pointer appearance-none min-w-[120px]"
+                        value={roleFilter}
+                        onChange={(e) => setRoleFilter(e.target.value)}
+                    >
+                        <option value="ALL">Grupo</option>
+                        <option value="STUDENT">Estudante</option>
+                        <option value="PROFESSOR">Professor</option>
+                        <option value="LIBRARIAN">Bibliotecário</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                    <Button variant="secondary" icon="download" className="basis-12 shrink-0" />
+                </div>
             </div>
 
             {/* Users Table */}
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden border-slate-800 bg-[#161f2c]">
                 {isLoading ? (
-                    <div className="p-8 text-center text-slate-400">Carregando...</div>
+                    <div className="p-12 text-center text-slate-400">
+                        <div className="animate-spin size-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                        Carregando usuários...
+                    </div>
                 ) : error ? (
-                    <div className="p-8 text-center text-red-500">{error}</div>
+                    <div className="p-8 text-center text-red-500 bg-red-500/5">{error}</div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="w-full text-left">
+                        <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-[#111a22] border-b border-white/10">
-                                    <th className="px-6 py-4 text-xs font-bold text-text-secondary uppercase">Usuário</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-text-secondary uppercase">Matrícula</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-text-secondary uppercase">Tipo</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-text-secondary uppercase">Status</th>
-                                    <th className="px-6 py-4 text-xs font-bold text-text-secondary uppercase text-right">Ações</th>
+                                <tr className="border-b border-white/5 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                    <th className="px-6 py-5">Usuário</th>
+                                    <th className="px-6 py-5">CPF</th>
+                                    <th className="px-6 py-5">Email</th>
+                                    <th className="px-6 py-5">Grupo</th>
+                                    <th className="px-6 py-5">Status</th>
+                                    <th className="px-6 py-5 text-right">Ações</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
-                                {users.map((user) => (
-                                    <tr key={user.id} className="group hover:bg-[#1e2e3e] transition-colors">
+                                {filteredUsers.map((user) => (
+                                    <tr key={user.id} className="group hover:bg-white/[0.02] transition-colors">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <Avatar src={user.avatarUrl} />
+                                                <Avatar src={user.avatarUrl} alt={user.name} />
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-white text-base">{user.name}</span>
-                                                    <span className="text-xs text-text-secondary">{user.email}</span>
+                                                    <span className="font-semibold text-white text-[15px]">{user.name}</span>
+                                                    <span className="text-xs text-slate-500 mt-0.5">
+                                                        {user.enrollmentId ? `Matrícula: ${formatEnrollmentId(user.enrollmentId)}` : `ID: ${user.id.substring(0, 8)}`}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4 text-sm text-gray-300 font-mono">{formatEnrollmentId(user.enrollmentId)}</td>
+                                        <td className="px-6 py-4 text-sm text-slate-400 font-mono tracking-wide">
+                                            {formatCpf(user.cpf)}
+                                        </td>
+                                        <td className="px-6 py-4 text-sm text-slate-400">
+                                            {user.email}
+                                        </td>
                                         <td className="px-6 py-4">
                                             <Badge
                                                 label={formatUserRole(user.role)}
@@ -193,22 +283,22 @@ export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, de
                                         </td>
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
-                                                <div className={`size-2 rounded-full ${user.status === 'active' ? 'bg-success' : 'bg-danger'}`}></div>
-                                                <span className={`text-sm font-medium ${user.status === 'active' ? 'text-white' : 'text-danger'}`}>
+                                                <div className={`size-1.5 rounded-full ${user.status === 'ACTIVE' ? 'bg-emerald-500' : 'bg-red-500'}`}></div>
+                                                <span className={`text-sm font-medium ${user.status === 'ACTIVE' ? 'text-slate-300' : 'text-slate-400'}`}>
                                                     {formatUserStatus(user.status)}
                                                 </span>
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                                                <button onClick={() => handleOpenCredentials(user)} className="flex size-8 items-center justify-center rounded-lg hover:bg-white/5 text-slate-400 hover:text-white transition-colors" title="Credenciais">
-                                                    <Icon name="key" />
+                                            <div className="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                                                <button onClick={() => handleOpenCredentials(user)} className="flex size-8 items-center justify-center rounded hover:bg-white/5 text-slate-400 hover:text-white transition-colors" title="Credenciais">
+                                                    <Icon name="key" className="size-4" />
                                                 </button>
-                                                <button onClick={() => handleOpenEdit(user)} className="flex size-8 items-center justify-center rounded-lg hover:bg-primary/10 text-slate-400 hover:text-primary transition-colors" title="Editar">
-                                                    <Icon name="edit" />
+                                                <button onClick={() => handleOpenEdit(user)} className="flex size-8 items-center justify-center rounded hover:bg-white/5 text-slate-400 hover:text-primary transition-colors" title="Editar">
+                                                    <Icon name="edit" className="size-4" />
                                                 </button>
-                                                <button onClick={() => onDeleteClick(user)} className="flex size-8 items-center justify-center rounded-lg hover:bg-danger/10 text-slate-400 hover:text-danger transition-colors" title="Apagar">
-                                                    <Icon name="delete" />
+                                                <button onClick={() => onDeleteClick(user)} className="flex size-8 items-center justify-center rounded hover:bg-white/5 text-slate-400 hover:text-red-400 transition-colors" title="Apagar">
+                                                    <Icon name="delete" className="size-4" />
                                                 </button>
                                             </div>
                                         </td>
