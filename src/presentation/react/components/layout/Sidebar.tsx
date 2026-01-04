@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuthContext } from '@/presentation/react/hooks/use-auth-context';
 import { Icon } from '@/presentation/react/components/ui';
 import { SidebarItem } from '../../types';
 
@@ -24,6 +25,19 @@ const NAV_ITEMS: { category: string; items: SidebarItem[] }[] = [
 ];
 
 export const Sidebar: React.FC = () => {
+    const { user } = useAuthContext();
+
+    const allowedRoles = ['ADMIN', 'LIBRARIAN'];
+    const canManageUsers = user && allowedRoles.includes(user.role);
+
+    const filteredNavItems = NAV_ITEMS.map(section => ({
+        ...section,
+        items: section.items.filter(item => {
+            if (item.path === '/users') return canManageUsers;
+            return true;
+        })
+    })).filter(section => section.items.length > 0);
+
     return (
         <aside className="hidden lg:flex flex-col w-72 bg-card-dark border-r border-white/5 h-full shrink-0">
             <div className="flex items-center gap-3 px-6 py-6 border-b border-white/5">
@@ -36,8 +50,9 @@ export const Sidebar: React.FC = () => {
                 </div>
             </div>
 
+
             <div className="flex flex-col gap-1 p-4 flex-1 overflow-y-auto">
-                {NAV_ITEMS.map((section, idx) => (
+                {filteredNavItems.map((section, idx) => (
                     <React.Fragment key={idx}>
                         <p className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 mt-2">
                             {section.category}
@@ -61,7 +76,7 @@ export const Sidebar: React.FC = () => {
                                 )}
                             </NavLink>
                         ))}
-                        {idx < NAV_ITEMS.length - 1 && <div className="my-2 border-t border-white/5" />}
+                        {idx < filteredNavItems.length - 1 && <div className="my-2 border-t border-white/5" />}
                     </React.Fragment>
                 ))}
             </div>
