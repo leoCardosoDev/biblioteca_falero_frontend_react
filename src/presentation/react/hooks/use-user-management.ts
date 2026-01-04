@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from 'react';
-import { UserModel } from '../../domain/models/user-model';
-import { LoadUsers } from '../../domain/usecases/load-users';
-import { LoadUserById } from '../../domain/usecases/load-user-by-id';
-import { AddUser, AddUserParams } from '../../domain/usecases/add-user';
-import { UpdateUser, UpdateUserParams } from '../../domain/usecases/update-user';
-import { DeleteUser } from '../../domain/usecases/delete-user';
+import { User } from '@/domain/models/user';
+import { LoadUsers } from '@/domain/usecases/load-users';
+import { LoadUserById } from '@/domain/usecases/load-user-by-id';
+import { AddUser, AddUserParams } from '@/domain/usecases/add-user';
+import { UpdateUser, UpdateUserParams } from '@/domain/usecases/update-user';
+import { DeleteUser } from '@/domain/usecases/delete-user';
 
 export interface UseUserManagementProps {
   loadUsers: LoadUsers;
@@ -15,7 +15,7 @@ export interface UseUserManagementProps {
 }
 
 export const useUserManagement = ({ loadUsers, loadUserById, addUser, updateUser, deleteUser }: UseUserManagementProps) => {
-  const [users, setUsers] = useState<UserModel[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -83,11 +83,11 @@ export const useUserManagement = ({ loadUsers, loadUserById, addUser, updateUser
   }, [fetchUsers]);
 
 
+
   return {
     users,
     isLoading,
     error,
-    fetchUsers,
     handleAddUser,
     handleUpdateUser,
     handleDeleteUser,
