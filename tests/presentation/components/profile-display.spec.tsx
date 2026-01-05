@@ -10,7 +10,7 @@ vi.mock('@/presentation/react/hooks/use-auth-context')
 describe('ProfileDisplay', () => {
   const mockUser: AccountModel = {
     name: 'Admin Falero',
-    role: 'admin',
+    role: 'ADMIN',
     avatarUrl: 'https://github.com/shadcn.png',
     accessToken: 'any_token',
     refreshToken: 'any_refresh_token'

@@ -1,7 +1,7 @@
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context';
 import { Avatar } from '@/presentation/react/components/ui';
 import { formatUserRole } from '@/presentation/react/helpers/user-serializers';
-import { UserModel } from '@/domain/models/user-model';
+import { User } from '@/domain/models/user';
 
 export const ProfileDisplay: React.FC = () => {
   const { user } = useAuthContext();
@@ -17,7 +17,7 @@ export const ProfileDisplay: React.FC = () => {
           {user.name}
         </p>
         <p className="text-xs text-slate-500">
-          {formatUserRole(user.role as UserModel['role'])}
+          {formatUserRole(user.role as User['role'])}
         </p>
       </div>
       <Avatar src={user.avatarUrl} />
