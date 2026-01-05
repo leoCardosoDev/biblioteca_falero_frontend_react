@@ -1,4 +1,4 @@
-import { ZodSchema } from 'zod'
+import { ZodType } from 'zod'
 
 import {
   UseFormProps,
@@ -7,7 +7,7 @@ import {
 import { useReactHookFormAdapter } from '@/infra/forms/react-hook-form-adapter'
 
 export const useCustomForm = <T extends FieldValues>(
-  props?: UseFormProps<T> & { schema?: ZodSchema }
+  props?: UseFormProps<T> & { schema?: ZodType }
 ) => {
   return useReactHookFormAdapter<T>(props)
 }
