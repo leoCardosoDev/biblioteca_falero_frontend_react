@@ -1,10 +1,13 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, Select, FormSection } from '@/presentation/react/components/ui';
-import { BookFormData } from '../../book-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form/context'
+import { Input, Select, FormSection } from '@/presentation/react/components/ui'
+import { BookFormData } from '../../book-schema'
 
 export const BookCategorization: React.FC = () => {
-  const { register, formState: { errors } } = useFormContext<BookFormData>();
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<BookFormData>()
 
   return (
     <FormSection title="Categorização">
@@ -49,5 +52,5 @@ export const BookCategorization: React.FC = () => {
         required
       />
     </FormSection>
-  );
-};
+  )
+}

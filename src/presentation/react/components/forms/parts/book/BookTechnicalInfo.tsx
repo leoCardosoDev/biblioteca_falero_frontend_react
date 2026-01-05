@@ -1,10 +1,13 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, FormSection } from '@/presentation/react/components/ui';
-import { BookFormData } from '../../book-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form/context'
+import { Input, FormSection } from '@/presentation/react/components/ui'
+import { BookFormData } from '../../book-schema'
 
 export const BookTechnicalInfo: React.FC = () => {
-  const { register, formState: { errors } } = useFormContext<BookFormData>();
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<BookFormData>()
 
   return (
     <FormSection title="Dados Técnicos">
@@ -33,5 +36,5 @@ export const BookTechnicalInfo: React.FC = () => {
         error={errors.edition?.message}
       />
     </FormSection>
-  );
-};
+  )
+}

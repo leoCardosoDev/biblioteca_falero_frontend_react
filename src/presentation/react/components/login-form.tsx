@@ -1,46 +1,46 @@
-import React from 'react';
-import type { UseFormRegister, FieldErrors } from 'react-hook-form';
-import { Input } from '@/presentation/react/components/ui';
-import { Button } from '@/presentation/react/components/ui';
-import type { LoginFormData } from '../hooks/use-auth';
+import React from 'react'
+import { Button } from '@/presentation/react/components/ui'
+import { Field } from '@/presentation/react/components/ui/form'
 
-import { LoginHeader } from './login-header';
+import { LoginHeader } from './login-header'
 
-type LoginFormProps = {
-  register: UseFormRegister<LoginFormData>
-  handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>
-  errors: FieldErrors<LoginFormData>
+export const LoginForm: React.FC<{
   isLoading: boolean
   error?: string
-}
-
-export const LoginForm: React.FC<LoginFormProps> = ({ register, handleSubmit, errors, isLoading, error }) => {
+  onSubmit?: never // Not used
+}> = ({ isLoading, error }) => {
   return (
     <div className="w-full">
       <LoginHeader />
-      <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-        <Input
+      <div className="flex flex-col gap-6">
+        <Field
+          name="email"
           label="Usuário"
           placeholder="Digite seu login"
           icon="person"
-          {...register('email')}
-          error={errors.email?.message}
         />
-        <Input
+        <Field
+          name="password"
           label="Senha"
           type="password"
           placeholder="Digite sua senha"
           icon="lock"
-          {...register('password')}
-          error={errors.password?.message}
         />
 
-        {error && <div className="text-red-500 text-sm text-center bg-red-100 dark:bg-red-900/20 p-2 rounded">{error}</div>}
+        {error && (
+          <div className="rounded bg-red-100 p-2 text-center text-sm text-red-500 dark:bg-red-900/20">
+            {error}
+          </div>
+        )}
 
-        <Button className="h-12 mt-2" icon={isLoading ? undefined : "arrow_forward"} disabled={isLoading}>
+        <Button
+          className="mt-2 h-12"
+          icon={isLoading ? undefined : 'arrow_forward'}
+          disabled={isLoading}
+        >
           {isLoading ? 'Entrando...' : 'Entrar'}
         </Button>
-      </form>
+      </div>
     </div>
   )
 }

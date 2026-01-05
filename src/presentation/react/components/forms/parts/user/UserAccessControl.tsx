@@ -1,10 +1,13 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Select, FormSection } from '@/presentation/react/components/ui';
-import { UserFormData } from '../../user-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form'
+import { Select, FormSection } from '@/presentation/react/components/ui'
+import { UserFormData } from '../../user-schema'
 
 export const UserAccessControl: React.FC = () => {
-  const { register, formState: { errors } } = useFormContext<UserFormData>();
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<UserFormData>()
 
   return (
     <FormSection title="Controle de Acesso">
@@ -33,5 +36,5 @@ export const UserAccessControl: React.FC = () => {
         <option value="BLOCKED">Bloqueado</option>
       </Select>
     </FormSection>
-  );
-};
+  )
+}

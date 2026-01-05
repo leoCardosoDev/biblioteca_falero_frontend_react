@@ -1,14 +1,21 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, TextArea, FormSection } from '@/presentation/react/components/ui';
-import { LoanFormData } from '../../loan-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form/context'
+import {
+  Input,
+  TextArea,
+  FormSection
+} from '@/presentation/react/components/ui'
+import { LoanFormData } from '../../loan-schema'
 
 export const LoanTerms: React.FC = () => {
-  const { register, formState: { errors } } = useFormContext<LoanFormData>();
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<LoanFormData>()
 
   return (
     <FormSection title="Prazos e Condições">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Input
           {...register('loanDate')}
           id="loanDate"
@@ -35,5 +42,5 @@ export const LoanTerms: React.FC = () => {
         error={errors.observations?.message}
       />
     </FormSection>
-  );
-};
+  )
+}

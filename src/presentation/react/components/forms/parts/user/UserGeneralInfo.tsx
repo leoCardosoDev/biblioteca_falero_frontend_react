@@ -1,14 +1,19 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, FormSection } from '@/presentation/react/components/ui';
-import { maskCpf, maskRg } from '@/presentation/react/helpers/mask-utils';
-import { UserFormData } from '../../user-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form'
+import { Input, FormSection } from '@/presentation/react/components/ui'
+import { maskCpf, maskRg } from '@/presentation/react/helpers/mask-utils'
+import { UserFormData } from '../../user-schema'
 
 export const UserGeneralInfo: React.FC = () => {
-  const { register, setValue, watch, formState: { errors } } = useFormContext<UserFormData>();
+  const {
+    register,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useFormContext<UserFormData>()
 
-  const watchedCpf = watch('cpf');
-  const watchedRg = watch('rg');
+  const watchedCpf = watch('cpf')
+  const watchedRg = watch('rg')
 
   return (
     <FormSection title="Informações Pessoais">
@@ -31,7 +36,7 @@ export const UserGeneralInfo: React.FC = () => {
         value={watchedCpf || ''}
         placeholder="000.000.000-00"
         onChange={(e) => {
-          setValue('cpf', maskCpf(e.target.value), { shouldValidate: true });
+          setValue('cpf', maskCpf(e.target.value), { shouldValidate: true })
         }}
         error={errors.cpf?.message}
         required
@@ -44,7 +49,7 @@ export const UserGeneralInfo: React.FC = () => {
         value={watchedRg || ''}
         placeholder="00.000.000-0"
         onChange={(e) => {
-          setValue('rg', maskRg(e.target.value), { shouldValidate: true });
+          setValue('rg', maskRg(e.target.value), { shouldValidate: true })
         }}
         error={errors.rg?.message}
         required
@@ -62,5 +67,5 @@ export const UserGeneralInfo: React.FC = () => {
         required
       />
     </FormSection>
-  );
-};
+  )
+}

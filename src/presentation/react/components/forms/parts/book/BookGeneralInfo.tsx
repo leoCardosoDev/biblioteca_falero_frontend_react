@@ -1,10 +1,17 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, FormSection, TextArea } from '@/presentation/react/components/ui';
-import { BookFormData } from '../../book-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form/context'
+import {
+  Input,
+  FormSection,
+  TextArea
+} from '@/presentation/react/components/ui'
+import { BookFormData } from '../../book-schema'
 
 export const BookGeneralInfo: React.FC = () => {
-  const { register, formState: { errors } } = useFormContext<BookFormData>();
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<BookFormData>()
 
   return (
     <div className="flex flex-col gap-8">
@@ -51,5 +58,5 @@ export const BookGeneralInfo: React.FC = () => {
         error={errors.synopsis?.message}
       />
     </div>
-  );
-};
+  )
+}

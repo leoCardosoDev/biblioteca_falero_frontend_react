@@ -1,71 +1,77 @@
-import React, { useEffect } from 'react';
-import { useForm, FormProvider } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Icon } from '../ui';
-import { bookSchema, BookFormData } from './book-schema';
-import { BookCoverUpload } from './parts/book/BookCoverUpload';
-import { BookGeneralInfo } from './parts/book/BookGeneralInfo';
-import { BookTechnicalInfo } from './parts/book/BookTechnicalInfo';
-import { BookCategorization } from './parts/book/BookCategorization';
+import React, { useEffect } from 'react'
+import { Icon } from '../ui'
+import { bookSchema, BookFormData } from './book-schema'
+import { BookCoverUpload } from './parts/book/BookCoverUpload'
+import { BookGeneralInfo } from './parts/book/BookGeneralInfo'
+import { BookTechnicalInfo } from './parts/book/BookTechnicalInfo'
+import { BookCategorization } from './parts/book/BookCategorization'
+import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
 interface BookFormProps {
-    initialData?: Partial<BookFormData>;
-    onCancel: () => void;
-    onSave: (data: BookFormData) => void;
+  initialData?: Partial<BookFormData>
+  onCancel: () => void
+  onSave: (data: BookFormData) => void
 }
 
-export const BookForm: React.FC<BookFormProps> = ({ initialData, onCancel, onSave }) => {
-    const methods = useForm<BookFormData>({
-        resolver: zodResolver(bookSchema),
-        defaultValues: {
-            language: 'Português',
-            ...initialData
-        }
-    });
+export const BookForm: React.FC<BookFormProps> = ({
+  initialData,
+  onCancel,
+  onSave
+}) => {
+  const methods = useCustomForm<BookFormData>({
+    schema: bookSchema,
+    defaultValues: {
+      language: 'Português',
+      ...initialData
+    }
+  })
 
-    const { handleSubmit, reset } = methods;
+  const { reset } = methods
 
-    useEffect(() => {
-        if (initialData) {
-            reset({
-                language: 'Português',
-                ...initialData
-            });
-        }
-    }, [initialData, reset]);
+  useEffect(() => {
+    if (initialData) {
+      reset({
+        language: 'Português',
+        ...initialData
+      })
+    }
+  }, [initialData, reset])
 
-    return (
-        <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSave)} className="flex flex-col gap-6" noValidate>
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    {/* Upload Section */}
-                    <BookCoverUpload />
+  return (
+    <Form
+      form={methods}
+      onSubmit={onSave}
+      className="flex flex-col gap-6"
+      noValidate
+    >
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        {/* Upload Section */}
+        <BookCoverUpload />
 
-                    {/* Fields Section */}
-                    <div className="lg:col-span-8 flex flex-col gap-8">
-                        <BookGeneralInfo />
-                        <BookTechnicalInfo />
-                        <BookCategorization />
-                    </div>
-                </div>
+        {/* Fields Section */}
+        <div className="flex flex-col gap-8 lg:col-span-8">
+          <BookGeneralInfo />
+          <BookTechnicalInfo />
+          <BookCategorization />
+        </div>
+      </div>
 
-                <div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-200/10 dark:border-slate-800/50 mt-6">
-                    <button
-                        type="button"
-                        onClick={onCancel}
-                        className="px-6 h-11 rounded-lg border border-slate-200/10 dark:border-slate-800/50 text-slate-500 dark:text-[#92adc9] hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#192633] transition-colors font-medium"
-                    >
-                        Cancelar
-                    </button>
-                    <button
-                        type="submit"
-                        className="flex items-center gap-2 px-6 h-11 rounded-lg bg-primary hover:bg-blue-600 text-white font-medium shadow-lg shadow-primary/20 transition-all"
-                    >
-                        <Icon name="check" />
-                        Salvar Obra
-                    </button>
-                </div>
-            </form>
-        </FormProvider>
-    );
-};
+      <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-200/10 pt-6 dark:border-slate-800/50">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="h-11 rounded-lg border border-slate-200/10 px-6 font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-800/50 dark:text-[#92adc9] dark:hover:bg-[#192633] dark:hover:text-white"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+        >
+          <Icon name="check" />
+          Salvar Obra
+        </button>
+      </div>
+    </Form>
+  )
+}

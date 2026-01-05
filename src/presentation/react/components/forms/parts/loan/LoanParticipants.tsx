@@ -1,10 +1,13 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, Select, FormSection } from '@/presentation/react/components/ui';
-import { LoanFormData } from '../../loan-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form/context'
+import { Input, Select, FormSection } from '@/presentation/react/components/ui'
+import { LoanFormData } from '../../loan-schema'
 
 export const LoanParticipants: React.FC = () => {
-  const { register, formState: { errors } } = useFormContext<LoanFormData>();
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<LoanFormData>()
 
   return (
     <FormSection title="Participantes">
@@ -29,5 +32,5 @@ export const LoanParticipants: React.FC = () => {
         required
       />
     </FormSection>
-  );
-};
+  )
+}

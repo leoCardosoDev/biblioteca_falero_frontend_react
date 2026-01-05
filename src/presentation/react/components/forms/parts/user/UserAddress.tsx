@@ -1,13 +1,18 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, FormSection } from '@/presentation/react/components/ui';
-import { maskZipCode } from '@/presentation/react/helpers/mask-utils';
-import { UserFormData } from '../../user-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form'
+import { Input, FormSection } from '@/presentation/react/components/ui'
+import { maskZipCode } from '@/presentation/react/helpers/mask-utils'
+import { UserFormData } from '../../user-schema'
 
 export const UserAddress: React.FC = () => {
-  const { register, setValue, watch, formState: { errors } } = useFormContext<UserFormData>();
+  const {
+    register,
+    setValue,
+    watch,
+    formState: { errors }
+  } = useFormContext<UserFormData>()
 
-  const watchedZipCode = watch('address.zipCode');
+  const watchedZipCode = watch('address.zipCode')
 
   return (
     <FormSection title="Endereço">
@@ -18,7 +23,9 @@ export const UserAddress: React.FC = () => {
         value={watchedZipCode || ''}
         placeholder="00000-000"
         onChange={(e) => {
-          setValue('address.zipCode', maskZipCode(e.target.value), { shouldValidate: true });
+          setValue('address.zipCode', maskZipCode(e.target.value), {
+            shouldValidate: true
+          })
         }}
         error={errors.address?.zipCode?.message}
         required
@@ -68,5 +75,5 @@ export const UserAddress: React.FC = () => {
         required
       />
     </FormSection>
-  );
-};
+  )
+}

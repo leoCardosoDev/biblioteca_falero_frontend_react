@@ -9,7 +9,7 @@ type Props = {
 }
 
 export const LoginController: React.FC<Props> = ({ router }: Props) => {
-  const { register, loginHandler, isLoading, error, errors } = useAuth()
+  const { methods, loginSubmit, isLoading, error } = useAuth()
 
   const handleLoginSuccess = () => {
     router.navigate('/')
@@ -17,9 +17,8 @@ export const LoginController: React.FC<Props> = ({ router }: Props) => {
 
   return (
     <LoginView
-      register={register}
-      onSubmit={loginHandler(handleLoginSuccess)}
-      errors={errors}
+      methods={methods}
+      onSubmit={loginSubmit(handleLoginSuccess)}
       isLoading={isLoading}
       error={error}
     />

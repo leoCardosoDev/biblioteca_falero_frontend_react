@@ -1,14 +1,22 @@
-import React from 'react';
-import { useFormContext } from 'react-hook-form';
-import { Input, Select, TextArea, FormSection } from '@/presentation/react/components/ui';
-import { ReservationFormData } from '../../reservation-schema';
+import React from 'react'
+import { useFormContext } from '@/presentation/react/components/ui/form/context'
+import {
+  Input,
+  Select,
+  TextArea,
+  FormSection
+} from '@/presentation/react/components/ui'
+import { ReservationFormData } from '../../reservation-schema'
 
 export const ReservationDetails: React.FC = () => {
-  const { register, formState: { errors } } = useFormContext<ReservationFormData>();
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<ReservationFormData>()
 
   return (
     <FormSection title="Detalhes da Reserva">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Input
           {...register('reservationDate')}
           id="reservationDate"
@@ -39,5 +47,5 @@ export const ReservationDetails: React.FC = () => {
         error={errors.notes?.message}
       />
     </FormSection>
-  );
-};
+  )
+}

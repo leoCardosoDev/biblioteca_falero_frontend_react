@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { Link, NavLink } from '@/presentation/components/ui/link'
+import { Link, NavLink } from '@/presentation/react/components/ui/link'
 import { BrowserRouter } from 'react-router-dom'
 
 const makeSut = <P extends object>(

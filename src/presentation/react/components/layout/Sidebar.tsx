@@ -1,5 +1,5 @@
 import React from 'react'
-import { NavLink } from '@/presentation/components/ui/link'
+import { NavLink } from '@/presentation/react/components/ui/link'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import { Icon } from '@/presentation/react/components/ui'
 import { SidebarItem } from '../../types'
