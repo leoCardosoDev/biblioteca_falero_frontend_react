@@ -104,7 +104,22 @@ describe('HttpAuthentication', () => {
     const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
     const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
 
+    vi.mocked(axios.isAxiosError).mockReturnValue(false)
     vi.mocked(axios.post).mockRejectedValue(new Error())
+
+    const promise = sut.auth(params)
+
+    await expect(promise).rejects.toThrow(UnexpectedError)
+  })
+
+  test('Should throw UnexpectedError if error.response is undefined', async () => {
+    const sut = new HttpAuthenticationRepository(axios as unknown as AxiosInstance)
+    const params: AuthenticationParams = { email: 'any_email', password: 'any_password' }
+
+    vi.mocked(axios.isAxiosError).mockReturnValue(true)
+    vi.mocked(axios.post).mockRejectedValue({
+      response: undefined
+    })
 
     const promise = sut.auth(params)
 

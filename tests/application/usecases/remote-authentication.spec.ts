@@ -92,4 +92,20 @@ describe('RemoteAuthentication UseCase', () => {
       refreshToken: 'any_refresh_token'
     })
   })
+
+  test('Should not call CacheRepository if accessToken is missing', async () => {
+    const { sut, authRepoStub, cacheRepoSpy } = makeSut()
+    vi.spyOn(authRepoStub, 'auth').mockResolvedValueOnce({
+      name: 'any_name',
+      role: 'any_role',
+      refreshToken: 'any_refresh_token'
+    } as unknown as AccountModel)
+    const setSpy = vi.spyOn(cacheRepoSpy, 'set')
+    const removeSpy = vi.spyOn(cacheRepoSpy, 'remove')
+
+    await sut.auth({ email: 'any_email@mail.com', password: 'any_password' })
+
+    expect(setSpy).not.toHaveBeenCalled()
+    expect(removeSpy).not.toHaveBeenCalled()
+  })
 })
