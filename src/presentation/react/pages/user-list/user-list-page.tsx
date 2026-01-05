@@ -85,18 +85,16 @@ export const Users: React.FC<UsersProps> = ({ loadUsers, addUser, updateUser, de
     };
 
     const onSaveCredentials = async (data: CredentialFormData) => {
-        if (userForCredentials) {
-            try {
-                await addUserLogin.perform({
-                    userId: userForCredentials.id,
-                    username: data.username,
-                    password: data.password
-                });
-                setIsCredentialModalOpen(false);
-                // toast.success('Credenciais atualizadas com sucesso!');
-            } catch (_error) {
-                // toast.error('Erro ao salvar credenciais');
-            }
+        try {
+            await addUserLogin.perform({
+                userId: userForCredentials!.id,
+                username: data.username,
+                password: data.password
+            });
+            setIsCredentialModalOpen(false);
+            // toast.success('Credenciais atualizadas com sucesso!');
+        } catch (_error) {
+            // toast.error('Erro ao salvar credenciais');
         }
     };
 

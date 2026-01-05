@@ -6,7 +6,6 @@ export interface UpdateUserParams {
   email?: string;
   rg?: string;
   cpf?: string;
-  birthDate?: string;
   address?: {
     street: string;
     number: string;

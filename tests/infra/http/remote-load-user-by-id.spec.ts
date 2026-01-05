@@ -1,7 +1,11 @@
 import { describe, test, expect, vi } from 'vitest'
 import { RemoteLoadUserById } from '@/infra/http/remote-load-user-by-id'
+<<<<<<< HEAD
 import { type AxiosInstance } from 'axios'
 import type { User } from '@/domain/models/user'
+=======
+import type { AxiosInstance } from 'axios'
+>>>>>>> feature/task-019-infra-http-coverage
 import { faker } from '@faker-js/faker'
 
 const makeAxios = (): AxiosInstance => {
@@ -34,7 +38,11 @@ const makeSut = (): SutTypes => {
 describe('RemoteLoadUserById', () => {
   test('Should call axios.get with correct URL', async () => {
     const { sut, axiosStub } = makeSut()
+<<<<<<< HEAD
     const getSpy = vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: {} })
+=======
+    const getSpy = vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: { login: { role: 'STUDENT' } } })
+>>>>>>> feature/task-019-infra-http-coverage
     const id = faker.string.uuid()
 
     await sut.perform(id)
@@ -45,6 +53,7 @@ describe('RemoteLoadUserById', () => {
   test('Should return a User on success', async () => {
     const { sut, axiosStub } = makeSut()
     const id = faker.string.uuid()
+<<<<<<< HEAD
     const mockUser: User = {
       id,
       name: faker.person.fullName(),
@@ -67,6 +76,18 @@ describe('RemoteLoadUserById', () => {
         zipCode: faker.location.zipCode()
       }
     } as unknown as User
+=======
+    const mockUser = {
+      id,
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      status: 'ACTIVE',
+      login: {
+        role: 'ADMIN',
+        status: 'ACTIVE'
+      }
+    }
+>>>>>>> feature/task-019-infra-http-coverage
 
     vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: mockUser })
 
@@ -74,7 +95,32 @@ describe('RemoteLoadUserById', () => {
 
     expect(user).toMatchObject({
       id: mockUser.id,
+<<<<<<< HEAD
       role: 'ADMIN'
+=======
+      role: 'ADMIN',
+      status: 'ACTIVE'
+    })
+  })
+
+  test('Should apply fallbacks if login or status is missing', async () => {
+    const { sut, axiosStub } = makeSut()
+    const id = faker.string.uuid()
+    const mockUser = {
+      id,
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      login: null
+    }
+
+    vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: mockUser })
+
+    const user = await sut.perform(id)
+
+    expect(user).toMatchObject({
+      role: 'STUDENT',
+      status: 'INACTIVE'
+>>>>>>> feature/task-019-infra-http-coverage
     })
   })
 

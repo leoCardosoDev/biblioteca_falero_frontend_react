@@ -7,3 +7,6 @@ export * from './switch';
 export * from './error-boundary';
 export * from './Input';
 export * from './Modal';
+export * from './Select';
+export * from './TextArea';
+export * from './FormSection';

@@ -6,7 +6,7 @@ import { Modal } from '../ui';
 import { Icon } from '../ui';
 
 const credentialSchema = z.object({
-  username: z.string().optional(),
+  username: z.string().min(3, 'O usuário deve ter no mínimo 3 caracteres').optional().or(z.literal('')),
   password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres').regex(/[A-Z]/, 'Deve conter letra maiúscula').regex(/[0-9]/, 'Deve conter número'),
 });
 

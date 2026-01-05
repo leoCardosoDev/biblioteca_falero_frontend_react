@@ -18,7 +18,6 @@ export interface User {
   email: string;
   rg: string;
   cpf: string;
-  birthDate: string; // YYYY-MM-DD
   role: UserRole;
   status: UserStatus;
   enrollmentId?: string; // Optional (e.g. for students)

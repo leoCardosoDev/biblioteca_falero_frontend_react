@@ -17,7 +17,6 @@ const makeUserRepository = (): UserRepository => {
         email: params.email,
         rg: params.rg,
         cpf: params.cpf,
-        birthDate: params.birthDate,
         role: params.role,
         status: params.status,
         address: params.address
@@ -59,7 +58,6 @@ describe('DbAddUser', () => {
       email: 'any_mail@mail.com',
       rg: 'any_rg',
       cpf: 'any_cpf',
-      birthDate: '2000-01-01',
       role: 'ADMIN',
       status: 'ACTIVE',
       address: {
@@ -83,7 +81,6 @@ describe('DbAddUser', () => {
       email: 'any_mail@mail.com',
       rg: 'any_rg',
       cpf: 'any_cpf',
-      birthDate: '2000-01-01',
       role: 'ADMIN',
       status: 'ACTIVE',
       address: {
@@ -101,7 +98,6 @@ describe('DbAddUser', () => {
       email: 'any_mail@mail.com',
       rg: 'any_rg',
       cpf: 'any_cpf',
-      birthDate: '2000-01-01',
       role: 'ADMIN',
       status: 'ACTIVE',
       address: {

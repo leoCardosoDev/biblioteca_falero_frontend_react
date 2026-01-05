@@ -9,6 +9,19 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     include: ['**/*.spec.{ts,tsx}'],
+    coverage: {
+      provider: 'v8',
+      exclude: [
+        'node_modules/**',
+        'dist/**',
+        'tests/**',
+        'src/application/protocols/**',
+        'src/domain/contracts/**',
+        'src/domain/models/**',
+        'src/domain/usecases/**',
+        'src/**/index.ts',
+      ],
+    },
   },
   resolve: {
     alias: {

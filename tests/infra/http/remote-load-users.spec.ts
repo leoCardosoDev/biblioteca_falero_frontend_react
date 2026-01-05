@@ -1,7 +1,11 @@
 import { describe, test, expect, vi } from 'vitest'
 import { RemoteLoadUsers } from '@/infra/http/remote-load-users'
+<<<<<<< HEAD
 import { type AxiosInstance } from 'axios'
 import type { User } from '@/domain/models/user'
+=======
+import type { AxiosInstance } from 'axios'
+>>>>>>> feature/task-019-infra-http-coverage
 import { faker } from '@faker-js/faker'
 
 const makeAxios = (): AxiosInstance => {
@@ -43,6 +47,7 @@ describe('RemoteLoadUsers', () => {
 
   test('Should return a list of Users on success', async () => {
     const { sut, axiosStub } = makeSut()
+<<<<<<< HEAD
     const mockUsers: User[] = [{
       id: faker.string.uuid(),
       name: faker.person.fullName(),
@@ -65,16 +70,54 @@ describe('RemoteLoadUsers', () => {
         zipCode: faker.location.zipCode()
       }
     } as unknown as User]
+=======
+    const mockUsers = [{
+      id: faker.string.uuid(),
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      status: 'ACTIVE',
+      login: {
+        role: 'ADMIN',
+        status: 'ACTIVE'
+      }
+    }]
+>>>>>>> feature/task-019-infra-http-coverage
 
     vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: mockUsers })
 
     const users = await sut.perform()
 
+<<<<<<< HEAD
 
 
     expect(users[0]).toMatchObject({
       id: mockUsers[0].id,
       role: 'ADMIN'
+=======
+    expect(users[0]).toMatchObject({
+      id: mockUsers[0].id,
+      role: 'ADMIN',
+      status: 'ACTIVE'
+    })
+  })
+
+  test('Should apply fallbacks if login or status is missing', async () => {
+    const { sut, axiosStub } = makeSut()
+    const mockUsers = [{
+      id: faker.string.uuid(),
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      login: null
+    }]
+
+    vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: mockUsers })
+
+    const users = await sut.perform()
+
+    expect(users[0]).toMatchObject({
+      role: 'STUDENT',
+      status: 'INACTIVE'
+>>>>>>> feature/task-019-infra-http-coverage
     })
   })
 
