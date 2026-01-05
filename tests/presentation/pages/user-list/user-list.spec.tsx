@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-
-import { describe, test, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
-import { Users } from '@/presentation/react/pages/user-list/user-list-page'
-import type { User } from '@/domain/models/user'
-=======
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import React from 'react'
 import { Users } from '@/presentation/react/pages/user-list/user-list-page'
 import type { User } from '@/domain/models/user'
 import type { AddUserLogin } from '@/domain/usecases/add-user-login'
->>>>>>> feature/task-019-infra-http-coverage
 
 // Mock the hook
 const mocks = vi.hoisted(() => ({
@@ -22,14 +14,6 @@ vi.mock('@/presentation/react/hooks/use-user-management', () => ({
   useUserManagement: mocks.useUserManagement
 }))
 
-<<<<<<< HEAD
-const makeSut = () => {
-  // Dummy props with explicit casting to avoid 'any' if interface is not exported, 
-  // or better use 'unknown' then cast:
-  // Actually UsersProps is not exported but Users is. 
-  // We can just cast to correct types or use 'as never' for mocks if allow.
-  // Cleanest is to satisfy the prop types with minimal valid objects.
-=======
 // Mock child components
 vi.mock('@/presentation/react/components/forms', () => ({
   UserForm: ({ onSave, onCancel }: { onSave: (data: unknown) => void, onCancel: () => void }) => (
@@ -52,7 +36,6 @@ vi.mock('@/presentation/react/components/credential-modal/credential-modal', () 
 }))
 
 const makeSut = () => {
->>>>>>> feature/task-019-infra-http-coverage
   const props = {
     loadUsers: {} as never,
     addUser: {} as never,
@@ -68,19 +51,11 @@ describe('User List Page', () => {
   const mockUsers: User[] = [
     {
       id: '1', name: 'John Doe', email: 'john@example.com', role: 'STUDENT', status: 'ACTIVE', enrollmentId: '123', cpf: '111.111.111-11', avatarUrl: 'any_url',
-<<<<<<< HEAD
-      rg: '1234567', birthDate: '2000-01-01'
-    },
-    {
-      id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'PROFESSOR', status: 'BLOCKED', enrollmentId: '456', cpf: '222.222.222-22', avatarUrl: 'any_url',
-      rg: '7654321', birthDate: '1980-01-01'
-=======
       rg: '1234567'
     },
     {
       id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'PROFESSOR', status: 'BLOCKED', enrollmentId: '456', cpf: '222.222.222-22', avatarUrl: 'any_url',
       rg: '7654321'
->>>>>>> feature/task-019-infra-http-coverage
     }
   ]
 
@@ -174,8 +149,6 @@ describe('User List Page', () => {
     makeSut()
     expect(screen.getByText('Desconhecido')).toBeInTheDocument()
   })
-<<<<<<< HEAD
-=======
 
   test('Should open user form when clicking new user button', () => {
     makeSut()
@@ -549,5 +522,4 @@ describe('User List Page', () => {
       expect(screen.queryByText('Save Creds Mock')).not.toBeInTheDocument()
     })
   })
->>>>>>> feature/task-019-infra-http-coverage
 })
