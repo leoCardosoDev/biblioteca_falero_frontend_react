@@ -1,5 +1,5 @@
-import { UserModel } from '../models/user-model';
+import { User } from '../models/user';
 
 export interface LoadUsers {
-  perform: () => Promise<UserModel[]>;
+  perform: () => Promise<User[]>;
 }
