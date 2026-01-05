@@ -1,7 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { DbLoadUserById } from '@/application/usecases/db-load-user-by-id'
 import { UserRepository } from '@/domain/contracts/user-repository'
-import { UserModel } from '@/domain/models/user-model'
+import { User } from '@/domain/models/user'
 import { faker } from '@faker-js/faker'
 
 const makeUserRepositoryStub = (): UserRepository => {
@@ -25,7 +25,7 @@ describe('DbLoadUserById', () => {
 
   test('Should call UserRepository.loadById with correct id', async () => {
     const id = faker.string.uuid()
-    vi.spyOn(userRepositoryStub, 'loadById').mockResolvedValueOnce({} as UserModel)
+    vi.spyOn(userRepositoryStub, 'loadById').mockResolvedValueOnce({} as User)
 
     await sut.perform(id)
 
@@ -34,7 +34,7 @@ describe('DbLoadUserById', () => {
 
   test('Should return user on success', async () => {
     const id = faker.string.uuid()
-    const user = { id, name: faker.person.fullName() } as UserModel
+    const user = { id, name: faker.person.fullName() } as User
     vi.spyOn(userRepositoryStub, 'loadById').mockResolvedValueOnce(user)
 
     const result = await sut.perform(id)
