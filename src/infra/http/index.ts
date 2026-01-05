@@ -1,1 +1,5 @@
 export * from './http-authentication-repository'
+export * from './http-user-login-repository'
+export * from './http-user-repository'
+export * from './remote-load-user-by-id'
+export * from './remote-load-users'
