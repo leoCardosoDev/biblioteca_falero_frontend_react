@@ -1,19 +1,15 @@
 import React from 'react'
 
-import { UseFormReturn } from 'react-hook-form'
-import { Form } from '@/presentation/react/components/ui/form'
-import { LoginForm } from '@/presentation/react/components/login-form'
-import { LoginFormData } from '@/presentation/react/hooks/use-auth'
+import { LoginForm } from '@/presentation/react/components/forms/login-form'
+import { LoginFormData } from '@/presentation/react/components/forms/login-schema'
 
 type Props = {
-  methods: UseFormReturn<LoginFormData>
   onSubmit: (data: LoginFormData) => Promise<void>
   isLoading: boolean
   error?: string
 }
 
 export const LoginView: React.FC<Props> = ({
-  methods,
   onSubmit,
   isLoading,
   error
@@ -23,9 +19,7 @@ export const LoginView: React.FC<Props> = ({
       {/* Left Section - Form */}
       <div className="z-10 flex w-full flex-col justify-center bg-slate-950 p-8 md:w-[40%] md:p-16 lg:p-24">
         <div className="mx-auto w-full max-w-md space-y-12">
-          <Form form={methods} onSubmit={onSubmit}>
-            <LoginForm isLoading={isLoading} error={error} />
-          </Form>
+          <LoginForm isLoading={isLoading} error={error} onSubmit={onSubmit} />
         </div>
       </div>
 

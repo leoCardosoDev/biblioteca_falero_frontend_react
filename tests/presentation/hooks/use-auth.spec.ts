@@ -1,9 +1,8 @@
 import { renderHook, act } from '@testing-library/react'
-import { useAuth, type LoginFormData } from '@/presentation/react/hooks/use-auth'
+import { useAuth } from '@/presentation/react/hooks/use-auth'
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { InvalidCredentialsError } from '@/domain/errors'
 import type { AccountModel } from '@/domain/models'
-import * as reactHookForm from 'react-hook-form'
 
 // Mock the context hook
 const mocks = vi.hoisted(() => ({
@@ -16,26 +15,15 @@ vi.mock('@/presentation/react/hooks/use-auth-context', () => ({
   })
 }))
 
-// We'll spy on useForm to control handleSubmit when needed
-vi.mock('react-hook-form', async () => {
-  const actual = await vi.importActual<typeof reactHookForm>('react-hook-form')
-  return {
-    ...actual,
-    useForm: vi.fn(actual.useForm)
-  }
-})
-
 describe('useAuth Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(reactHookForm.useForm).mockRestore()
   })
 
   test('Should return initial state', () => {
     const { result } = renderHook(() => useAuth())
     expect(result.current.isLoading).toBe(false)
     expect(result.current.error).toBeUndefined()
-    expect(result.current.isValid).toBe(false)
   })
 
   test('Should call login with correct values', async () => {
@@ -50,10 +38,16 @@ describe('useAuth Hook', () => {
 
     let response
     await act(async () => {
-      response = await result.current.performLogin({ email: 'any_email@mail.com', password: 'any_password' })
+      response = await result.current.performLogin({
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
     })
 
-    expect(mocks.login).toHaveBeenCalledWith({ email: 'any_email@mail.com', password: 'any_password' })
+    expect(mocks.login).toHaveBeenCalledWith({
+      email: 'any_email@mail.com',
+      password: 'any_password'
+    })
     expect(response).toEqual(account)
   })
 
@@ -62,7 +56,10 @@ describe('useAuth Hook', () => {
     mocks.login.mockResolvedValueOnce(null)
 
     await act(async () => {
-      await result.current.performLogin({ email: 'any_email@mail.com', password: 'any_password' })
+      await result.current.performLogin({
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
     })
 
     expect(result.current.error).toBe('Erro inesperado: Falha no login')
@@ -74,7 +71,10 @@ describe('useAuth Hook', () => {
     mocks.login.mockRejectedValueOnce(error)
 
     await act(async () => {
-      await result.current.performLogin({ email: 'any_email@mail.com', password: 'any_password' })
+      await result.current.performLogin({
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
     })
 
     expect(result.current.error).toBe(error.message)
@@ -85,20 +85,18 @@ describe('useAuth Hook', () => {
     mocks.login.mockRejectedValueOnce(new Error())
 
     await act(async () => {
-      await result.current.performLogin({ email: 'any_email@mail.com', password: 'any_password' })
+      await result.current.performLogin({
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      })
     })
 
-    expect(result.current.error).toBe('Erro inesperado. Tente novamente mais tarde.')
+    expect(result.current.error).toBe(
+      'Erro inesperado. Tente novamente mais tarde.'
+    )
   })
 
-  test('Should call onSuccess if loginHandler succeeds', async () => {
-    const handleSubmitSpy = vi.fn((fn) => (data: unknown) => fn(data as LoginFormData))
-    vi.mocked(reactHookForm.useForm).mockReturnValue({
-      register: vi.fn(),
-      handleSubmit: handleSubmitSpy,
-      formState: { errors: {}, isValid: true }
-    } as unknown as reactHookForm.UseFormReturn<reactHookForm.FieldValues>)
-
+  test('Should call onSuccess if loginSubmit succeeds', async () => {
     const { result } = renderHook(() => useAuth())
     const account: AccountModel = {
       accessToken: 'any_token',
@@ -109,33 +107,26 @@ describe('useAuth Hook', () => {
     mocks.login.mockResolvedValueOnce(account)
     const onSuccess = vi.fn()
 
-    const handler = result.current.loginHandler(onSuccess)
+    const submit = result.current.loginSubmit(onSuccess)
     const data = { email: 'any_email@mail.com', password: 'any_password' }
 
     await act(async () => {
-      await (handler as unknown as (data: LoginFormData) => Promise<void>)(data)
+      await submit(data)
     })
 
     expect(onSuccess).toHaveBeenCalledWith(account)
   })
 
-  test('Should not call onSuccess if loginHandler fails', async () => {
-    const handleSubmitSpy = vi.fn((fn) => (data: unknown) => fn(data as LoginFormData))
-    vi.mocked(reactHookForm.useForm).mockReturnValue({
-      register: vi.fn(),
-      handleSubmit: handleSubmitSpy,
-      formState: { errors: {}, isValid: true }
-    } as unknown as reactHookForm.UseFormReturn<reactHookForm.FieldValues>)
-
+  test('Should not call onSuccess if loginSubmit fails', async () => {
     const { result } = renderHook(() => useAuth())
     mocks.login.mockResolvedValueOnce(null)
     const onSuccess = vi.fn()
 
-    const handler = result.current.loginHandler(onSuccess)
+    const submit = result.current.loginSubmit(onSuccess)
     const data = { email: 'any_email@mail.com', password: 'any_password' }
 
     await act(async () => {
-      await (handler as unknown as (data: LoginFormData) => Promise<void>)(data)
+      await submit(data)
     })
 
     expect(onSuccess).not.toHaveBeenCalled()

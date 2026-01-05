@@ -1,23 +1,46 @@
 import React from 'react'
 import { Button } from '@/presentation/react/components/ui'
-import { Field } from '@/presentation/react/components/ui/form'
+import {
+  Field,
+  useCustomForm,
+  Form
+} from '@/presentation/react/components/ui/form'
+import { LoginHeader } from '../login-header'
+import { loginSchema, LoginFormData } from './login-schema'
 
-import { LoginHeader } from './login-header'
+export type { LoginFormData }
 
-export const LoginForm: React.FC<{
+interface LoginFormProps {
   isLoading: boolean
   error?: string
-  onSubmit?: never // Not used
-}> = ({ isLoading, error }) => {
+  onSubmit: (data: LoginFormData) => void
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({
+  isLoading,
+  error,
+  onSubmit
+}) => {
+  const methods = useCustomForm<LoginFormData>({
+    schema: loginSchema,
+    mode: 'onChange'
+  })
+
   return (
     <div className="w-full">
       <LoginHeader />
-      <div className="flex flex-col gap-6">
+      <Form
+        form={methods}
+        onSubmit={onSubmit}
+        className="flex flex-col gap-6"
+        noValidate
+      >
         <Field
           name="email"
           label="Usuário"
           placeholder="Digite seu login"
           icon="person"
+          required
         />
         <Field
           name="password"
@@ -25,6 +48,7 @@ export const LoginForm: React.FC<{
           type="password"
           placeholder="Digite sua senha"
           icon="lock"
+          required
         />
 
         {error && (
@@ -34,13 +58,14 @@ export const LoginForm: React.FC<{
         )}
 
         <Button
+          type="submit"
           className="mt-2 h-12"
           icon={isLoading ? undefined : 'arrow_forward'}
           disabled={isLoading}
         >
           {isLoading ? 'Entrando...' : 'Entrar'}
         </Button>
-      </div>
+      </Form>
     </div>
   )
 }
