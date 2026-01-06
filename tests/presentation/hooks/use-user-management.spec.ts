@@ -4,7 +4,10 @@ import { describe, test, expect, vi } from 'vitest'
 import type { LoadUsers } from '@/domain/usecases/load-users'
 import type { LoadUserById } from '@/domain/usecases/load-user-by-id'
 import type { AddUser, AddUserParams } from '@/domain/usecases/add-user'
-import type { UpdateUser, UpdateUserParams } from '@/domain/usecases/update-user'
+import type {
+  UpdateUser,
+  UpdateUserParams
+} from '@/domain/usecases/update-user'
 import type { DeleteUser } from '@/domain/usecases/delete-user'
 import type { User } from '@/domain/models/user'
 
@@ -35,11 +38,16 @@ const makeLoadUsers = (): LoadUsers => ({
 })
 
 const makeAddUser = (): AddUser => ({
-  perform: vi.fn(async (params) => ({ id: 'new_id', ...params, status: 'ACTIVE' } as unknown as User))
+  perform: vi.fn(
+    async (params) =>
+      ({ id: 'new_id', ...params, status: 'ACTIVE' }) as unknown as User
+  )
 })
 
 const makeUpdateUser = (): UpdateUser => ({
-  perform: vi.fn(async (params) => ({ ...makeUser(params.id), ...params } as unknown as User))
+  perform: vi.fn(
+    async (params) => ({ ...makeUser(params.id), ...params }) as unknown as User
+  )
 })
 
 const makeDeleteUser = (): DeleteUser => ({
@@ -64,8 +72,17 @@ const makeSut = (): SutTypes => ({
 
 describe('useUserManagement Hook', () => {
   test('Should load users on mount', async () => {
-    const { loadUsers, loadUserById, addUser, updateUser, deleteUser } = makeSut()
-    const { result } = renderHook(() => useUserManagement({ loadUsers, loadUserById, addUser, updateUser, deleteUser }))
+    const { loadUsers, loadUserById, addUser, updateUser, deleteUser } =
+      makeSut()
+    const { result } = renderHook(() =>
+      useUserManagement({
+        loadUsers,
+        loadUserById,
+        addUser,
+        updateUser,
+        deleteUser
+      })
+    )
 
     expect(result.current.isLoading).toBe(true)
     await waitFor(() => {
@@ -95,9 +112,14 @@ describe('useUserManagement Hook', () => {
       email: 'new@mail.com',
       rg: '123',
       cpf: '123',
+      gender: 'MALE',
       role: 'STUDENT',
       status: 'ACTIVE',
-      address: makeUser().address!
+      address: {
+        ...makeUser().address!,
+        neighborhoodId: 'any_neighborhood_id',
+        cityId: 'any_city_id'
+      }
     }
 
     let success
@@ -118,11 +140,85 @@ describe('useUserManagement Hook', () => {
 
     let success
     await act(async () => {
-      success = await result.current.handleAddUser({} as unknown as AddUserParams)
+      success = await result.current.handleAddUser(
+        {} as unknown as AddUserParams
+      )
     })
 
     expect(success).toBe(false)
     expect(result.current.error).toBe('Erro ao criar usuário.')
+  })
+
+  test('Should handle error with response data string on add user', async () => {
+    const sut = makeSut()
+    const errorResponse = {
+      response: {
+        data: {
+          error: 'Specific API Error'
+        }
+      }
+    }
+    vi.spyOn(sut.addUser, 'perform').mockRejectedValueOnce(errorResponse)
+    const { result } = renderHook(() => useUserManagement(sut))
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    let success
+    await act(async () => {
+      success = await result.current.handleAddUser(
+        {} as unknown as AddUserParams
+      )
+    })
+
+    expect(success).toBe(false)
+    expect(result.current.error).toBe('Specific API Error')
+  })
+
+  test('Should handle error with response data object on add user', async () => {
+    const sut = makeSut()
+    const errorResponse = {
+      response: {
+        data: {
+          error: { message: 'Specific Object Error' }
+        }
+      }
+    }
+    vi.spyOn(sut.addUser, 'perform').mockRejectedValueOnce(errorResponse)
+    const { result } = renderHook(() => useUserManagement(sut))
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    let success
+    await act(async () => {
+      success = await result.current.handleAddUser(
+        {} as unknown as AddUserParams
+      )
+    })
+
+    expect(success).toBe(false)
+    expect(result.current.error).toBe('Specific Object Error')
+  })
+
+  test('Should handle error with response data object missing message on add user', async () => {
+    const sut = makeSut()
+    const errorResponse = {
+      response: {
+        data: {
+          error: {} // Empty object to trigger fallback
+        }
+      }
+    }
+    vi.spyOn(sut.addUser, 'perform').mockRejectedValueOnce(errorResponse)
+    const { result } = renderHook(() => useUserManagement(sut))
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    let success
+    await act(async () => {
+      success = await result.current.handleAddUser(
+        {} as unknown as AddUserParams
+      )
+    })
+
+    expect(success).toBe(false)
+    expect(result.current.error).toBe('Erro nos dados enviados.')
   })
 
   test('Should update user and reload list', async () => {
@@ -154,6 +250,72 @@ describe('useUserManagement Hook', () => {
 
     expect(success).toBe(false)
     expect(result.current.error).toBe('Erro ao atualizar usuário.')
+  })
+
+  test('Should handle error with response data string on update user', async () => {
+    const sut = makeSut()
+    const errorResponse = {
+      response: {
+        data: {
+          error: 'Specific Update Error'
+        }
+      }
+    }
+    vi.spyOn(sut.updateUser, 'perform').mockRejectedValueOnce(errorResponse)
+    const { result } = renderHook(() => useUserManagement(sut))
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    let success
+    await act(async () => {
+      success = await result.current.handleUpdateUser({ id: 'any_id' })
+    })
+
+    expect(success).toBe(false)
+    expect(result.current.error).toBe('Specific Update Error')
+  })
+
+  test('Should handle error with response data object on update user', async () => {
+    const sut = makeSut()
+    const errorResponse = {
+      response: {
+        data: {
+          error: { message: 'Specific Update Object Error' }
+        }
+      }
+    }
+    vi.spyOn(sut.updateUser, 'perform').mockRejectedValueOnce(errorResponse)
+    const { result } = renderHook(() => useUserManagement(sut))
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    let success
+    await act(async () => {
+      success = await result.current.handleUpdateUser({ id: 'any_id' })
+    })
+
+    expect(success).toBe(false)
+    expect(result.current.error).toBe('Specific Update Object Error')
+  })
+
+  test('Should handle error with response data object missing message on update user', async () => {
+    const sut = makeSut()
+    const errorResponse = {
+      response: {
+        data: {
+          error: {} // Empty object to trigger fallback
+        }
+      }
+    }
+    vi.spyOn(sut.updateUser, 'perform').mockRejectedValueOnce(errorResponse)
+    const { result } = renderHook(() => useUserManagement(sut))
+    await waitFor(() => expect(result.current.isLoading).toBe(false))
+
+    let success
+    await act(async () => {
+      success = await result.current.handleUpdateUser({ id: 'any_id' })
+    })
+
+    expect(success).toBe(false)
+    expect(result.current.error).toBe('Erro nos dados enviados.')
   })
 
   test('Should delete user and reload list', async () => {
