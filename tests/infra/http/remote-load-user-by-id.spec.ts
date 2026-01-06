@@ -1,48 +1,74 @@
 import { describe, test, expect, vi } from 'vitest'
 import { RemoteLoadUserById } from '@/infra/http/remote-load-user-by-id'
-import type { AxiosInstance } from 'axios'
+import type {
+  HttpClient,
+  HttpRequest,
+  HttpResponse
+} from '@/application/protocols/http/http-client'
 import { faker } from '@faker-js/faker'
 
-const makeAxios = (): AxiosInstance => {
-  return {
-    get: vi.fn(),
-    post: vi.fn(),
-    put: vi.fn(),
-    delete: vi.fn(),
-    patch: vi.fn(),
-    defaults: { headers: { common: {} } },
-    interceptors: { request: { use: vi.fn() }, response: { use: vi.fn() } },
-    request: vi.fn()
-  } as unknown as AxiosInstance
+type HttpClientSpyType = HttpClient<unknown> & {
+  url?: string
+  method?: string
+  body?: unknown
+  response: HttpResponse<unknown>
 }
 
-interface SutTypes {
+const makeHttpClientSpy = (): HttpClientSpyType => {
+  class HttpClientSpy implements HttpClient<unknown> {
+    url?: string
+    method?: string
+    body?: unknown
+    headers?: unknown
+    response: HttpResponse<unknown> = {
+      statusCode: 200,
+      body: {
+        id: 'any_id',
+        name: 'any_name',
+        email: 'any_email',
+        login: { role: 'STUDENT' },
+        status: 'INACTIVE'
+      }
+    }
+
+    async request(data: HttpRequest): Promise<HttpResponse<unknown>> {
+      this.url = data.url
+      this.method = data.method
+      this.body = data.body
+      this.headers = data.headers
+      return this.response
+    }
+  }
+  return new HttpClientSpy()
+}
+
+type SutTypes = {
   sut: RemoteLoadUserById
-  axiosStub: AxiosInstance
+  httpClientSpy: HttpClientSpyType
 }
 
 const makeSut = (): SutTypes => {
-  const axiosStub = makeAxios()
-  const sut = new RemoteLoadUserById(axiosStub)
+  const httpClientSpy = makeHttpClientSpy()
+  const sut = new RemoteLoadUserById(httpClientSpy)
   return {
     sut,
-    axiosStub
+    httpClientSpy
   }
 }
 
 describe('RemoteLoadUserById', () => {
-  test('Should call axios.get with correct URL', async () => {
-    const { sut, axiosStub } = makeSut()
-    const getSpy = vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: { login: { role: 'STUDENT' } } })
+  test('Should call HttpClient with correct URL and method', async () => {
+    const { sut, httpClientSpy } = makeSut()
     const id = faker.string.uuid()
 
     await sut.perform(id)
 
-    expect(getSpy).toHaveBeenCalledWith(`/users/${id}`)
+    expect(httpClientSpy.url).toBe(`/users/${id}`)
+    expect(httpClientSpy.method).toBe('get')
   })
 
   test('Should return a User on success', async () => {
-    const { sut, axiosStub } = makeSut()
+    const { sut, httpClientSpy } = makeSut()
     const id = faker.string.uuid()
     const mockUser = {
       id,
@@ -54,8 +80,7 @@ describe('RemoteLoadUserById', () => {
         status: 'ACTIVE'
       }
     }
-
-    vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: mockUser })
+    httpClientSpy.response.body = mockUser
 
     const user = await sut.perform(id)
 
@@ -67,7 +92,7 @@ describe('RemoteLoadUserById', () => {
   })
 
   test('Should apply fallbacks if login or status is missing', async () => {
-    const { sut, axiosStub } = makeSut()
+    const { sut, httpClientSpy } = makeSut()
     const id = faker.string.uuid()
     const mockUser = {
       id,
@@ -75,8 +100,7 @@ describe('RemoteLoadUserById', () => {
       email: faker.internet.email(),
       login: null
     }
-
-    vi.spyOn(axiosStub, 'get').mockResolvedValueOnce({ data: mockUser })
+    httpClientSpy.response.body = mockUser as unknown
 
     const user = await sut.perform(id)
 
@@ -86,9 +110,9 @@ describe('RemoteLoadUserById', () => {
     })
   })
 
-  test('Should throw if axios throws', async () => {
-    const { sut, axiosStub } = makeSut()
-    vi.spyOn(axiosStub, 'get').mockRejectedValueOnce(new Error())
+  test('Should throw if HttpClient throws', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    vi.spyOn(httpClientSpy, 'request').mockRejectedValueOnce(new Error())
 
     const promise = sut.perform('any_id')
 

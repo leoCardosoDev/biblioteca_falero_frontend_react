@@ -1,99 +1,182 @@
-import { describe, test, expect, vi, beforeEach } from 'vitest'
+import { describe, test, expect, vi } from 'vitest'
 import { HttpUserRepository } from '@/infra/http/http-user-repository'
-import type { AxiosInstance } from 'axios'
-import { faker } from '@faker-js/faker'
 import type { AddUserParams } from '@/domain/usecases/add-user'
 import type { UpdateUserParams } from '@/domain/usecases/update-user'
+import type {
+  HttpClient,
+  HttpRequest,
+  HttpResponse
+} from '@/application/protocols/http/http-client'
+import { faker } from '@faker-js/faker'
 
-const makeAxiosMock = (): AxiosInstance => {
+type HttpClientSpyType = HttpClient<unknown> & {
+  url?: string
+  method?: string
+  body?: unknown
+  response: HttpResponse<unknown>
+}
+
+const makeHttpClientSpy = (): HttpClientSpyType => {
+  class HttpClientSpy implements HttpClient<unknown> {
+    url?: string
+    method?: string
+    body?: unknown
+    headers?: unknown
+    response: HttpResponse<unknown> = {
+      statusCode: 200,
+      body: {}
+    }
+
+    async request(data: HttpRequest): Promise<HttpResponse<unknown>> {
+      this.url = data.url
+      this.method = data.method
+      this.body = data.body
+      this.headers = data.headers
+      return this.response
+    }
+  }
+  return new HttpClientSpy()
+}
+
+type SutTypes = {
+  sut: HttpUserRepository
+  httpClientSpy: HttpClientSpyType
+}
+
+const makeSut = (): SutTypes => {
+  const httpClientSpy = makeHttpClientSpy()
+  const sut = new HttpUserRepository(httpClientSpy)
   return {
-    get: vi.fn(),
-    post: vi.fn(),
-    put: vi.fn(),
-    delete: vi.fn()
-  } as unknown as AxiosInstance
+    sut,
+    httpClientSpy
+  }
 }
 
 describe('HttpUserRepository', () => {
-  let sut: HttpUserRepository
-  let axiosMock: AxiosInstance
-
-  beforeEach(() => {
-    axiosMock = makeAxiosMock()
-    sut = new HttpUserRepository(axiosMock)
-  })
-
   describe('loadAll', () => {
-    test('Should call axios.get with correct URL', async () => {
-      vi.spyOn(axiosMock, 'get').mockResolvedValueOnce({ data: [] })
+    test('Should call HttpClient with correct URL and method', async () => {
+      const { sut, httpClientSpy } = makeSut()
+      httpClientSpy.response.body = []
+
       await sut.loadAll()
-      expect(axiosMock.get).toHaveBeenCalledWith('/users')
+
+      expect(httpClientSpy.url).toBe('/users')
+      expect(httpClientSpy.method).toBe('get')
     })
 
     test('Should return user list on success', async () => {
+      const { sut, httpClientSpy } = makeSut()
       const users = [{ id: 'any_id' }]
-      vi.spyOn(axiosMock, 'get').mockResolvedValueOnce({ data: users })
+      httpClientSpy.response.body = users
+
       const result = await sut.loadAll()
       expect(result).toEqual(users)
     })
   })
 
   describe('loadById', () => {
-    test('Should call axios.get with correct URL', async () => {
+    test('Should call HttpClient with correct URL and method', async () => {
+      const { sut, httpClientSpy } = makeSut()
       const userId = faker.string.uuid()
-      vi.spyOn(axiosMock, 'get').mockResolvedValueOnce({ data: {} })
+      httpClientSpy.response.body = {}
+
       await sut.loadById(userId)
-      expect(axiosMock.get).toHaveBeenCalledWith(`/users/${userId}`)
+
+      expect(httpClientSpy.url).toBe(`/users/${userId}`)
+      expect(httpClientSpy.method).toBe('get')
     })
 
     test('Should return user data on success', async () => {
+      const { sut, httpClientSpy } = makeSut()
       const userId = faker.string.uuid()
       const userData = { id: userId, name: faker.person.fullName() }
-      vi.spyOn(axiosMock, 'get').mockResolvedValueOnce({ data: userData })
+      httpClientSpy.response.body = userData
+
       const result = await sut.loadById(userId)
       expect(result).toEqual(userData)
     })
 
-    test('Should throw if axios.get fails', async () => {
-      vi.spyOn(axiosMock, 'get').mockRejectedValueOnce(new Error())
+    test('Should throw if HttpClient throws', async () => {
+      const { sut, httpClientSpy } = makeSut()
+      vi.spyOn(httpClientSpy, 'request').mockRejectedValueOnce(new Error())
+
       const promise = sut.loadById('any_id')
       await expect(promise).rejects.toThrow()
     })
   })
 
-  describe('add', () => {
-    test('Should call axios.post with correct values', async () => {
-      const params = { name: 'any_name', email: 'any_email' } as unknown as AddUserParams
-      vi.spyOn(axiosMock, 'post').mockResolvedValueOnce({ data: {} })
-      await sut.add(params)
-      expect(axiosMock.post).toHaveBeenCalledWith('/users', params)
-    })
+  test('Should call HttpClient with correct values on add', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    const params = {
+      name: 'any_name',
+      email: 'any_email',
+      gender: 'MALE'
+    } as unknown as AddUserParams
+    httpClientSpy.response.body = { login: { role: 'ADMIN' } }
 
-    test('Should return user on success', async () => {
-      const userData = { id: 'any_id' }
-      vi.spyOn(axiosMock, 'post').mockResolvedValueOnce({ data: userData })
-      const result = await sut.add({} as unknown as AddUserParams)
-      expect(result).toEqual(userData)
+    await sut.add(params)
+
+    expect(httpClientSpy.url).toBe('/users')
+    expect(httpClientSpy.method).toBe('post')
+    expect(httpClientSpy.body).toEqual(params)
+  })
+
+  test('Should return user on success with correct mapping (add)', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    const remoteData = {
+      id: 'any_id',
+      status: 'ACTIVE',
+      login: { role: 'LIBRARIAN' }
+    }
+    httpClientSpy.response.body = remoteData
+
+    const result = await sut.add({} as unknown as AddUserParams)
+    expect(result).toEqual({
+      id: 'any_id',
+      status: 'ACTIVE',
+      login: { role: 'LIBRARIAN' },
+      role: 'LIBRARIAN'
+    })
+  })
+
+  test('Should fallback to default role and status if missing in response (add)', async () => {
+    const { sut, httpClientSpy } = makeSut()
+    httpClientSpy.response.body = { id: 'any_id' }
+
+    const result = await sut.add({} as unknown as AddUserParams)
+    expect(result).toEqual({
+      id: 'any_id',
+      role: 'STUDENT',
+      status: 'INACTIVE'
     })
   })
 
   describe('update', () => {
-    test('Should call axios.put with correct URL and body', async () => {
+    test('Should call HttpClient with correct URL and body', async () => {
+      const { sut, httpClientSpy } = makeSut()
       const id = 'any_id'
       const data = { name: 'updated_name' }
       const params = { id, ...data } as unknown as UpdateUserParams
-      vi.spyOn(axiosMock, 'put').mockResolvedValueOnce({ data: {} })
+      httpClientSpy.response.body = {}
+
       await sut.update(params)
-      expect(axiosMock.put).toHaveBeenCalledWith(`/users/${id}`, data)
+
+      expect(httpClientSpy.url).toBe(`/users/${id}`)
+      expect(httpClientSpy.method).toBe('put')
+      expect(httpClientSpy.body).toEqual(data)
     })
   })
 
   describe('delete', () => {
-    test('Should call axios.delete with correct URL', async () => {
+    test('Should call HttpClient with correct URL', async () => {
+      const { sut, httpClientSpy } = makeSut()
       const id = 'any_id'
-      vi.spyOn(axiosMock, 'delete').mockResolvedValueOnce({})
+      httpClientSpy.response.body = {}
+
       await sut.delete(id)
-      expect(axiosMock.delete).toHaveBeenCalledWith(`/users/${id}`)
+
+      expect(httpClientSpy.url).toBe(`/users/${id}`)
+      expect(httpClientSpy.method).toBe('delete')
     })
   })
 })
