@@ -1,11 +1,11 @@
-import { LoadUsers } from '../../domain/usecases/load-users';
-import { User } from '@/domain/models/user';
-import { UserRepository } from '../../domain/contracts/user-repository';
+import { LoadUsers } from '@/domain/usecases/load-users'
+import { User } from '@/domain/models/user'
+import { UserRepository } from '@/domain/contracts/user-repository'
 
 export class DbLoadUsers implements LoadUsers {
-  constructor(private readonly userRepository: UserRepository) { }
+  constructor(private readonly userRepository: UserRepository) {}
 
   async perform(): Promise<User[]> {
-    return this.userRepository.loadAll();
+    return this.userRepository.loadAll()
   }
 }

@@ -5,7 +5,7 @@ import {
   FormSection,
   TextArea
 } from '@/presentation/react/components/ui'
-import { BookFormData } from '../../book-schema'
+import { BookFormData } from '@/presentation/react/components/forms/book-schema'
 
 export const BookGeneralInfo: React.FC = () => {
   const {

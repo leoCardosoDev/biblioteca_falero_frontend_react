@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
+import { Icon } from '@/presentation/react/components/ui'
 import { bookSchema, BookFormData } from './book-schema'
 import { BookCoverUpload } from './parts/book/BookCoverUpload'
 import { BookGeneralInfo } from './parts/book/BookGeneralInfo'

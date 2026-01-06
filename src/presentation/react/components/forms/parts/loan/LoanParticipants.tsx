@@ -1,7 +1,7 @@
 import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form/context'
 import { Input, Select, FormSection } from '@/presentation/react/components/ui'
-import { LoanFormData } from '../../loan-schema'
+import { LoanFormData } from '@/presentation/react/components/forms/loan-schema'
 
 export const LoanParticipants: React.FC = () => {
   const {

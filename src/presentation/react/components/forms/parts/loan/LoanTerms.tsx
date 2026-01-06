@@ -5,7 +5,7 @@ import {
   TextArea,
   FormSection
 } from '@/presentation/react/components/ui'
-import { LoanFormData } from '../../loan-schema'
+import { LoanFormData } from '@/presentation/react/components/forms/loan-schema'
 
 export const LoanTerms: React.FC = () => {
   const {

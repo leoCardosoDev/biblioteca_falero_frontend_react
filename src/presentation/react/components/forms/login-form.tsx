@@ -5,7 +5,7 @@ import {
   useCustomForm,
   Form
 } from '@/presentation/react/components/ui/form'
-import { LoginHeader } from '../login-header'
+import { LoginHeader } from '@/presentation/react/components/login-header'
 import { loginSchema, LoginFormData } from './login-schema'
 
 export type { LoginFormData }

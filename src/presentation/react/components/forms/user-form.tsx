@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
+import { Icon } from '@/presentation/react/components/ui'
 import { User } from '@/domain/models/user'
 import { UserGeneralInfo } from './parts/user/UserGeneralInfo'
 import { UserAddress } from './parts/user/UserAddress'
@@ -13,18 +13,22 @@ interface UserFormProps {
   initialData?: User
   onCancel: () => void
   onSave: (data: UserFormData) => void
+  loadAddressByZipCode: (zipCode: string) => Promise<unknown>
 }
 
 export const UserForm: React.FC<UserFormProps> = ({
   initialData,
   onCancel,
-  onSave
+  onSave,
+  loadAddressByZipCode
 }) => {
   const methods = useCustomForm<UserFormData>({
     schema: userSchema,
     defaultValues: {
       role: 'PROFESSOR',
-      status: 'ACTIVE'
+      status: 'ACTIVE',
+      gender: 'MALE',
+      phone: ''
     }
   })
 
@@ -32,6 +36,7 @@ export const UserForm: React.FC<UserFormProps> = ({
 
   useEffect(() => {
     if (initialData) {
+      const data = initialData as User & { gender?: string; phone?: string }
       reset({
         name: initialData.name,
         email: initialData.email,
@@ -43,11 +48,14 @@ export const UserForm: React.FC<UserFormProps> = ({
           | 'PROFESSOR'
           | 'STUDENT',
         status: initialData.status as 'ACTIVE' | 'INACTIVE' | 'BLOCKED',
+        gender: (data.gender as 'MALE' | 'FEMALE' | 'OTHER') || 'MALE',
+        phone: data.phone || '',
         address: initialData.address || {
           street: '',
           number: '',
-          neighborhood: '',
-          city: '',
+          complement: '',
+          neighborhoodId: '',
+          cityId: '',
           state: '',
           zipCode: ''
         }
@@ -64,7 +72,7 @@ export const UserForm: React.FC<UserFormProps> = ({
     >
       <div className="flex flex-col gap-8">
         <UserGeneralInfo />
-        <UserAddress />
+        <UserAddress loadAddress={loadAddressByZipCode} />
         <UserAccessControl />
       </div>
 

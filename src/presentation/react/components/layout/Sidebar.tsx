@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from '@/presentation/react/components/ui/link'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import { Icon } from '@/presentation/react/components/ui'
-import { SidebarItem } from '../../types'
+import { SidebarItem } from '@/presentation/react/types'
 
 const NAV_ITEMS: { category: string; items: SidebarItem[] }[] = [
   {

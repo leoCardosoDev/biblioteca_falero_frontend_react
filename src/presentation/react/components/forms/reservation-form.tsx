@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
+import { Icon } from '@/presentation/react/components/ui'
 import { reservationSchema, ReservationFormData } from './reservation-schema'
 import { ReservationParticipants } from './parts/reservation/ReservationParticipants'
 import { ReservationDetails } from './parts/reservation/ReservationDetails'
