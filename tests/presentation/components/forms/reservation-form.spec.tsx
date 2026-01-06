@@ -1,20 +1,16 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, test, expect, vi } from 'vitest'
 import { ReservationForm } from '@/presentation/react/components/forms/reservation-form'
 
 describe('ReservationForm Component', () => {
-  const makeSut = (props: Partial<React.ComponentProps<typeof ReservationForm>> = {}) => {
+  const makeSut = (
+    props: Partial<React.ComponentProps<typeof ReservationForm>> = {}
+  ) => {
     const onSave = vi.fn()
     const onCancel = vi.fn()
     const user = userEvent.setup()
-    render(
-      <ReservationForm
-        onSave={onSave}
-        onCancel={onCancel}
-        {...props}
-      />
-    )
+    render(<ReservationForm onSave={onSave} onCancel={onCancel} {...props} />)
     return { onSave, onCancel, user }
   }
 
@@ -39,29 +35,44 @@ describe('ReservationForm Component', () => {
 
     await waitFor(async () => {
       // Expect validation messages for user and book
-      expect(await screen.findByText(/selecione um usuário/i)).toBeInTheDocument()
+      expect(
+        await screen.findByText(/selecione um usuário/i)
+      ).toBeInTheDocument()
       expect(await screen.findByText(/selecione uma obra/i)).toBeInTheDocument()
     })
   })
 
   test('Should call onSave with correct values', async () => {
-    const { onSave, user } = makeSut()
+    const { onSave } = makeSut()
 
     // Select user "1" (John Doe)
-    await user.selectOptions(screen.getByLabelText(/usuário/i), '1')
-    await user.type(screen.getByLabelText(/obra/i), '123456')
-    await user.selectOptions(screen.getByLabelText(/prioridade/i), 'HIGH')
-    await user.type(screen.getByLabelText(/notas/i), 'Test notes')
+    fireEvent.change(screen.getByLabelText(/usuário/i), {
+      target: { value: '1' }
+    })
+    fireEvent.change(screen.getByLabelText(/obra/i), {
+      target: { value: '123456' }
+    })
+    fireEvent.change(screen.getByLabelText(/prioridade/i), {
+      target: { value: 'HIGH' }
+    })
+    fireEvent.change(screen.getByLabelText(/notas/i), {
+      target: { value: 'Test notes' }
+    })
 
-    await user.click(screen.getByRole('button', { name: /confirmar reserva/i }))
+    const submitButton = screen.getByRole('button', {
+      name: /confirmar reserva/i
+    })
+    fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(onSave.mock.calls[0][0]).toEqual(expect.objectContaining({
-        userId: '1',
-        bookId: '123456',
-        priority: 'HIGH',
-        notes: 'Test notes'
-      }))
+      expect(onSave.mock.calls[0][0]).toEqual(
+        expect.objectContaining({
+          userId: '1',
+          bookId: '123456',
+          priority: 'HIGH',
+          notes: 'Test notes'
+        })
+      )
     })
   })
 
