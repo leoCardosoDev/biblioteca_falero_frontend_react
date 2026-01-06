@@ -4,6 +4,7 @@ import React from 'react'
 import { Users } from '@/presentation/react/pages/user-list/user-list-page'
 import type { User } from '@/domain/models/user'
 import type { AddUserLogin } from '@/domain/usecases/add-user-login'
+import type { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
 
 // Mock the hook
 const mocks = vi.hoisted(() => ({
@@ -16,24 +17,69 @@ vi.mock('@/presentation/react/hooks/use-user-management', () => ({
 
 // Mock child components
 vi.mock('@/presentation/react/components/forms', () => ({
-  UserForm: ({ onSave, onCancel }: { onSave: (data: unknown) => void, onCancel: () => void }) => (
+  UserForm: ({
+    onSave,
+    onCancel
+  }: {
+    onSave: (data: unknown) => void
+    onCancel: () => void
+  }) => (
     <>
-      <button onClick={() => onSave({ name: 'New User' })}>Save User Mock</button>
+      <button onClick={() => onSave({ name: 'New User' })}>
+        Save User Mock
+      </button>
+      <button
+        onClick={() =>
+          onSave({
+            name: 'New User',
+            address: {
+              zipCode: '12345678',
+              street: 'Test St',
+              number: '123',
+              neighborhoodId: 'NbId',
+              cityId: 'CityId',
+              state: 'ST'
+            }
+          })
+        }
+      >
+        Save User Address Mock
+      </button>
       <button onClick={onCancel}>Cancel User Mock</button>
     </>
   )
 }))
 
-vi.mock('@/presentation/react/components/credential-modal/credential-modal', () => ({
-  CredentialModal: ({ onSave, onClose, isOpen }: { onSave: (data: unknown) => void, onClose: () => void, isOpen: boolean }) => (
-    isOpen ? (
-      <>
-        <button onClick={() => onSave({ username: 'user', password: 'pass', confirmPassword: 'pass' })}>Save Creds Mock</button>
-        <button onClick={onClose}>Cancel Creds Mock</button>
-      </>
-    ) : null
-  )
-}))
+vi.mock(
+  '@/presentation/react/components/credential-modal/credential-modal',
+  () => ({
+    CredentialModal: ({
+      onSave,
+      onClose,
+      isOpen
+    }: {
+      onSave: (data: unknown) => void
+      onClose: () => void
+      isOpen: boolean
+    }) =>
+      isOpen ? (
+        <>
+          <button
+            onClick={() =>
+              onSave({
+                username: 'user',
+                password: 'pass',
+                confirmPassword: 'pass'
+              })
+            }
+          >
+            Save Creds Mock
+          </button>
+          <button onClick={onClose}>Cancel Creds Mock</button>
+        </>
+      ) : null
+  })
+)
 
 const makeSut = () => {
   const props = {
@@ -42,7 +88,8 @@ const makeSut = () => {
     updateUser: {} as never,
     deleteUser: {} as never,
     addUserLogin: {} as never,
-    loadUserById: {} as never
+    loadUserById: {} as never,
+    loadAddressByZipCode: { perform: vi.fn() } as never
   }
   render(<Users {...props} />)
 }
@@ -50,11 +97,25 @@ const makeSut = () => {
 describe('User List Page', () => {
   const mockUsers: User[] = [
     {
-      id: '1', name: 'John Doe', email: 'john@example.com', role: 'STUDENT', status: 'ACTIVE', enrollmentId: '123', cpf: '111.111.111-11', avatarUrl: 'any_url',
+      id: '1',
+      name: 'John Doe',
+      email: 'john@example.com',
+      role: 'STUDENT',
+      status: 'ACTIVE',
+      enrollmentId: '123',
+      cpf: '111.111.111-11',
+      avatarUrl: 'any_url',
       rg: '1234567'
     },
     {
-      id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'PROFESSOR', status: 'BLOCKED', enrollmentId: '456', cpf: '222.222.222-22', avatarUrl: 'any_url',
+      id: '2',
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      role: 'PROFESSOR',
+      status: 'BLOCKED',
+      enrollmentId: '456',
+      cpf: '222.222.222-22',
+      avatarUrl: 'any_url',
       rg: '7654321'
     }
   ]
@@ -79,7 +140,9 @@ describe('User List Page', () => {
 
   test('Should filter by text (name)', () => {
     makeSut()
-    const input = screen.getByPlaceholderText('Buscar por nome, CPF ou email...')
+    const input = screen.getByPlaceholderText(
+      'Buscar por nome, CPF ou email...'
+    )
     fireEvent.change(input, { target: { value: 'John' } })
     expect(screen.getByText('John Doe')).toBeInTheDocument()
     expect(screen.queryByText('Jane Smith')).not.toBeInTheDocument()
@@ -180,7 +243,12 @@ describe('User List Page', () => {
     // Click mock save
     fireEvent.click(screen.getByText('Save User Mock'))
 
-    expect(handleAddUser).toHaveBeenCalled()
+    await waitFor(() => {
+      expect(handleAddUser).toHaveBeenCalled()
+    })
+    // Success modal should be shown
+    expect(screen.getByText('Usuário Criado')).toBeInTheDocument()
+    expect(screen.getByText(/cadastrado com sucesso/i)).toBeInTheDocument()
   })
 
   test('Should open credential modal when clicking key icon', () => {
@@ -195,7 +263,12 @@ describe('User List Page', () => {
     const handleLoadUserById = vi.fn().mockResolvedValue({
       ...mockUsers[0],
       address: {
-        street: 'Street', number: '1', neighborhood: 'N', city: 'C', state: 'ST', zipCode: '00000-000'
+        street: 'Street',
+        number: '1',
+        neighborhood: 'N',
+        city: 'C',
+        state: 'ST',
+        zipCode: '00000-000'
       }
     })
     mocks.useUserManagement.mockReturnValue({
@@ -221,7 +294,9 @@ describe('User List Page', () => {
 
   test('Should call handleUpdateUser when editing user is saved', async () => {
     const handleUpdateUser = vi.fn().mockResolvedValue(true)
-    const handleLoadUserById = vi.fn().mockResolvedValue({ id: '1', name: 'John' })
+    const handleLoadUserById = vi
+      .fn()
+      .mockResolvedValue({ id: '1', name: 'John' })
     mocks.useUserManagement.mockReturnValue({
       users: mockUsers,
       isLoading: false,
@@ -236,13 +311,15 @@ describe('User List Page', () => {
     // Open edit modal
     const editButton = screen.getAllByTitle('Editar')[0]
     fireEvent.click(editButton)
-    await React.act(async () => { })
+    await React.act(async () => {})
 
     // Click mock save
     fireEvent.click(screen.getByText('Save User Mock'))
 
     await waitFor(() => {
-      expect(handleUpdateUser).toHaveBeenCalledWith(expect.objectContaining({ id: '1' }))
+      expect(handleUpdateUser).toHaveBeenCalledWith(
+        expect.objectContaining({ id: '1' })
+      )
     })
   })
 
@@ -312,7 +389,7 @@ describe('User List Page', () => {
     const editButton = screen.getAllByTitle('Editar')[0]
     fireEvent.click(editButton)
 
-    await React.act(async () => { })
+    await React.act(async () => {})
 
     expect(handleLoadUserById).toHaveBeenCalled()
     expect(screen.queryByText('Editar Usuário')).not.toBeInTheDocument()
@@ -336,11 +413,13 @@ describe('User List Page', () => {
     // Click mock save
     fireEvent.click(screen.getByText('Save User Mock'))
 
-    await React.act(async () => { }) // Wait for async
-
-    expect(handleAddUser).toHaveBeenCalled()
-    // Modal should still be open (title present)
-    expect(screen.getByText('Cadastrar Novo Usuário')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(handleAddUser).toHaveBeenCalled()
+      // Error modal should be shown
+      expect(screen.getByText('Erro na Operação')).toBeInTheDocument()
+    })
+    // Modal should still be open but "Cadastrar Novo Usuário" title is in background
+    // and UserForm is still there. But StatusModal is on top.
   })
 
   test('Should handle credential save success', async () => {
@@ -351,7 +430,10 @@ describe('User List Page', () => {
       updateUser: {} as never,
       deleteUser: {} as never,
       addUserLogin: { perform: addUserLoginPerform } as unknown as AddUserLogin,
-      loadUserById: {} as never
+      loadUserById: {} as never,
+      loadAddressByZipCode: {
+        perform: vi.fn()
+      } as unknown as LoadAddressByZipCode
     }
 
     mocks.useUserManagement.mockReturnValue({
@@ -373,7 +455,7 @@ describe('User List Page', () => {
     // Click mock save
     fireEvent.click(screen.getByText('Save Creds Mock'))
 
-    await React.act(async () => { })
+    await React.act(async () => {})
 
     expect(addUserLoginPerform).toHaveBeenCalledWith({
       userId: '1',
@@ -383,14 +465,19 @@ describe('User List Page', () => {
   })
 
   test('Should handle credential save error', async () => {
-    const addUserLoginPerform = vi.fn().mockRejectedValue(new Error('Any error'))
+    const addUserLoginPerform = vi
+      .fn()
+      .mockRejectedValue(new Error('Any error'))
     const props = {
       loadUsers: {} as never,
       addUser: {} as never,
       updateUser: {} as never,
       deleteUser: {} as never,
       addUserLogin: { perform: addUserLoginPerform } as unknown as AddUserLogin,
-      loadUserById: {} as never
+      loadUserById: {} as never,
+      loadAddressByZipCode: {
+        perform: vi.fn()
+      } as unknown as LoadAddressByZipCode
     }
 
     mocks.useUserManagement.mockReturnValue({
@@ -412,7 +499,7 @@ describe('User List Page', () => {
     // Click mock save
     fireEvent.click(screen.getByText('Save Creds Mock'))
 
-    await React.act(async () => { })
+    await React.act(async () => {})
 
     expect(addUserLoginPerform).toHaveBeenCalled()
   })
@@ -436,7 +523,11 @@ describe('User List Page', () => {
   })
 
   test('Should render ID when enrollmentId is missing', () => {
-    const userWithoutEnrollment = { ...mockUsers[0], id: '123456789', enrollmentId: undefined }
+    const userWithoutEnrollment = {
+      ...mockUsers[0],
+      id: '123456789',
+      enrollmentId: undefined
+    }
     mocks.useUserManagement.mockReturnValue({
       users: [userWithoutEnrollment],
       isLoading: false,
@@ -470,7 +561,9 @@ describe('User List Page', () => {
     fireEvent.keyDown(window, { key: 'Escape' })
 
     await waitFor(() => {
-      expect(screen.queryByText('Cadastrar Novo Usuário')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Cadastrar Novo Usuário')
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -494,7 +587,9 @@ describe('User List Page', () => {
     fireEvent.click(screen.getByText('Cancel User Mock'))
 
     await waitFor(() => {
-      expect(screen.queryByText('Cadastrar Novo Usuário')).not.toBeInTheDocument()
+      expect(
+        screen.queryByText('Cadastrar Novo Usuário')
+      ).not.toBeInTheDocument()
     })
   })
 
@@ -518,8 +613,70 @@ describe('User List Page', () => {
     // Click cancel button from mocked CredentialModal (which calls onClose)
     fireEvent.click(screen.getByText('Cancel Creds Mock'))
 
+    await waitFor(
+      () => {
+        expect(screen.queryByText('Save Creds Mock')).not.toBeInTheDocument()
+      },
+      { timeout: 3000 }
+    )
+  })
+
+  test('Should call handleAddUser with address data when saving new user', async () => {
+    const handleAddUser = vi.fn().mockResolvedValue(true)
+    mocks.useUserManagement.mockReturnValue({
+      users: mockUsers,
+      isLoading: false,
+      error: null,
+      handleAddUser,
+      handleUpdateUser: vi.fn(),
+      handleDeleteUser: vi.fn(),
+      handleLoadUserById: vi.fn()
+    })
+    makeSut()
+
+    // Open modal
+    fireEvent.click(screen.getByRole('button', { name: /novo usuário/i }))
+
+    // Click mock save with address
+    fireEvent.click(screen.getByText('Save User Address Mock'))
+
     await waitFor(() => {
-      expect(screen.queryByText('Save Creds Mock')).not.toBeInTheDocument()
+      expect(handleAddUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          address: expect.objectContaining({
+            zipCode: '12345678'
+          })
+        })
+      )
+    })
+  })
+
+  test('Should close status modal', async () => {
+    const handleAddUser = vi.fn().mockResolvedValue(true)
+    mocks.useUserManagement.mockReturnValue({
+      users: mockUsers,
+      isLoading: false,
+      error: null,
+      handleAddUser,
+      handleUpdateUser: vi.fn(),
+      handleDeleteUser: vi.fn(),
+      handleLoadUserById: vi.fn()
+    })
+    makeSut()
+
+    // Trigger success status modal
+    fireEvent.click(screen.getByRole('button', { name: /novo usuário/i }))
+    fireEvent.click(screen.getByText('Save User Mock'))
+
+    await waitFor(() => {
+      expect(screen.getByText('Usuário Criado')).toBeInTheDocument()
+    })
+
+    // Click "Entendi" button
+    fireEvent.click(screen.getByText('Entendi'))
+
+    await waitFor(() => {
+      expect(screen.queryByText('Usuário Criado')).not.toBeInTheDocument()
     })
   })
 })
