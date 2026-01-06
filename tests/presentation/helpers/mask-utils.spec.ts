@@ -1,5 +1,11 @@
 import { describe, test, expect } from 'vitest'
-import { maskCpf, maskRg, maskZipCode, maskBirthDate } from '@/presentation/react/helpers/mask-utils'
+import {
+  maskCpf,
+  maskRg,
+  maskZipCode,
+  maskBirthDate,
+  maskPhone
+} from '@/presentation/react/helpers/mask-utils'
 
 describe('MaskUtils', () => {
   describe('maskCpf', () => {
@@ -41,6 +47,20 @@ describe('MaskUtils', () => {
 
     test('Should handle partial BirthDate', () => {
       expect(maskBirthDate('0101')).toBe('01/01')
+    })
+  })
+
+  describe('maskPhone', () => {
+    test('Should format landline phone correctly (10 digits)', () => {
+      expect(maskPhone('1112345678')).toBe('(11) 1234-5678')
+    })
+
+    test('Should format mobile phone correctly (11 digits)', () => {
+      expect(maskPhone('11912345678')).toBe('(11) 91234-5678')
+    })
+
+    test('Should handle partial phone', () => {
+      expect(maskPhone('111234')).toBe('(11) 1234')
     })
   })
 })
