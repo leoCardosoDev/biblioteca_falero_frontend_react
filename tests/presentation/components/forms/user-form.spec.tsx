@@ -7,17 +7,13 @@ import type { User } from '@/domain/models/user'
 describe('UserForm Component', () => {
   vi.setConfig({ testTimeout: 30000 })
 
-  const makeSut = (props: Partial<React.ComponentProps<typeof UserForm>> = {}) => {
+  const makeSut = (
+    props: Partial<React.ComponentProps<typeof UserForm>> = {}
+  ) => {
     const onSave = vi.fn()
     const onCancel = vi.fn()
-    const user = userEvent.setup()
-    render(
-      <UserForm
-        onSave={onSave}
-        onCancel={onCancel}
-        {...props}
-      />
-    )
+    const user = userEvent.setup({ delay: null })
+    render(<UserForm onSave={onSave} onCancel={onCancel} {...props} />)
     return { onSave, onCancel, user }
   }
 
@@ -41,7 +37,9 @@ describe('UserForm Component', () => {
     const { user } = makeSut()
     await user.click(screen.getByRole('button', { name: /salvar usuário/i }))
 
-    expect(await screen.findByText(/nome deve ter pelo menos 3 caracteres/i)).toBeInTheDocument()
+    expect(
+      await screen.findByText(/nome deve ter pelo menos 3 caracteres/i)
+    ).toBeInTheDocument()
     expect(await screen.findByText(/email inválido/i)).toBeInTheDocument()
     expect(await screen.findByText(/rg inválido/i)).toBeInTheDocument()
     expect(await screen.findByText(/cpf inválido/i)).toBeInTheDocument()
@@ -66,18 +64,20 @@ describe('UserForm Component', () => {
 
     await waitFor(() => {
       // Check only the first argument (data), ignoring the second argument (event)
-      expect(onSave.mock.calls[0][0]).toEqual(expect.objectContaining({
-        name: 'John Doe',
-        email: 'john@example.com',
-        cpf: '111.111.111-11',
-        address: expect.objectContaining({
-          street: 'Rua A',
-          city: 'Sao Paulo',
-          zipCode: '01001-000'
+      expect(onSave.mock.calls[0][0]).toEqual(
+        expect.objectContaining({
+          name: 'John Doe',
+          email: 'john@example.com',
+          cpf: '111.111.111-11',
+          address: expect.objectContaining({
+            street: 'Rua A',
+            city: 'Sao Paulo',
+            zipCode: '01001-000'
+          })
         })
-      }))
+      )
     })
-  }, 10000)
+  })
 
   test('Should load initialData correctly', async () => {
     const initialData = {
@@ -99,7 +99,9 @@ describe('UserForm Component', () => {
     makeSut({ initialData })
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/nome completo/i)).toHaveValue('Initial Name')
+      expect(screen.getByLabelText(/nome completo/i)).toHaveValue(
+        'Initial Name'
+      )
       expect(screen.getByLabelText(/email/i)).toHaveValue('initial@mail.com')
       expect(screen.getByLabelText(/rua/i)).toHaveValue('Rua B')
     })
@@ -120,14 +122,16 @@ describe('UserForm Component', () => {
       status: 'ACTIVE',
       cpf: '11122233344',
       rg: '12345678',
-      birthDate: '2000-01-01',
+      birthDate: '2000-01-01'
       // address is specifically undefined here
     } as unknown as User
 
     makeSut({ initialData })
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/nome completo/i)).toHaveValue('User Without Address')
+      expect(screen.getByLabelText(/nome completo/i)).toHaveValue(
+        'User Without Address'
+      )
       // Address fields should be empty
       expect(screen.getByLabelText(/rua/i)).toHaveValue('')
       expect(screen.getByLabelText(/cidade/i)).toHaveValue('')

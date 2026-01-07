@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
+import { Icon } from '@/presentation/react/components/ui'
 import { loanSchema, LoanFormData } from './loan-schema'
 import { LoanParticipants } from './parts/loan/LoanParticipants'
 import { LoanTerms } from './parts/loan/LoanTerms'

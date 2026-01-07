@@ -4,17 +4,13 @@ import { describe, test, expect, vi } from 'vitest'
 import { LoanForm } from '@/presentation/react/components/forms/loan-form'
 
 describe('LoanForm Component', () => {
-  const makeSut = (props: Partial<React.ComponentProps<typeof LoanForm>> = {}) => {
+  const makeSut = (
+    props: Partial<React.ComponentProps<typeof LoanForm>> = {}
+  ) => {
     const onSave = vi.fn()
     const onCancel = vi.fn()
-    const user = userEvent.setup()
-    render(
-      <LoanForm
-        onSave={onSave}
-        onCancel={onCancel}
-        {...props}
-      />
-    )
+    const user = userEvent.setup({ delay: null })
+    render(<LoanForm onSave={onSave} onCancel={onCancel} {...props} />)
     return { onSave, onCancel, user }
   }
 
@@ -35,7 +31,9 @@ describe('LoanForm Component', () => {
 
   test('Should show validation errors for empty fields on submit', async () => {
     const { user } = makeSut()
-    await user.click(screen.getByRole('button', { name: /confirmar empréstimo/i }))
+    await user.click(
+      screen.getByRole('button', { name: /confirmar empréstimo/i })
+    )
 
     await waitFor(async () => {
       // Use findAllByText to handle potential multiple matches or ensure at least one
@@ -50,19 +48,26 @@ describe('LoanForm Component', () => {
     // Select user "1" which corresponds to "John Doe" in the component
     await user.selectOptions(screen.getByLabelText(/leitor/i), '1')
     await user.type(screen.getByLabelText(/obra/i), '123456')
-    await user.type(screen.getByLabelText(/previsão de devolução/i), '2024-02-01')
+    await user.type(
+      screen.getByLabelText(/previsão de devolução/i),
+      '2024-02-01'
+    )
     await user.type(screen.getByLabelText(/observações/i), 'Test observations')
 
-    await user.click(screen.getByRole('button', { name: /confirmar empréstimo/i }))
+    await user.click(
+      screen.getByRole('button', { name: /confirmar empréstimo/i })
+    )
 
     await waitFor(() => {
       // Assert on the first argument of the first call
-      expect(onSave.mock.calls[0][0]).toEqual(expect.objectContaining({
-        userId: '1',
-        bookId: '123456',
-        expectedReturnDate: '2024-02-01',
-        observations: 'Test observations'
-      }))
+      expect(onSave.mock.calls[0][0]).toEqual(
+        expect.objectContaining({
+          userId: '1',
+          bookId: '123456',
+          expectedReturnDate: '2024-02-01',
+          observations: 'Test observations'
+        })
+      )
     })
   })
 
@@ -79,7 +84,9 @@ describe('LoanForm Component', () => {
     await waitFor(() => {
       expect(screen.getByLabelText(/leitor/i)).toHaveValue('1')
       expect(screen.getByLabelText(/obra/i)).toHaveValue('123456')
-      expect(screen.getByLabelText(/observações/i)).toHaveValue('Initial Observations')
+      expect(screen.getByLabelText(/observações/i)).toHaveValue(
+        'Initial Observations'
+      )
     })
   })
 })

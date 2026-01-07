@@ -4,17 +4,13 @@ import { describe, test, expect, vi } from 'vitest'
 import { ReservationForm } from '@/presentation/react/components/forms/reservation-form'
 
 describe('ReservationForm Component', () => {
-  const makeSut = (props: Partial<React.ComponentProps<typeof ReservationForm>> = {}) => {
+  const makeSut = (
+    props: Partial<React.ComponentProps<typeof ReservationForm>> = {}
+  ) => {
     const onSave = vi.fn()
     const onCancel = vi.fn()
-    const user = userEvent.setup()
-    render(
-      <ReservationForm
-        onSave={onSave}
-        onCancel={onCancel}
-        {...props}
-      />
-    )
+    const user = userEvent.setup({ delay: null })
+    render(<ReservationForm onSave={onSave} onCancel={onCancel} {...props} />)
     return { onSave, onCancel, user }
   }
 
@@ -39,7 +35,9 @@ describe('ReservationForm Component', () => {
 
     await waitFor(async () => {
       // Expect validation messages for user and book
-      expect(await screen.findByText(/selecione um usuário/i)).toBeInTheDocument()
+      expect(
+        await screen.findByText(/selecione um usuário/i)
+      ).toBeInTheDocument()
       expect(await screen.findByText(/selecione uma obra/i)).toBeInTheDocument()
     })
   })
@@ -56,12 +54,14 @@ describe('ReservationForm Component', () => {
     await user.click(screen.getByRole('button', { name: /confirmar reserva/i }))
 
     await waitFor(() => {
-      expect(onSave.mock.calls[0][0]).toEqual(expect.objectContaining({
-        userId: '1',
-        bookId: '123456',
-        priority: 'HIGH',
-        notes: 'Test notes'
-      }))
+      expect(onSave.mock.calls[0][0]).toEqual(
+        expect.objectContaining({
+          userId: '1',
+          bookId: '123456',
+          priority: 'HIGH',
+          notes: 'Test notes'
+        })
+      )
     })
   })
 

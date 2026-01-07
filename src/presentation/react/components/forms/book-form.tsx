@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
+import { Icon } from '@/presentation/react/components/ui'
 import { bookSchema, BookFormData } from './book-schema'
 import { BookCoverUpload } from './parts/book/BookCoverUpload'
 import { BookGeneralInfo } from './parts/book/BookGeneralInfo'
@@ -45,10 +45,10 @@ export const BookForm: React.FC<BookFormProps> = ({
       noValidate
     >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-        {/* Upload Section */}
+        {}
         <BookCoverUpload />
 
-        {/* Fields Section */}
+        {}
         <div className="flex flex-col gap-8 lg:col-span-8">
           <BookGeneralInfo />
           <BookTechnicalInfo />

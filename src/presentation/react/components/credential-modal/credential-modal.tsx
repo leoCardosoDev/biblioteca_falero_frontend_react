@@ -1,6 +1,6 @@
 import React from 'react'
 import { z } from 'zod'
-import { Modal } from '../ui'
+import { Modal } from '@/presentation/react/components/ui'
 import {
   useCustomForm,
   Form,
