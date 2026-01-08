@@ -25,14 +25,27 @@ export const UserForm: React.FC<UserFormProps> = ({
 }) => {
   const methods = useCustomForm<UserFormData>({
     schema: userSchema,
+    mode: 'onChange',
     defaultValues: {
-      role: 'PROFESSOR',
+      role: 'STUDENT',
       status: 'ACTIVE',
-      gender: 'OTHER'
+      gender: 'OTHER',
+      address: {
+        zipCode: '',
+        street: '',
+        number: '',
+        complement: '',
+        neighborhood: '',
+        city: '',
+        state: ''
+      }
     }
   })
 
-  const { reset } = methods
+  const {
+    reset,
+    formState: { isValid }
+  } = methods
 
   useEffect(() => {
     if (initialData) {
@@ -54,7 +67,8 @@ export const UserForm: React.FC<UserFormProps> = ({
           neighborhood: '',
           city: '',
           state: '',
-          zipCode: ''
+          zipCode: '',
+          complement: ''
         }
       })
     }
@@ -83,7 +97,8 @@ export const UserForm: React.FC<UserFormProps> = ({
         </button>
         <button
           type="submit"
-          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+          disabled={!isValid}
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Icon name="save" />
           Salvar Usuário

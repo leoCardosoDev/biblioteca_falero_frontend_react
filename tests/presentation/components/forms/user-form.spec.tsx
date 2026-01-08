@@ -34,7 +34,6 @@ describe('UserForm Component', () => {
     expect(screen.getByLabelText(/rg/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/cpf/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/gênero/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/perfil/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/status/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/cep/i)).toBeInTheDocument()
 
@@ -46,16 +45,11 @@ describe('UserForm Component', () => {
     expect(screen.queryByLabelText(/estado \(uf\)/i)).not.toBeInTheDocument()
   })
 
-  test('Should show validation errors for empty fields on submit', async () => {
-    const { user } = makeSut()
-    await user.click(screen.getByRole('button', { name: /salvar usuário/i }))
-
+  test('Should have the submit button disabled when fields are empty', async () => {
+    makeSut()
     expect(
-      await screen.findByText(/nome deve ter pelo menos 3 caracteres/i)
-    ).toBeInTheDocument()
-    expect(await screen.findByText(/email inválido/i)).toBeInTheDocument()
-    expect(await screen.findByText(/rg inválido/i)).toBeInTheDocument()
-    expect(await screen.findByText(/cpf inválido/i)).toBeInTheDocument()
+      screen.getByRole('button', { name: /salvar usuário/i })
+    ).toBeDisabled()
   })
 
   test('Should call onSave with correct values', async () => {
@@ -89,13 +83,17 @@ describe('UserForm Component', () => {
       expect(screen.getByLabelText(/rua/i)).toBeInTheDocument()
     })
 
-    // Now fields are pre-filled by the mock, but we can edit them if needed.
-    // The test originally typed 'Rua A'. The mock returns 'Rua A'. So we don't need to type if it matches.
-    // But we need to type Number.
-    await user.type(screen.getByLabelText(/número/i), '123')
+    // Verify pre-filled values are correct and Read-Only
+    const streetInput = screen.getByLabelText(/rua/i)
+    expect(streetInput).toHaveValue('Rua A')
+    expect(streetInput).toHaveAttribute('readonly')
+    expect(screen.getByLabelText(/bairro/i)).toHaveAttribute('readonly')
+    expect(screen.getByLabelText(/cidade/i)).toHaveAttribute('readonly')
+    expect(screen.getByLabelText(/estado \(uf\)/i)).toHaveAttribute('readonly')
 
-    // Verify pre-filled values are correct
-    expect(screen.getByLabelText(/rua/i)).toHaveValue('Rua A')
+    // Editable fields
+    await user.type(screen.getByLabelText(/número/i), '123')
+    await user.type(screen.getByLabelText(/complemento/i), 'Apt 101')
 
     await user.click(screen.getByRole('button', { name: /salvar usuário/i }))
 
@@ -118,7 +116,8 @@ describe('UserForm Component', () => {
             street: 'Rua A',
             city: 'Sao Paulo',
             zipCode: '63240-970',
-            number: '123'
+            number: '123',
+            complement: 'Apt 101'
           })
         })
       )
@@ -180,7 +179,7 @@ describe('UserForm Component', () => {
       expect(screen.getByLabelText(/nome completo/i)).toHaveValue(
         'User Without Address'
       )
-      // Address fields should be hidden
+      // Address fields should be hidden because zipCode is empty in initialData
       expect(screen.queryByLabelText(/rua/i)).not.toBeInTheDocument()
       expect(screen.queryByLabelText(/cidade/i)).not.toBeInTheDocument()
     })

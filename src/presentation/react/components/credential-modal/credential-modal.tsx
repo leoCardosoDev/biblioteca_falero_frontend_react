@@ -1,6 +1,6 @@
 import React from 'react'
 import { z } from 'zod'
-import { Modal } from '@/presentation/react/components/ui'
+import { Modal, Select } from '@/presentation/react/components/ui'
 import {
   useCustomForm,
   Form,
@@ -8,13 +8,7 @@ import {
 } from '@/presentation/react/components/ui/form'
 
 const credentialSchema = z.object({
-  username: z
-    .string()
-    .optional()
-    .refine(
-      (val) => !val || val.length >= 3,
-      'O usuário deve ter no mínimo 3 caracteres'
-    ),
+  role: z.enum(['ADMIN', 'LIBRARIAN', 'PROFESSOR', 'STUDENT']),
   password: z
     .string()
     .min(8, 'A senha deve ter no mínimo 8 caracteres')
@@ -29,18 +23,37 @@ interface CredentialModalProps {
   onClose: () => void
   onSave: (data: CredentialFormData) => void
   userName: string
+  initialRole?: string
 }
 
 export const CredentialModal: React.FC<CredentialModalProps> = ({
   isOpen,
   onClose,
   onSave,
-  userName
+  userName,
+  initialRole
 }) => {
   const methods = useCustomForm<CredentialFormData>({
     schema: credentialSchema,
-    mode: 'onChange'
+    mode: 'onChange',
+    defaultValues: {
+      role: (initialRole as unknown as CredentialFormData['role']) || 'STUDENT'
+    }
   })
+
+  React.useEffect(() => {
+    if (isOpen) {
+      methods.reset({
+        role:
+          (initialRole as unknown as CredentialFormData['role']) || 'STUDENT',
+        password: ''
+      })
+    }
+  }, [initialRole, isOpen, methods])
+
+  const {
+    formState: { isValid }
+  } = methods
 
   return (
     <Modal
@@ -51,11 +64,17 @@ export const CredentialModal: React.FC<CredentialModalProps> = ({
       maxWidth="max-w-md"
     >
       <Form form={methods} onSubmit={onSave} className="flex flex-col gap-6">
-        <Field
-          name="username"
-          label="Nome de Usuário (Opcional)"
-          placeholder="username"
-        />
+        <Select
+          {...methods.register('role')}
+          id="role"
+          label="Perfil"
+          className="w-full"
+        >
+          <option value="PROFESSOR">Professor</option>
+          <option value="LIBRARIAN">Bibliotecário</option>
+          <option value="ADMIN">Administrador</option>
+          <option value="STUDENT">Estudante</option>
+        </Select>
 
         <Field
           name="password"
@@ -76,7 +95,8 @@ export const CredentialModal: React.FC<CredentialModalProps> = ({
           </button>
           <button
             type="submit"
-            className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+            disabled={!isValid}
+            className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
             Salvar Senha
           </button>

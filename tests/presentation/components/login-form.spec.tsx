@@ -11,7 +11,7 @@ describe('LoginForm Component', () => {
     render(<LoginForm isLoading={false} onSubmit={mockOnSubmit} />)
     expect(screen.getByPlaceholderText(/login/i)).toBeInTheDocument()
     expect(screen.getByPlaceholderText(/senha/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /entrar/i })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /entrar/i })).toBeDisabled()
   })
 
   test('Should render loading state correctly', () => {

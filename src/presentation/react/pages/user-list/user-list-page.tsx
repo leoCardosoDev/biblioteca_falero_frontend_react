@@ -126,13 +126,18 @@ export const Users: React.FC<UsersProps> = ({
 
   const onSaveCredentials = async (data: CredentialFormData) => {
     try {
+      if (data.role !== userForCredentials!.role) {
+        await handleUpdateUser({
+          id: userForCredentials!.id,
+          role: data.role
+        })
+      }
+
       await addUserLogin.perform({
         userId: userForCredentials!.id,
-        username: data.username,
         password: data.password
       })
       setIsCredentialModalOpen(false)
-      // toast.success('Credenciais atualizadas com sucesso!');
     } catch (_error) {
       // toast.error('Erro ao salvar credenciais');
     }
@@ -167,9 +172,14 @@ export const Users: React.FC<UsersProps> = ({
 
       {userForCredentials && (
         <CredentialModal
+          key={userForCredentials.id}
           isOpen={isCredentialModalOpen}
-          onClose={() => setIsCredentialModalOpen(false)}
+          onClose={() => {
+            setIsCredentialModalOpen(false)
+            setUserForCredentials(null)
+          }}
           userName={userForCredentials.name}
+          initialRole={userForCredentials.role}
           onSave={onSaveCredentials}
         />
       )}
@@ -221,7 +231,19 @@ export const Users: React.FC<UsersProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-3xl font-bold text-white">85</h3>
+              <h3 className="text-3xl font-bold text-white">
+                {
+                  users.filter((user) => {
+                    if (!user.createdAt) return false
+                    const createdAt = new Date(user.createdAt)
+                    const now = new Date()
+                    return (
+                      createdAt.getMonth() === now.getMonth() &&
+                      createdAt.getFullYear() === now.getFullYear()
+                    )
+                  }).length
+                }
+              </h3>
               <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-sm font-medium text-emerald-500">
                 <Icon name="trending_up" className="mr-1 inline size-3" />
                 12%
@@ -352,10 +374,22 @@ export const Users: React.FC<UsersProps> = ({
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <div
-                          className={`size-1.5 rounded-full ${user.status === 'ACTIVE' ? 'bg-emerald-500' : 'bg-red-500'}`}
+                          className={`size-1.5 rounded-full ${
+                            user.status === 'ACTIVE'
+                              ? 'bg-emerald-500'
+                              : user.status === 'INACTIVE'
+                                ? 'bg-amber-500'
+                                : 'bg-red-500'
+                          }`}
                         ></div>
                         <span
-                          className={`text-sm font-medium ${user.status === 'ACTIVE' ? 'text-slate-300' : 'text-slate-400'}`}
+                          className={`text-sm font-medium ${
+                            user.status === 'ACTIVE'
+                              ? 'text-emerald-500'
+                              : user.status === 'INACTIVE'
+                                ? 'text-amber-500'
+                                : 'text-red-400'
+                          }`}
                         >
                           {formatUserStatus(user.status)}
                         </span>

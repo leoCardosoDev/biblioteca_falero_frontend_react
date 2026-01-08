@@ -18,13 +18,17 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({
 }) => {
   const methods = useCustomForm<ReservationFormData>({
     schema: reservationSchema,
+    mode: 'onChange',
     defaultValues: initialData || {
       reservationDate: new Date().toISOString().split('T')[0],
       priority: 'LOW'
     }
   })
 
-  const { reset } = methods
+  const {
+    reset,
+    formState: { isValid }
+  } = methods
 
   useEffect(() => {
     if (initialData) {
@@ -54,7 +58,8 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({
         </button>
         <button
           type="submit"
-          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+          disabled={!isValid}
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Icon name="check" />
           Confirmar Reserva

@@ -29,17 +29,11 @@ describe('ReservationForm Component', () => {
     expect(screen.getByLabelText(/data da reserva/i)).toHaveValue(today)
   })
 
-  test('Should show validation errors for empty fields on submit', async () => {
-    const { user } = makeSut()
-    await user.click(screen.getByRole('button', { name: /confirmar reserva/i }))
-
-    await waitFor(async () => {
-      // Expect validation messages for user and book
-      expect(
-        await screen.findByText(/selecione um usuário/i)
-      ).toBeInTheDocument()
-      expect(await screen.findByText(/selecione uma obra/i)).toBeInTheDocument()
-    })
+  test('Should have the submit button disabled when fields are empty', async () => {
+    makeSut()
+    expect(
+      screen.getByRole('button', { name: /confirmar reserva/i })
+    ).toBeDisabled()
   })
 
   test('Should call onSave with correct values', async () => {

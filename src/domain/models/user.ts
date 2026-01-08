@@ -23,7 +23,9 @@ export interface User {
   cpf: string
   role: UserRole
   status: UserStatus
+  gender: 'MALE' | 'FEMALE' | 'OTHER'
   enrollmentId?: string
   avatarUrl?: string
   address?: Address
+  createdAt: string
 }

@@ -34,8 +34,9 @@ describe('CredentialModal Component', () => {
     expect(
       screen.getByText(`Defina o acesso para ${userName}`)
     ).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('username')).toBeInTheDocument()
+    expect(screen.getByLabelText(/perfil/i)).toBeInTheDocument()
     expect(screen.getByPlaceholderText('********')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /salvar senha/i })).toBeDisabled()
   })
 
   test('Should call onClose when Cancelar is clicked', async () => {
@@ -66,33 +67,10 @@ describe('CredentialModal Component', () => {
 
     const passwordInput = screen.getByPlaceholderText('********')
     await user.type(passwordInput, 'short')
-    await user.click(screen.getByRole('button', { name: /salvar senha/i }))
 
     await waitFor(() => {
       expect(
         screen.getByText('A senha deve ter no mínimo 8 caracteres')
-      ).toBeInTheDocument()
-    })
-  })
-
-  test('Should display validation errors for short username', async () => {
-    const user = userEvent.setup()
-    render(
-      <CredentialModal
-        isOpen={true}
-        onClose={vi.fn()}
-        onSave={vi.fn()}
-        userName={userName}
-      />
-    )
-
-    const usernameInput = screen.getByPlaceholderText('username')
-    await user.type(usernameInput, 'us')
-    await user.click(screen.getByRole('button', { name: /salvar senha/i }))
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('O usuário deve ter no mínimo 3 caracteres')
       ).toBeInTheDocument()
     })
   })
@@ -106,23 +84,25 @@ describe('CredentialModal Component', () => {
         onClose={vi.fn()}
         onSave={onSaveMock}
         userName={userName}
+        initialRole="PROFESSOR"
       />
     )
 
-    const usernameInput = screen.getByPlaceholderText('username')
+    const roleSelect = screen.getByLabelText(/perfil/i)
     const passwordInput = screen.getByPlaceholderText('********')
 
-    await user.type(usernameInput, 'valid_user')
+    await user.selectOptions(roleSelect, 'ADMIN')
     await user.type(passwordInput, 'Valid123')
 
     // Trigger submit
     const submitButton = screen.getByRole('button', { name: /salvar senha/i })
+    expect(submitButton).toBeEnabled()
     await user.click(submitButton)
 
     await waitFor(() => {
       expect(onSaveMock).toHaveBeenCalledWith(
         expect.objectContaining({
-          username: 'valid_user',
+          role: 'ADMIN',
           password: 'Valid123'
         }),
         expect.anything()

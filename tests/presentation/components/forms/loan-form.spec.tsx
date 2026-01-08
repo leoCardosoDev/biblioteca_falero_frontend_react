@@ -29,17 +29,11 @@ describe('LoanForm Component', () => {
     expect(screen.getByLabelText(/data do empréstimo/i)).toHaveValue(today)
   })
 
-  test('Should show validation errors for empty fields on submit', async () => {
-    const { user } = makeSut()
-    await user.click(
+  test('Should have the submit button disabled when fields are empty', async () => {
+    makeSut()
+    expect(
       screen.getByRole('button', { name: /confirmar empréstimo/i })
-    )
-
-    await waitFor(async () => {
-      // Use findAllByText to handle potential multiple matches or ensure at least one
-      const participantsErrors = await screen.findAllByText(/selecione/i)
-      expect(participantsErrors.length).toBeGreaterThan(0)
-    })
+    ).toBeDisabled()
   })
 
   test('Should call onSave with correct values', async () => {

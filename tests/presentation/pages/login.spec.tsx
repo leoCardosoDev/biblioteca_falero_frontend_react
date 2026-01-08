@@ -1,4 +1,3 @@
-
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { Login } from '@/presentation/react/pages/login/login'
@@ -49,7 +48,7 @@ describe('Login Page', () => {
     makeSut()
     expect(screen.getByPlaceholderText('Digite seu login')).toHaveValue('')
     expect(screen.getByPlaceholderText('Digite sua senha')).toHaveValue('')
-    expect(screen.getByRole('button', { name: /entrar/i })).toBeEnabled()
+    expect(screen.getByRole('button', { name: /entrar/i })).toBeDisabled()
   })
 
   test('Should call AuthContext.login with correct values', async () => {
@@ -61,6 +60,12 @@ describe('Login Page', () => {
 
     fireEvent.change(emailInput, { target: { value: 'any_email@mail.com' } })
     fireEvent.change(passwordInput, { target: { value: 'any_password' } })
+
+    fireEvent.change(passwordInput, { target: { value: 'any_password' } })
+
+    await waitFor(() => {
+      expect(submitButton).toBeEnabled()
+    })
 
     fireEvent.click(submitButton)
 
@@ -82,6 +87,12 @@ describe('Login Page', () => {
 
     fireEvent.change(emailInput, { target: { value: 'valid_email@mail.com' } })
     fireEvent.change(passwordInput, { target: { value: 'valid_password' } })
+    fireEvent.change(passwordInput, { target: { value: 'valid_password' } })
+
+    await waitFor(() => {
+      expect(submitButton).toBeEnabled()
+    })
+
     fireEvent.click(submitButton)
 
     await waitFor(() => {
@@ -98,8 +109,16 @@ describe('Login Page', () => {
     const passwordInput = screen.getByPlaceholderText('Digite sua senha')
     const submitButton = screen.getByRole('button', { name: /entrar/i })
 
-    fireEvent.change(emailInput, { target: { value: 'invalid_email@mail.com' } })
+    fireEvent.change(emailInput, {
+      target: { value: 'invalid_email@mail.com' }
+    })
     fireEvent.change(passwordInput, { target: { value: 'invalid_password' } })
+    fireEvent.change(passwordInput, { target: { value: 'invalid_password' } })
+
+    await waitFor(() => {
+      expect(submitButton).toBeEnabled()
+    })
+
     fireEvent.click(submitButton)
 
     await waitFor(() => {
@@ -118,10 +137,17 @@ describe('Login Page', () => {
 
     fireEvent.change(emailInput, { target: { value: 'any_email@mail.com' } })
     fireEvent.change(passwordInput, { target: { value: 'any_password' } })
+
+    await waitFor(() => {
+      expect(submitButton).toBeEnabled()
+    })
+
     fireEvent.click(submitButton)
 
     await waitFor(() => {
-      expect(screen.getByText('Erro inesperado. Tente novamente mais tarde.')).toBeInTheDocument()
+      expect(
+        screen.getByText('Erro inesperado. Tente novamente mais tarde.')
+      ).toBeInTheDocument()
     })
   })
 })

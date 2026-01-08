@@ -1,6 +1,7 @@
 import { HttpClient } from '@/application/protocols/http/http-client'
 import { type LoadUsers } from '@/domain/usecases/load-users'
 import { type User } from '@/domain/models/user'
+import { handleStatusCode } from './http-status-handler'
 
 export class RemoteLoadUsers implements LoadUsers {
   constructor(private readonly httpClient: HttpClient) {}
@@ -10,6 +11,9 @@ export class RemoteLoadUsers implements LoadUsers {
       url: '/users',
       method: 'get'
     })
+
+    handleStatusCode(response)
+
     const remoteUsers = response.body as RemoteUser[]
     return remoteUsers.map((remoteUser) => ({
       ...remoteUser,

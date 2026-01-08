@@ -12,19 +12,6 @@ export const UserAccessControl: React.FC = () => {
   return (
     <FormSection title="Controle de Acesso">
       <Select
-        {...register('role')}
-        id="role"
-        label="Perfil"
-        error={errors.role?.message}
-        required
-      >
-        <option value="PROFESSOR">Professor</option>
-        <option value="LIBRARIAN">Bibliotecário</option>
-        <option value="ADMIN">Administrador</option>
-        <option value="STUDENT">Estudante</option>
-      </Select>
-
-      <Select
         {...register('status')}
         id="status"
         label="Status"

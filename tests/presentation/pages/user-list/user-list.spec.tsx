@@ -7,7 +7,8 @@ import type { AddUserLogin } from '@/domain/usecases/add-user-login'
 
 // Mock the hook
 const mocks = vi.hoisted(() => ({
-  useUserManagement: vi.fn()
+  useUserManagement: vi.fn(),
+  CredentialModal: vi.fn()
 }))
 
 vi.mock('@/presentation/react/hooks/use-user-management', () => ({
@@ -35,32 +36,38 @@ vi.mock('@/presentation/react/components/forms', () => ({
 vi.mock(
   '@/presentation/react/components/credential-modal/credential-modal',
   () => ({
-    CredentialModal: ({
-      onSave,
-      onClose,
-      isOpen
-    }: {
-      onSave: (data: unknown) => void
-      onClose: () => void
-      isOpen: boolean
-    }) =>
-      isOpen ? (
-        <>
-          <button
-            onClick={() =>
-              onSave({
-                username: 'user',
-                password: 'pass',
-                confirmPassword: 'pass'
-              })
-            }
-          >
-            Save Creds Mock
-          </button>
-          <button onClick={onClose}>Cancel Creds Mock</button>
-        </>
-      ) : null
+    CredentialModal: mocks.CredentialModal
   })
+)
+
+// Setup default mock implementation
+mocks.CredentialModal.mockImplementation(
+  ({
+    onSave,
+    onClose,
+    isOpen,
+    initialRole
+  }: {
+    onSave: (data: unknown) => void
+    onClose: () => void
+    isOpen: boolean
+    initialRole?: string
+  }) =>
+    isOpen ? (
+      <>
+        <button
+          onClick={() =>
+            onSave({
+              password: 'pass',
+              role: (initialRole as unknown as 'STUDENT') || 'STUDENT'
+            })
+          }
+        >
+          Save Creds Mock
+        </button>
+        <button onClick={onClose}>Cancel Creds Mock</button>
+      </>
+    ) : null
 )
 
 const makeSut = () => {
@@ -87,7 +94,9 @@ describe('User List Page', () => {
       enrollmentId: '123',
       cpf: '111.111.111-11',
       avatarUrl: 'any_url',
-      rg: '1234567'
+      rg: '1234567',
+      gender: 'MALE',
+      createdAt: new Date().toISOString()
     },
     {
       id: '2',
@@ -98,7 +107,9 @@ describe('User List Page', () => {
       enrollmentId: '456',
       cpf: '222.222.222-22',
       avatarUrl: 'any_url',
-      rg: '7654321'
+      rg: '7654321',
+      gender: 'FEMALE',
+      createdAt: new Date().toISOString()
     }
   ]
 
@@ -436,7 +447,6 @@ describe('User List Page', () => {
 
     expect(addUserLoginPerform).toHaveBeenCalledWith({
       userId: '1',
-      username: 'user',
       password: 'pass'
     })
   })
@@ -591,5 +601,158 @@ describe('User List Page', () => {
     await waitFor(() => {
       expect(screen.queryByText('Save Creds Mock')).not.toBeInTheDocument()
     })
+  })
+
+  test('Should not update user role if it has not changed during credential save', async () => {
+    const handleUpdateUser = vi.fn().mockResolvedValue(true)
+    const addUserLoginPerform = vi.fn().mockResolvedValue(true)
+
+    // User role is STUDENT
+    const user = { ...mockUsers[0], role: 'STUDENT' }
+
+    mocks.useUserManagement.mockReturnValue({
+      users: [user],
+      isLoading: false,
+      error: null,
+      handleAddUser: vi.fn(),
+      handleUpdateUser,
+      handleDeleteUser: vi.fn(),
+      handleLoadUserById: vi.fn()
+    })
+
+    const props = {
+      loadUsers: {} as never,
+      addUser: {} as never,
+      updateUser: {} as never,
+      deleteUser: {} as never,
+      addUserLogin: { perform: addUserLoginPerform } as unknown as AddUserLogin,
+      loadUserById: {} as never,
+      loadAddressByZipCode: {} as never
+    }
+
+    render(<Users {...props} />)
+
+    // Open credential modal
+    const keyButton = screen.getAllByTitle('Credenciais')[0]
+    fireEvent.click(keyButton)
+
+    // Click verify credentials mock
+    fireEvent.click(screen.getByText('Save Creds Mock'))
+
+    await React.act(async () => {})
+
+    expect(handleUpdateUser).not.toHaveBeenCalled()
+    expect(addUserLoginPerform).toHaveBeenCalled()
+  })
+
+  test('Should update user role if it HAS changed during credential save', async () => {
+    const handleUpdateUser = vi.fn().mockResolvedValue(true)
+    const addUserLoginPerform = vi.fn().mockResolvedValue(true)
+
+    // User role is STUDENT
+    const user = { ...mockUsers[0], role: 'STUDENT' }
+
+    mocks.useUserManagement.mockReturnValue({
+      users: [user],
+      isLoading: false,
+      error: null,
+      handleAddUser: vi.fn(),
+      handleUpdateUser,
+      handleDeleteUser: vi.fn(),
+      handleLoadUserById: vi.fn()
+    })
+
+    const props = {
+      loadUsers: {} as never,
+      addUser: {} as never,
+      updateUser: {} as never,
+      deleteUser: {} as never,
+      addUserLogin: { perform: addUserLoginPerform } as unknown as AddUserLogin,
+      loadUserById: {} as never,
+      loadAddressByZipCode: {} as never
+    }
+
+    render(<Users {...props} />)
+
+    // Mock credential save with DIFFERENT role
+    mocks.CredentialModal.mockImplementationOnce(
+      ({ onSave }: { onSave: (data: unknown) => void }) => (
+        <button
+          onClick={() =>
+            onSave({
+              password: 'p',
+              role: 'PROFESSOR' // Different from STUDENT
+            })
+          }
+        >
+          Save Different Role
+        </button>
+      )
+    )
+
+    // Open credential modal
+    const keyButton = screen.getAllByTitle('Credenciais')[0]
+    fireEvent.click(keyButton)
+
+    // Click verify credentials mock
+    fireEvent.click(screen.getByText('Save Different Role'))
+
+    await React.act(async () => {})
+
+    expect(handleUpdateUser).toHaveBeenCalledWith({
+      id: user.id,
+      role: 'PROFESSOR'
+    })
+    expect(addUserLoginPerform).toHaveBeenCalled()
+  })
+
+  test('Should handle user with missing createdAt in stats', () => {
+    const userNoDate = { ...mockUsers[0], id: '3', createdAt: undefined }
+    mocks.useUserManagement.mockReturnValue({
+      users: [userNoDate, mockUsers[0]],
+      isLoading: false,
+      error: null,
+      handleAddUser: vi.fn(),
+      handleUpdateUser: vi.fn(),
+      handleDeleteUser: vi.fn(),
+      handleLoadUserById: vi.fn()
+    })
+    makeSut()
+    // The stats calculation should not crash and should just ignore this user.
+    expect(screen.getByText('Total de Usuários')).toBeInTheDocument()
+  })
+
+  test('Should render status colors correctly', () => {
+    const inactiveUser = {
+      ...mockUsers[0],
+      id: '3',
+      status: 'INACTIVE',
+      email: 'inactive@test.com',
+      cpf: '000.000.000-00',
+      enrollmentId: '999'
+    }
+    const blockedUser = {
+      ...mockUsers[0],
+      id: '4',
+      status: 'BLOCKED',
+      email: 'blocked@test.com',
+      cpf: '000.000.000-01',
+      enrollmentId: '888'
+    }
+
+    mocks.useUserManagement.mockReturnValue({
+      users: [inactiveUser, blockedUser],
+      isLoading: false,
+      error: null,
+      handleAddUser: vi.fn(),
+      handleUpdateUser: vi.fn(),
+      handleDeleteUser: vi.fn(),
+      handleLoadUserById: vi.fn()
+    })
+    makeSut()
+
+    // Check for Inactive specific text
+    expect(screen.getAllByText('Inativo').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Bloqueado').length).toBeGreaterThan(0)
   })
 })

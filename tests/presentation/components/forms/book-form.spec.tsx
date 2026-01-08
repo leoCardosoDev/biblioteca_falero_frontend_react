@@ -6,17 +6,13 @@ import type { Book } from '@/domain/models/book'
 
 describe('BookForm Component', () => {
   vi.setConfig({ testTimeout: 15000 })
-  const makeSut = (props: Partial<React.ComponentProps<typeof BookForm>> = {}) => {
+  const makeSut = (
+    props: Partial<React.ComponentProps<typeof BookForm>> = {}
+  ) => {
     const onSave = vi.fn()
     const onCancel = vi.fn()
     const user = userEvent.setup()
-    render(
-      <BookForm
-        onSave={onSave}
-        onCancel={onCancel}
-        {...props}
-      />
-    )
+    render(<BookForm onSave={onSave} onCancel={onCancel} {...props} />)
     return { onSave, onCancel, user }
   }
 
@@ -30,13 +26,9 @@ describe('BookForm Component', () => {
     expect(screen.getByLabelText(/quantidade/i)).toBeInTheDocument()
   })
 
-  test('Should show validation errors for empty fields on submit', async () => {
-    const { user } = makeSut()
-    await user.click(screen.getByRole('button', { name: /salvar obra/i }))
-
-    expect(await screen.findByText(/título é obrigatório/i)).toBeInTheDocument()
-    expect(await screen.findByText(/autor é obrigatório/i)).toBeInTheDocument()
-    expect(await screen.findByText(/ISBN é obrigatório/i)).toBeInTheDocument()
+  test('Should have the submit button disabled when fields are empty', async () => {
+    makeSut()
+    expect(screen.getByRole('button', { name: /salvar obra/i })).toBeDisabled()
   })
 
   test('Should call onSave with correct numeric values', async () => {
@@ -53,15 +45,17 @@ describe('BookForm Component', () => {
     await user.click(screen.getByRole('button', { name: /salvar obra/i }))
 
     await waitFor(() => {
-      expect(onSave.mock.calls[0][0]).toEqual(expect.objectContaining({
-        title: 'Clean Code',
-        author: 'Robert C. Martin',
-        publisher: 'Pearson',
-        year: 2008,
-        isbn: '978-0132350884',
-        edition: '1',
-        quantity: 5
-      }))
+      expect(onSave.mock.calls[0][0]).toEqual(
+        expect.objectContaining({
+          title: 'Clean Code',
+          author: 'Robert C. Martin',
+          publisher: 'Pearson',
+          year: 2008,
+          isbn: '978-0132350884',
+          edition: '1',
+          quantity: 5
+        })
+      )
     })
   })
 
@@ -77,7 +71,9 @@ describe('BookForm Component', () => {
     makeSut({ initialData })
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/^título da obra$/i)).toHaveValue('Legacy Code')
+      expect(screen.getByLabelText(/^título da obra$/i)).toHaveValue(
+        'Legacy Code'
+      )
       expect(screen.getByLabelText(/ano/i)).toHaveValue(2004)
       expect(screen.getByLabelText(/quantidade/i)).toHaveValue(3)
     })

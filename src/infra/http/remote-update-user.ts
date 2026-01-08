@@ -1,6 +1,7 @@
 import { HttpClient } from '@/application/protocols/http/http-client'
 import { UpdateUser, UpdateUserParams } from '@/domain/usecases/update-user'
 import { User } from '@/domain/models/user'
+import { handleStatusCode } from './http-status-handler'
 
 export class RemoteUpdateUser implements UpdateUser {
   constructor(private readonly httpClient: HttpClient) {}
@@ -12,6 +13,9 @@ export class RemoteUpdateUser implements UpdateUser {
       method: 'put',
       body: data
     })
-    return response.body
+
+    handleStatusCode(response)
+
+    return response.body as User
   }
 }

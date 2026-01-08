@@ -26,6 +26,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     mode: 'onChange'
   })
 
+  const {
+    formState: { isValid }
+  } = methods
+
   return (
     <div className="w-full">
       <LoginHeader />
@@ -61,7 +65,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           type="submit"
           className="mt-2 h-12"
           icon={isLoading ? undefined : 'arrow_forward'}
-          disabled={isLoading}
+          disabled={isLoading || !isValid}
         >
           {isLoading ? 'Entrando...' : 'Entrar'}
         </Button>

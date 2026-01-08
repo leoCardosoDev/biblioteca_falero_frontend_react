@@ -1,6 +1,7 @@
 import { HttpClient } from '@/application/protocols/http/http-client'
 import { type LoadUserById } from '@/domain/usecases/load-user-by-id'
 import { type User } from '@/domain/models/user'
+import { handleStatusCode } from './http-status-handler'
 
 export class RemoteLoadUserById implements LoadUserById {
   constructor(private readonly httpClient: HttpClient) {}
@@ -10,6 +11,9 @@ export class RemoteLoadUserById implements LoadUserById {
       url: `/users/${id}`,
       method: 'get'
     })
+
+    handleStatusCode(response)
+
     const remoteUser = response.body as RemoteUser
     return {
       ...remoteUser,

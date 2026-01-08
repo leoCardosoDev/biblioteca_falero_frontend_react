@@ -18,12 +18,16 @@ export const LoanForm: React.FC<LoanFormProps> = ({
 }) => {
   const methods = useCustomForm<LoanFormData>({
     schema: loanSchema,
+    mode: 'onChange',
     defaultValues: initialData || {
       loanDate: new Date().toISOString().split('T')[0]
     }
   })
 
-  const { reset } = methods
+  const {
+    reset,
+    formState: { isValid }
+  } = methods
 
   useEffect(() => {
     if (initialData) {
@@ -53,7 +57,8 @@ export const LoanForm: React.FC<LoanFormProps> = ({
         </button>
         <button
           type="submit"
-          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+          disabled={!isValid}
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Icon name="check" />
           Confirmar Empréstimo
