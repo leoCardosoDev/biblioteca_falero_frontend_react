@@ -12,25 +12,38 @@ describe('UserForm Component', () => {
   ) => {
     const onSave = vi.fn()
     const onCancel = vi.fn()
+    const loadAddressByZipCode = {
+      perform: vi.fn()
+    }
     const user = userEvent.setup({ delay: null })
-    render(<UserForm onSave={onSave} onCancel={onCancel} {...props} />)
-    return { onSave, onCancel, user }
+    render(
+      <UserForm
+        onSave={onSave}
+        onCancel={onCancel}
+        loadAddressByZipCode={loadAddressByZipCode}
+        {...props}
+      />
+    )
+    return { onSave, onCancel, user, loadAddressByZipCode }
   }
 
-  test('Should render all fields correctly', () => {
+  test('Should render initial fields correctly', () => {
     makeSut()
     expect(screen.getByLabelText(/nome completo/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/rg/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/cpf/i)).toBeInTheDocument()
+    expect(screen.getByLabelText(/gênero/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/perfil/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/status/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/rua/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/número/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/bairro/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/cidade/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/estado \(uf\)/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/cep/i)).toBeInTheDocument()
+
+    // Address detail fields should remain hidden initially
+    expect(screen.queryByLabelText(/rua/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/número/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/bairro/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/cidade/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/estado \(uf\)/i)).not.toBeInTheDocument()
   })
 
   test('Should show validation errors for empty fields on submit', async () => {
@@ -46,33 +59,66 @@ describe('UserForm Component', () => {
   })
 
   test('Should call onSave with correct values', async () => {
-    const { onSave, user } = makeSut()
+    const { onSave, user, loadAddressByZipCode } = makeSut()
+
+    // Mock successful address lookup to reveal fields
+    loadAddressByZipCode.perform.mockResolvedValue({
+      street: 'Rua A',
+      neighborhood: 'Centro',
+      city: 'Sao Paulo',
+      state: 'SP',
+      neighborhoodId: '123e4567-e89b-12d3-a456-426614174000',
+      cityId: '123e4567-e89b-12d3-a456-426614174001',
+      stateId: '123e4567-e89b-12d3-a456-426614174002'
+    })
 
     await user.type(screen.getByLabelText(/nome completo/i), 'John Doe')
     await user.type(screen.getByLabelText(/email/i), 'john@example.com')
     await user.type(screen.getByLabelText(/rg/i), '1234567')
     await user.type(screen.getByLabelText(/cpf/i), '11111111111')
+    await user.selectOptions(screen.getByLabelText(/gênero/i), 'MALE')
 
-    await user.type(screen.getByLabelText(/rua/i), 'Rua A')
+    // Perform CEP lookup to show address fields
+    const cepInput = screen.getByLabelText(/cep/i)
+    await user.type(cepInput, '63240970')
+    const cepButton = screen.getByTestId('cep-search-button')
+    await user.click(cepButton)
+
+    // Wait for fields to appear
+    await waitFor(() => {
+      expect(screen.getByLabelText(/rua/i)).toBeInTheDocument()
+    })
+
+    // Now fields are pre-filled by the mock, but we can edit them if needed.
+    // The test originally typed 'Rua A'. The mock returns 'Rua A'. So we don't need to type if it matches.
+    // But we need to type Number.
     await user.type(screen.getByLabelText(/número/i), '123')
-    await user.type(screen.getByLabelText(/bairro/i), 'Centro')
-    await user.type(screen.getByLabelText(/cidade/i), 'Sao Paulo')
-    await user.type(screen.getByLabelText(/estado \(uf\)/i), 'SP')
-    await user.type(screen.getByLabelText(/cep/i), '01001000')
+
+    // Verify pre-filled values are correct
+    expect(screen.getByLabelText(/rua/i)).toHaveValue('Rua A')
 
     await user.click(screen.getByRole('button', { name: /salvar usuário/i }))
 
     await waitFor(() => {
-      // Check only the first argument (data), ignoring the second argument (event)
+      if (onSave.mock.calls.length === 0) {
+        // screen.debug()
+        // console.log('Validation Errors present?')
+      }
+      expect(onSave).toHaveBeenCalled()
+    })
+
+    await waitFor(() => {
       expect(onSave.mock.calls[0][0]).toEqual(
         expect.objectContaining({
           name: 'John Doe',
           email: 'john@example.com',
           cpf: '111.111.111-11',
+          gender: 'MALE',
           address: expect.objectContaining({
             street: 'Rua A',
             city: 'Sao Paulo',
-            zipCode: '01001-000'
+            zipCode: '63240-970',
+            number: '123'
           })
         })
       )
@@ -103,6 +149,8 @@ describe('UserForm Component', () => {
         'Initial Name'
       )
       expect(screen.getByLabelText(/email/i)).toHaveValue('initial@mail.com')
+      // Fields should be visible because address.street is present
+      expect(screen.getByLabelText(/rua/i)).toBeInTheDocument()
       expect(screen.getByLabelText(/rua/i)).toHaveValue('Rua B')
     })
   })
@@ -132,9 +180,9 @@ describe('UserForm Component', () => {
       expect(screen.getByLabelText(/nome completo/i)).toHaveValue(
         'User Without Address'
       )
-      // Address fields should be empty
-      expect(screen.getByLabelText(/rua/i)).toHaveValue('')
-      expect(screen.getByLabelText(/cidade/i)).toHaveValue('')
+      // Address fields should be hidden
+      expect(screen.queryByLabelText(/rua/i)).not.toBeInTheDocument()
+      expect(screen.queryByLabelText(/cidade/i)).not.toBeInTheDocument()
     })
   })
 })

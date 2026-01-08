@@ -10,6 +10,9 @@ export interface Address {
   city: string
   state: string
   zipCode: string
+  stateId?: string
+  cityId?: string
+  neighborhoodId?: string
 }
 
 export interface User {

@@ -7,12 +7,16 @@ export const userSchema = z.object({
     .string()
     .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'CPF inválido (000.000.000-00)'),
   rg: z.string().min(5, 'RG inválido'),
+  gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   role: z.enum(['ADMIN', 'LIBRARIAN', 'PROFESSOR', 'STUDENT']),
   status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
   address: z.object({
     street: z.string().min(1, 'Rua obrigatória'),
     number: z.string().min(1, 'Número obrigatório'),
     complement: z.string().optional(),
+    neighborhoodId: z.string().uuid('Bairro inválido').optional(),
+    cityId: z.string().uuid('Cidade inválida').optional(),
+    stateId: z.string().uuid('Estado inválido').optional(),
     neighborhood: z.string().min(1, 'Bairro obrigatório'),
     city: z.string().min(1, 'Cidade obrigatória'),
     state: z.string().length(2, 'Estado (UF) deve ter 2 letras'),

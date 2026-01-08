@@ -10,6 +10,6 @@ export class RemoteLoadAddressByZipCode implements LoadAddressByZipCode {
       url: `/addresses/cep/${zipCode}`,
       method: 'get'
     })
-    return response.body
+    return response.body as Address
   }
 }

@@ -4,6 +4,7 @@ import { User } from '@/domain/models/user'
 import { UserGeneralInfo } from './parts/user/UserGeneralInfo'
 import { UserAddress } from './parts/user/UserAddress'
 import { UserAccessControl } from './parts/user/UserAccessControl'
+import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
 import { userSchema, UserFormData } from './user-schema'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
@@ -13,18 +14,21 @@ interface UserFormProps {
   initialData?: User
   onCancel: () => void
   onSave: (data: UserFormData) => void
+  loadAddressByZipCode: LoadAddressByZipCode
 }
 
 export const UserForm: React.FC<UserFormProps> = ({
   initialData,
   onCancel,
-  onSave
+  onSave,
+  loadAddressByZipCode
 }) => {
   const methods = useCustomForm<UserFormData>({
     schema: userSchema,
     defaultValues: {
       role: 'PROFESSOR',
-      status: 'ACTIVE'
+      status: 'ACTIVE',
+      gender: 'OTHER'
     }
   })
 
@@ -43,6 +47,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           | 'PROFESSOR'
           | 'STUDENT',
         status: initialData.status as 'ACTIVE' | 'INACTIVE' | 'BLOCKED',
+        gender: (initialData.gender as 'MALE' | 'FEMALE' | 'OTHER') || 'OTHER',
         address: initialData.address || {
           street: '',
           number: '',
@@ -64,7 +69,7 @@ export const UserForm: React.FC<UserFormProps> = ({
     >
       <div className="flex flex-col gap-8">
         <UserGeneralInfo />
-        <UserAddress />
+        <UserAddress loadAddressByZipCode={loadAddressByZipCode} />
         <UserAccessControl />
       </div>
 

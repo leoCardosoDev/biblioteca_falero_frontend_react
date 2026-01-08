@@ -11,8 +11,11 @@ export interface AddUserParams {
     street: string
     number: string
     complement?: string
-    neighborhoodId: string
-    cityId: string
+    neighborhoodId?: string
+    cityId?: string
+    stateId?: string
+    neighborhood: string
+    city: string
     state: string
     zipCode: string
   }

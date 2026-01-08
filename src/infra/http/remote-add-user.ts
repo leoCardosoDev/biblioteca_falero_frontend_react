@@ -11,10 +11,10 @@ export class RemoteAddUser implements AddUser {
       method: 'post',
       body: params
     })
-    const remoteUser = response.body
+    const remoteUser = response.body as User
     return {
       ...remoteUser,
-      role: remoteUser.login?.role || 'STUDENT',
+      role: remoteUser.role || 'STUDENT',
       status: remoteUser.status || 'INACTIVE'
     }
   }
