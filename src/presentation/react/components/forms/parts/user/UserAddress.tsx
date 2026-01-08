@@ -5,6 +5,7 @@ import { maskZipCode } from '@/presentation/react/helpers/mask-utils'
 import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
 import { Button, Icon } from '@/presentation/react/components/ui'
 import { UserFormData } from '../../user-schema'
+import { NotFoundError } from '@/domain/errors'
 
 interface UserAddressProps {
   loadAddressByZipCode: LoadAddressByZipCode
@@ -21,27 +22,65 @@ export const UserAddress: React.FC<UserAddressProps> = ({
   } = useFormContext<UserFormData>()
 
   const [isLoading, setIsLoading] = React.useState(false)
+  const [isZipCodeResolved, setIsZipCodeResolved] = React.useState(false)
+  const [searchError, setSearchError] = React.useState<string | null>(null)
+
   const watchedZipCode = watch('address.zipCode') ?? ''
+  const watchedAddress = watch('address')
+
+  React.useEffect(() => {
+    // Only resolve automatically if street is non-empty (for editing existing users)
+    if (watchedAddress?.street && watchedAddress.street.trim().length > 0 && watchedZipCode.replace(/\D/g, '').length === 8) {
+      setIsZipCodeResolved(true)
+    }
+  }, [watchedAddress?.street, watchedZipCode])
 
   const handleZipCodeLookup = async () => {
     const cleanZip = watchedZipCode.replace(/\D/g, '')
-    if (cleanZip.length !== 8) {
-      return
-    }
+
 
     setIsLoading(true)
+    setSearchError(null)
+    setIsZipCodeResolved(false) // Reset visibility immediately
+
     try {
       const address = await loadAddressByZipCode.perform(cleanZip)
 
-      setValue('address.street', address.street)
-      setValue('address.neighborhood', address.neighborhood)
-      setValue('address.city', address.city)
-      setValue('address.state', address.state)
+      setValue('address.street', address.street, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
+      setValue('address.neighborhood', address.neighborhood, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
+      setValue('address.city', address.city, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
+      setValue('address.state', address.state, {
+        shouldDirty: true,
+        shouldValidate: true
+      })
       setValue('address.neighborhoodId', address.neighborhoodId)
       setValue('address.cityId', address.cityId)
       setValue('address.stateId', address.stateId)
-    } catch (_error) {
-      // Ignore error for now or handle UI feedback
+      setIsZipCodeResolved(true)
+    } catch (error) {
+      if (error instanceof NotFoundError) {
+        setSearchError('CEP não encontrado')
+      } else {
+        setSearchError('Erro interno. Contate o administrador')
+      }
+      setIsZipCodeResolved(false)
+      // Clear address fields to prevent stale data and useEffect re-triggers
+      setValue('address.street', '', { shouldValidate: false })
+      setValue('address.neighborhood', '', { shouldValidate: false })
+      setValue('address.city', '', { shouldValidate: false })
+      setValue('address.state', '', { shouldValidate: false })
+      setValue('address.neighborhoodId', '')
+      setValue('address.cityId', '')
+      setValue('address.stateId', '')
     } finally {
       setIsLoading(false)
     }
@@ -49,7 +88,7 @@ export const UserAddress: React.FC<UserAddressProps> = ({
 
   return (
     <FormSection title="Endereço">
-      <div className="flex items-end gap-2">
+      <div className="flex items-start gap-2">
         <Input
           {...register('address.zipCode')}
           id="zipCode"
@@ -61,8 +100,12 @@ export const UserAddress: React.FC<UserAddressProps> = ({
             setValue('address.zipCode', masked, {
               shouldValidate: true
             })
+            if (masked.replace(/\D/g, '').length !== 8) {
+              setIsZipCodeResolved(false)
+              setSearchError(null)
+            }
           }}
-          error={errors.address?.zipCode?.message}
+          error={searchError || errors.address?.zipCode?.message}
           className="flex-1"
           required
         />
@@ -71,7 +114,7 @@ export const UserAddress: React.FC<UserAddressProps> = ({
           data-testid="cep-search-button"
           onClick={handleZipCodeLookup}
           disabled={isLoading || watchedZipCode.replace(/\D/g, '').length !== 8}
-          className="mb-[1px] h-11"
+          className="mt-[26px] h-12 w-12"
         >
           {isLoading ? (
             <Icon name="loader" className="animate-spin" />
@@ -81,16 +124,18 @@ export const UserAddress: React.FC<UserAddressProps> = ({
         </Button>
       </div>
 
-      <div className="hidden md:block" />
-
-      {!!watch('address.street') && (
+      {isZipCodeResolved && (
         <>
+          <div className="hidden md:block" />
           <Input
             {...register('address.street')}
             id="street"
             label="Rua"
+            value={watchedAddress?.street || ''}
+            readOnly
             error={errors.address?.street?.message}
             className="md:col-span-2"
+            inputClassName="bg-slate-100 dark:bg-slate-800/50 cursor-not-allowed"
             required
           />
 
@@ -103,10 +148,20 @@ export const UserAddress: React.FC<UserAddressProps> = ({
           />
 
           <Input
+            {...register('address.complement')}
+            id="complement"
+            label="Complemento"
+            error={errors.address?.complement?.message}
+          />
+
+          <Input
             {...register('address.neighborhood')}
             id="neighborhood"
             label="Bairro"
+            value={watchedAddress?.neighborhood || ''}
+            readOnly
             error={errors.address?.neighborhood?.message}
+            inputClassName="bg-slate-100 dark:bg-slate-800/50 cursor-not-allowed"
             required
           />
 
@@ -114,7 +169,10 @@ export const UserAddress: React.FC<UserAddressProps> = ({
             {...register('address.city')}
             id="city"
             label="Cidade"
+            value={watchedAddress?.city || ''}
+            readOnly
             error={errors.address?.city?.message}
+            inputClassName="bg-slate-100 dark:bg-slate-800/50 cursor-not-allowed"
             required
           />
 
@@ -122,8 +180,11 @@ export const UserAddress: React.FC<UserAddressProps> = ({
             {...register('address.state')}
             id="state"
             label="Estado (UF)"
+            value={watchedAddress?.state || ''}
             maxLength={2}
+            readOnly
             error={errors.address?.state?.message}
+            inputClassName="bg-slate-100 dark:bg-slate-800/50 cursor-not-allowed"
             required
           />
         </>
