@@ -9,7 +9,9 @@ const mocks = vi.hoisted(() => ({
   router: {
     navigate: vi.fn()
   },
-  login: vi.fn()
+  login: vi.fn(),
+  isAuthenticated: false,
+  isLoading: false
 }))
 
 // Mock AuthContext
@@ -19,8 +21,8 @@ vi.mock('@/presentation/react/hooks/use-auth-context', () => ({
     signIn: vi.fn(),
     signOut: vi.fn(),
     user: undefined,
-    isAuthenticated: false,
-    isLoading: false
+    isAuthenticated: mocks.isAuthenticated,
+    isLoading: mocks.isLoading
   })
 }))
 
@@ -35,6 +37,8 @@ const makeSut = () => {
 describe('Login Page', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mocks.isAuthenticated = false
+    mocks.isLoading = false
     // Default success behavior
     mocks.login.mockResolvedValue({
       accessToken: 'valid_token',
@@ -149,5 +153,21 @@ describe('Login Page', () => {
         screen.getByText('Erro inesperado. Tente novamente mais tarde.')
       ).toBeInTheDocument()
     })
+  })
+
+  test('Should navigate to / if already authenticated', async () => {
+    mocks.isAuthenticated = true
+    makeSut()
+    await waitFor(() => {
+      expect(mocks.router.navigate).toHaveBeenCalledWith('/')
+    })
+  })
+
+  test('Should not render login form while loading authentication status', () => {
+    mocks.isLoading = true
+    makeSut()
+    expect(
+      screen.queryByPlaceholderText('Digite seu login')
+    ).not.toBeInTheDocument()
   })
 })

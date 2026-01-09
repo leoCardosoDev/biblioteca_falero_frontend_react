@@ -9,10 +9,20 @@ type Props = {
 }
 
 export const LoginController: React.FC<Props> = ({ router }: Props) => {
-  const { loginSubmit, isLoading, error } = useAuth()
+  const { loginSubmit, isLoading, error, isAuthenticated } = useAuth()
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      router.navigate('/')
+    }
+  }, [isAuthenticated, router])
 
   const handleLoginSuccess = () => {
     router.navigate('/')
+  }
+
+  if (isLoading && !error) {
+    return null
   }
 
   return (

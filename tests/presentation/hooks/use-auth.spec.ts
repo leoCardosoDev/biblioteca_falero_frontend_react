@@ -6,12 +6,16 @@ import type { AccountModel } from '@/domain/models'
 
 // Mock the context hook
 const mocks = vi.hoisted(() => ({
-  login: vi.fn()
+  login: vi.fn(),
+  isLoading: false,
+  isAuthenticated: false
 }))
 
 vi.mock('@/presentation/react/hooks/use-auth-context', () => ({
   useAuthContext: () => ({
-    login: mocks.login
+    login: mocks.login,
+    isLoading: mocks.isLoading || false,
+    isAuthenticated: mocks.isAuthenticated || false
   })
 }))
 
@@ -24,6 +28,7 @@ describe('useAuth Hook', () => {
     const { result } = renderHook(() => useAuth())
     expect(result.current.isLoading).toBe(false)
     expect(result.current.error).toBeUndefined()
+    expect(result.current.isAuthenticated).toBe(false)
   })
 
   test('Should call login with correct values', async () => {
@@ -130,5 +135,17 @@ describe('useAuth Hook', () => {
     })
 
     expect(onSuccess).not.toHaveBeenCalled()
+  })
+
+  test('Should return isAuthenticated from context', () => {
+    mocks.isAuthenticated = true
+    const { result } = renderHook(() => useAuth())
+    expect(result.current.isAuthenticated).toBe(true)
+  })
+
+  test('Should return isLoading from context', () => {
+    mocks.isLoading = true
+    const { result } = renderHook(() => useAuth())
+    expect(result.current.isLoading).toBe(true)
   })
 })

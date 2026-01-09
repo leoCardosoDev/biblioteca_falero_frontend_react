@@ -5,7 +5,11 @@ import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import { LoginFormData } from '@/presentation/react/components/forms/login-schema'
 
 export const useAuth = () => {
-  const { login } = useAuthContext()
+  const {
+    login,
+    isLoading: isContextLoading,
+    isAuthenticated
+  } = useAuthContext()
   const [error, setError] = useState<string>()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -43,7 +47,8 @@ export const useAuth = () => {
   return {
     performLogin,
     loginSubmit,
-    isLoading,
-    error
+    isLoading: isLoading || isContextLoading,
+    error,
+    isAuthenticated
   }
 }
