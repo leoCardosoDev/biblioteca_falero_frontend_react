@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import { AuthFacade } from '@/application/facades/auth-facade'
-import { Authentication } from '@/domain/usecases/authentication'
-import { CacheRepository } from '@/application/protocols/cache-repository'
-import { AccountModel } from '@/domain/models/account-model'
-import { Logout } from '@/domain/usecases/logout'
+import type { Authentication } from '@/domain/usecases/authentication'
+import type { CacheRepository } from '@/application/protocols/cache-repository'
+import type { AccountModel } from '@/domain/models/account-model'
+import type { Logout } from '@/domain/usecases/logout'
 
 interface SutTypes {
   sut: AuthFacade
@@ -142,6 +142,34 @@ describe('AuthFacade', () => {
       )
       await sut.logout()
       expect(logoutStub.logout).not.toHaveBeenCalled()
+    })
+
+    it('Should NOT call Logout.logout if refreshToken is missing in account', async () => {
+      const { sut, logoutStub, cacheRepositoryStub } = makeSut()
+      const accountWithoutToken = { name: 'any_name' }
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(JSON.stringify(accountWithoutToken))
+      )
+      await sut.logout()
+      expect(logoutStub.logout).not.toHaveBeenCalled()
+    })
+
+    it('Should call console.error if Logout.logout throws', async () => {
+      const { sut, logoutStub, cacheRepositoryStub } = makeSut()
+      const account = makeAccount()
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(JSON.stringify(account))
+      )
+      vi.spyOn(logoutStub, 'logout').mockRejectedValueOnce(
+        new Error('any_error')
+      )
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      await sut.logout()
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Logout failed:',
+        expect.any(Error)
+      )
+      consoleSpy.mockRestore()
     })
 
     it('Should call CacheRepository.set with empty strings to clear session', async () => {
