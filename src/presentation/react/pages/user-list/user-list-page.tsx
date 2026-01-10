@@ -20,6 +20,9 @@ import { DeleteUser } from '@/domain/usecases/delete-user'
 import { AddUserLogin } from '@/domain/usecases/add-user-login'
 import { LoadUserById } from '@/domain/usecases/load-user-by-id'
 import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
+import { LoadCityById } from '@/domain/usecases/load-city-by-id'
+import { LoadStateById } from '@/domain/usecases/load-state-by-id'
+import { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
 import { User } from '@/domain/models/user'
 import {
   formatUserRole,
@@ -37,6 +40,9 @@ interface UsersProps {
   addUserLogin: AddUserLogin
   loadUserById: LoadUserById
   loadAddressByZipCode: LoadAddressByZipCode
+  loadCityById: LoadCityById
+  loadStateById: LoadStateById
+  loadNeighborhoodById: LoadNeighborhoodById
 }
 
 export const Users: React.FC<UsersProps> = ({
@@ -46,7 +52,10 @@ export const Users: React.FC<UsersProps> = ({
   deleteUser,
   addUserLogin,
   loadUserById,
-  loadAddressByZipCode
+  loadAddressByZipCode,
+  loadCityById,
+  loadStateById,
+  loadNeighborhoodById
 }) => {
   const {
     users,
@@ -167,6 +176,9 @@ export const Users: React.FC<UsersProps> = ({
           onCancel={() => setIsUserModalOpen(false)}
           onSave={onSaveUser}
           loadAddressByZipCode={loadAddressByZipCode}
+          loadCityById={loadCityById}
+          loadStateById={loadStateById}
+          loadNeighborhoodById={loadNeighborhoodById}
         />
       </Modal>
 
