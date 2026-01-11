@@ -1,5 +1,6 @@
 import React, { useEffect, useState, ReactNode } from 'react'
 import { AuthFacade } from '@/application/facades/auth-facade'
+export { AuthFacade }
 import { AccountModel } from '@/domain/models/account-model'
 import { AuthenticationParams } from '@/domain/usecases/authentication'
 import { AuthContext } from './auth-context-base'
