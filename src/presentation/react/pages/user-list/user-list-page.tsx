@@ -4,23 +4,15 @@ import {
   Card,
   Icon,
   Avatar,
-  Badge
+  Badge,
+  Modal
 } from '@/presentation/react/components/ui'
-import { Modal } from '@/presentation/react/components/ui'
 import { UserForm, UserFormData } from '@/presentation/react/components/forms'
 import {
   CredentialModal,
   CredentialFormData
 } from '@/presentation/react/components/credential-modal/credential-modal'
 import { useUserManagement } from '@/presentation/react/hooks/use-user-management'
-import { LoadUsers } from '@/domain/usecases/load-users'
-import { AddUser } from '@/domain/usecases/add-user'
-import { UpdateUser } from '@/domain/usecases/update-user'
-import { DeleteUser } from '@/domain/usecases/delete-user'
-import { AddUserLogin } from '@/domain/usecases/add-user-login'
-import { LoadUserById } from '@/domain/usecases/load-user-by-id'
-import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
-import { User } from '@/domain/models/user'
 import {
   formatUserRole,
   getUserRoleColor,
@@ -28,6 +20,17 @@ import {
   formatEnrollmentId,
   formatCpf
 } from '@/presentation/react/helpers/user-serializers'
+import { LoadUsers } from '@/domain/usecases/load-users'
+import { AddUser } from '@/domain/usecases/add-user'
+import { UpdateUser } from '@/domain/usecases/update-user'
+import { DeleteUser } from '@/domain/usecases/delete-user'
+import { AddUserLogin } from '@/domain/usecases/add-user-login'
+import { LoadUserById } from '@/domain/usecases/load-user-by-id'
+import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
+import { LoadCityById } from '@/domain/usecases/load-city-by-id'
+import { LoadStateById } from '@/domain/usecases/load-state-by-id'
+import { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
+import { User } from '@/domain/models/user'
 
 interface UsersProps {
   loadUsers: LoadUsers
@@ -37,6 +40,9 @@ interface UsersProps {
   addUserLogin: AddUserLogin
   loadUserById: LoadUserById
   loadAddressByZipCode: LoadAddressByZipCode
+  loadCityById: LoadCityById
+  loadStateById: LoadStateById
+  loadNeighborhoodById: LoadNeighborhoodById
 }
 
 export const Users: React.FC<UsersProps> = ({
@@ -46,7 +52,10 @@ export const Users: React.FC<UsersProps> = ({
   deleteUser,
   addUserLogin,
   loadUserById,
-  loadAddressByZipCode
+  loadAddressByZipCode,
+  loadCityById,
+  loadStateById,
+  loadNeighborhoodById
 }) => {
   const {
     users,
@@ -71,7 +80,6 @@ export const Users: React.FC<UsersProps> = ({
     null
   )
 
-  // Filter State
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
   const [roleFilter, setRoleFilter] = useState('ALL')
@@ -117,10 +125,6 @@ export const Users: React.FC<UsersProps> = ({
 
     if (success) {
       setIsUserModalOpen(false)
-      // Optionally open credential modal after creation
-      if (!selectedUser) {
-        // Logic to prompt for credentials? For now just close.
-      }
     }
   }
 
@@ -139,7 +143,7 @@ export const Users: React.FC<UsersProps> = ({
       })
       setIsCredentialModalOpen(false)
     } catch (_error) {
-      // toast.error('Erro ao salvar credenciais');
+      // TODO: implement error handling
     }
   }
 
@@ -167,6 +171,9 @@ export const Users: React.FC<UsersProps> = ({
           onCancel={() => setIsUserModalOpen(false)}
           onSave={onSaveUser}
           loadAddressByZipCode={loadAddressByZipCode}
+          loadCityById={loadCityById}
+          loadStateById={loadStateById}
+          loadNeighborhoodById={loadNeighborhoodById}
         />
       </Modal>
 
@@ -183,8 +190,6 @@ export const Users: React.FC<UsersProps> = ({
           onSave={onSaveCredentials}
         />
       )}
-
-      {/* Header */}
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-white">
@@ -203,8 +208,6 @@ export const Users: React.FC<UsersProps> = ({
           </Button>
         </div>
       </div>
-
-      {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card className="flex flex-col justify-between gap-2 border-slate-800 bg-[#161f2c] p-5">
           <div className="flex items-start justify-between">
@@ -271,7 +274,6 @@ export const Users: React.FC<UsersProps> = ({
         </Card>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-col items-center gap-4 lg:flex-row">
         <div className="relative w-full flex-1">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-500">
@@ -313,8 +315,6 @@ export const Users: React.FC<UsersProps> = ({
           />
         </div>
       </div>
-
-      {/* Users Table */}
       <Card className="overflow-hidden border-slate-800 bg-[#161f2c]">
         {isLoading ? (
           <div className="p-12 text-center text-slate-400">
@@ -374,22 +374,20 @@ export const Users: React.FC<UsersProps> = ({
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <div
-                          className={`size-1.5 rounded-full ${
-                            user.status === 'ACTIVE'
-                              ? 'bg-emerald-500'
-                              : user.status === 'INACTIVE'
-                                ? 'bg-amber-500'
-                                : 'bg-red-500'
-                          }`}
+                          className={`size-1.5 rounded-full ${user.status === 'ACTIVE'
+                            ? 'bg-emerald-500'
+                            : user.status === 'INACTIVE'
+                              ? 'bg-amber-500'
+                              : 'bg-red-500'
+                            }`}
                         ></div>
                         <span
-                          className={`text-sm font-medium ${
-                            user.status === 'ACTIVE'
-                              ? 'text-emerald-500'
-                              : user.status === 'INACTIVE'
-                                ? 'text-amber-500'
-                                : 'text-red-400'
-                          }`}
+                          className={`text-sm font-medium ${user.status === 'ACTIVE'
+                            ? 'text-emerald-500'
+                            : user.status === 'INACTIVE'
+                              ? 'text-amber-500'
+                              : 'text-red-400'
+                            }`}
                         >
                           {formatUserStatus(user.status)}
                         </span>

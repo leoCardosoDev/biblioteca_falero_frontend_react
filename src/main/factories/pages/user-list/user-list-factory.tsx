@@ -7,6 +7,9 @@ import { makeRemoteAddUserLogin } from '@/main/factories/usecases/make-remote-ad
 import { makeRemoteLoadUserById } from '@/main/factories/usecases/remote-load-user-by-id-factory'
 import { makeRemoteLoadAddressByZipCode } from '@/main/factories/usecases/make-remote-load-address-by-zip-code'
 import { makeRemoteLoadUsers } from '@/main/factories/usecases/remote-load-users-factory'
+import { makeRemoteLoadCityById } from '@/main/factories/usecases/make-remote-load-city-by-id'
+import { makeRemoteLoadStateById } from '@/main/factories/usecases/make-remote-load-state-by-id'
+import { makeRemoteLoadNeighborhoodById } from '@/main/factories/usecases/make-remote-load-neighborhood-by-id'
 
 export const MakeUserList: React.FC = () => {
   return (
@@ -18,6 +21,9 @@ export const MakeUserList: React.FC = () => {
       addUserLogin={makeRemoteAddUserLogin()}
       loadUserById={makeRemoteLoadUserById()}
       loadAddressByZipCode={makeRemoteLoadAddressByZipCode()}
+      loadCityById={makeRemoteLoadCityById()}
+      loadStateById={makeRemoteLoadStateById()}
+      loadNeighborhoodById={makeRemoteLoadNeighborhoodById()}
     />
   )
 }

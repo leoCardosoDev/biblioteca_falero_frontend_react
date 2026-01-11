@@ -1,10 +1,18 @@
 import React, { useEffect } from 'react'
 import { Icon } from '../ui'
+import {
+  maskCpf,
+  maskRg,
+  maskZipCode
+} from '@/presentation/react/helpers/mask-utils'
 import { User } from '@/domain/models/user'
 import { UserGeneralInfo } from './parts/user/UserGeneralInfo'
 import { UserAddress } from './parts/user/UserAddress'
 import { UserAccessControl } from './parts/user/UserAccessControl'
 import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
+import { LoadCityById } from '@/domain/usecases/load-city-by-id'
+import { LoadStateById } from '@/domain/usecases/load-state-by-id'
+import { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
 import { userSchema, UserFormData } from './user-schema'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
@@ -15,13 +23,19 @@ interface UserFormProps {
   onCancel: () => void
   onSave: (data: UserFormData) => void
   loadAddressByZipCode: LoadAddressByZipCode
+  loadCityById: LoadCityById
+  loadStateById: LoadStateById
+  loadNeighborhoodById: LoadNeighborhoodById
 }
 
 export const UserForm: React.FC<UserFormProps> = ({
   initialData,
   onCancel,
   onSave,
-  loadAddressByZipCode
+  loadAddressByZipCode,
+  loadCityById,
+  loadStateById,
+  loadNeighborhoodById
 }) => {
   const methods = useCustomForm<UserFormData>({
     schema: userSchema,
@@ -52,8 +66,8 @@ export const UserForm: React.FC<UserFormProps> = ({
       reset({
         name: initialData.name,
         email: initialData.email,
-        cpf: initialData.cpf,
-        rg: initialData.rg,
+        cpf: maskCpf(initialData.cpf),
+        rg: maskRg(initialData.rg),
         role: initialData.role as
           | 'ADMIN'
           | 'LIBRARIAN'
@@ -61,18 +75,64 @@ export const UserForm: React.FC<UserFormProps> = ({
           | 'STUDENT',
         status: initialData.status as 'ACTIVE' | 'INACTIVE' | 'BLOCKED',
         gender: (initialData.gender as 'MALE' | 'FEMALE' | 'OTHER') || 'OTHER',
-        address: initialData.address || {
-          street: '',
-          number: '',
-          neighborhood: '',
-          city: '',
-          state: '',
-          zipCode: '',
-          complement: ''
-        }
+        address: initialData.address
+          ? {
+            ...initialData.address,
+            zipCode: maskZipCode(initialData.address.zipCode)
+          }
+          : {
+            street: '',
+            number: '',
+            neighborhood: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            complement: ''
+          }
       })
+
+      if (initialData.address?.cityId && !initialData.address.city) {
+        loadCityById.perform(initialData.address.cityId).then((city) => {
+          methods.setValue('address.city', city.name)
+
+          if (
+            !initialData.address?.stateId &&
+            !initialData.address?.state &&
+            city.stateId
+          ) {
+            loadStateById.perform(city.stateId).then((state) => {
+              methods.setValue('address.state', state.acronym)
+              methods.setValue('address.stateId', state.id)
+            })
+          }
+        })
+      }
+
+      if (initialData.address?.stateId && !initialData.address.state) {
+        loadStateById.perform(initialData.address.stateId).then((state) => {
+          methods.setValue('address.state', state.acronym)
+        })
+      }
+
+      if (
+        initialData.address?.neighborhoodId &&
+        !initialData.address.neighborhood
+      ) {
+        loadNeighborhoodById
+          .perform(initialData.address.neighborhoodId)
+          .then((neighborhood) => {
+            methods.setValue('address.neighborhood', neighborhood.name)
+          })
+      }
     }
-  }, [initialData, reset])
+  }, [
+    initialData,
+    reset,
+    loadCityById,
+    loadStateById,
+    loadNeighborhoodById,
+    methods
+  ])
 
   return (
     <Form
@@ -101,7 +161,7 @@ export const UserForm: React.FC<UserFormProps> = ({
           className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Icon name="save" />
-          Salvar Usuário
+          {initialData ? 'Salvar Alterações' : 'Salvar Usuário'}
         </button>
       </div>
     </Form>
