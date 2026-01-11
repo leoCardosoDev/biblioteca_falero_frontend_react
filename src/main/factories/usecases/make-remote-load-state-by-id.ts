@@ -1,4 +1,4 @@
-import { RemoteLoadStateById } from '@/data/usecases/remote-load-state-by-id'
+import { RemoteLoadStateById } from '@/application/usecases/remote-load-state-by-id'
 import { LoadStateById } from '@/domain/usecases/load-state-by-id'
 import { makeHttpClient } from '@/main/factories/http/api-client-factory'
 

@@ -1,9 +1,9 @@
 import { HttpClient } from '@/application/protocols/http/http-client'
-import { HttpStatusCode } from '@/data/protocols/http/http-reponse'
-import { LoadStateById } from '@/domain/usecases/load-state-by-id'
+import { HttpStatusCode } from '@/application/protocols/http/http-response'
+import { LoadStateById, LoadStateByIdModel } from '@/domain/usecases/load-state-by-id'
 import { NotFoundError, UnexpectedError } from '@/domain/errors'
 
-type RemoteStateModel = {
+export type RemoteStateModel = {
   id: string
   name: string
   uf: string
@@ -13,7 +13,7 @@ export class RemoteLoadStateById implements LoadStateById {
   constructor(
     private readonly url: string,
     private readonly httpClient: HttpClient<RemoteStateModel>
-  ) {}
+  ) { }
 
   async perform(id: string): Promise<LoadStateByIdModel> {
     const httpResponse = await this.httpClient.request({
