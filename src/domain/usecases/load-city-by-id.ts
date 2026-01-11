@@ -1,14 +1,6 @@
-// Removed invalid import
-// User.ts had: address: { city: string, cityId: string }
-// Let's create a minimal City model or use a generic one if not found.
-// Actually, let's check for City model first in next step.
-// For now, I will define the interface generic.
+import { City } from '@/domain/models/city'
 
-export type LoadCityByIdModel = {
-  id: string
-  name: string
-  stateId: string
-}
+export type LoadCityByIdModel = City
 
 export interface LoadCityById {
   perform(id: string): Promise<LoadCityByIdModel>
