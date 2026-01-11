@@ -29,7 +29,6 @@ export const UserAddress: React.FC<UserAddressProps> = ({
   const watchedAddress = watch('address')
 
   React.useEffect(() => {
-    // Only resolve automatically if street is non-empty (for editing existing users)
     if (watchedAddress?.street && watchedAddress.street.trim().length > 0 && watchedZipCode.replace(/\D/g, '').length === 8) {
       setIsZipCodeResolved(true)
     }
@@ -41,7 +40,7 @@ export const UserAddress: React.FC<UserAddressProps> = ({
 
     setIsLoading(true)
     setSearchError(null)
-    setIsZipCodeResolved(false) // Reset visibility immediately
+    setIsZipCodeResolved(false)
 
     try {
       const address = await loadAddressByZipCode.perform(cleanZip)
@@ -73,7 +72,6 @@ export const UserAddress: React.FC<UserAddressProps> = ({
         setSearchError('Erro interno. Contate o administrador')
       }
       setIsZipCodeResolved(false)
-      // Clear address fields to prevent stale data and useEffect re-triggers
       setValue('address.street', '', { shouldValidate: false })
       setValue('address.neighborhood', '', { shouldValidate: false })
       setValue('address.city', '', { shouldValidate: false })

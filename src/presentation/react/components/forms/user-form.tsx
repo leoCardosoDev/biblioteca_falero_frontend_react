@@ -77,25 +77,24 @@ export const UserForm: React.FC<UserFormProps> = ({
         gender: (initialData.gender as 'MALE' | 'FEMALE' | 'OTHER') || 'OTHER',
         address: initialData.address
           ? {
-              ...initialData.address,
-              zipCode: maskZipCode(initialData.address.zipCode)
-            }
+            ...initialData.address,
+            zipCode: maskZipCode(initialData.address.zipCode)
+          }
           : {
-              street: '',
-              number: '',
-              neighborhood: '',
-              city: '',
-              state: '',
-              zipCode: '',
-              complement: ''
-            }
+            street: '',
+            number: '',
+            neighborhood: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            complement: ''
+          }
       })
 
       if (initialData.address?.cityId && !initialData.address.city) {
         loadCityById.perform(initialData.address.cityId).then((city) => {
           methods.setValue('address.city', city.name)
 
-          // Fallback: Load state from city if not present in initialData
           if (
             !initialData.address?.stateId &&
             !initialData.address?.state &&

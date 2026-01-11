@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { makeLocalStorageAdapter } from '@/main/factories/cache/cache-factory'
-import { HttpClient } from '@/application/protocols/http/http-client'
 import { AxiosHttpClient } from '@/infra/http/axios-http-client'
+import { HttpClient } from '@/application/protocols/http/http-client'
+import { makeLocalStorageAdapter } from '@/main/factories/cache/cache-factory'
 
 export const makeHttpClient = (baseUrl?: string): HttpClient => {
   const instance = axios.create({
