@@ -30,13 +30,22 @@ describe('HttpUserRepository', () => {
     })
 
     test('Should return user list on success', async () => {
-      const users = [{ id: 'any_id' }]
+      const users = [{ id: 'any_id', role: 'STUDENT', status: 'ACTIVE' }]
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: users
+        body: [{ id: 'any_id' }]
       })
       const result = await sut.loadAll()
       expect(result).toEqual(users)
+    })
+
+    test('Should return empty list if response body is null or undefined', async () => {
+      vi.mocked(httpClientStub.request).mockResolvedValueOnce({
+        statusCode: 200,
+        body: null as unknown as []
+      })
+      const result = await sut.loadAll()
+      expect(result).toEqual([])
     })
   })
 
@@ -56,10 +65,15 @@ describe('HttpUserRepository', () => {
 
     test('Should return user data on success', async () => {
       const userId = faker.string.uuid()
-      const userData = { id: userId, name: faker.person.fullName() }
+      const userData = {
+        id: userId,
+        name: faker.person.fullName(),
+        role: 'STUDENT',
+        status: 'ACTIVE'
+      }
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: userData
+        body: { id: userId, name: userData.name }
       })
       const result = await sut.loadById(userId)
       expect(result).toEqual(userData)
@@ -91,13 +105,13 @@ describe('HttpUserRepository', () => {
     })
 
     test('Should return user on success', async () => {
-      const userData = { id: 'any_id' }
+      const userData = { id: 'any_id', role: 'STUDENT', status: 'ACTIVE' }
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: userData
+        body: { id: 'any_id' }
       })
       const result = await sut.add({} as unknown as AddUserParams)
-      expect(result).toMatchObject({ id: 'any_id' })
+      expect(result).toEqual(userData)
     })
   })
 

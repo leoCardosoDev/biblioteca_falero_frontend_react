@@ -46,7 +46,11 @@ describe('User Serializers', () => {
       expect(getUserRoleColor('UNKNOWN' as unknown as User['role'])).toBe(
         'neutral'
       )
-      expect(getUserRoleColor('UNKNOWN' as unknown as User['role'])).toBe(
+    })
+
+    test('should return "neutral" if role is falsy', () => {
+      expect(getUserRoleColor(null as unknown as User['role'])).toBe('neutral')
+      expect(getUserRoleColor(undefined as unknown as User['role'])).toBe(
         'neutral'
       )
     })
@@ -108,7 +112,7 @@ describe('User Serializers', () => {
 
     test('should handle already formatted or messy inputs gracefully', () => {
       expect(formatCpf('123.456.789-00')).toBe('123.456.789-00')
-      // Cleaned: '12345678900', then regex replaces it
+
       expect(formatCpf('12345678900abc')).toBe('123.456.789-00')
     })
   })
