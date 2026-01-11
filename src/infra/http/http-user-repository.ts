@@ -12,7 +12,9 @@ export class HttpUserRepository implements UserRepository {
       url: '/users',
       method: 'get'
     })
-    return response.body
+    return ((response.body as unknown[]) || []).map((user: unknown) =>
+      this.mapToDomain(user)
+    )
   }
 
   async loadById(id: string): Promise<User> {
@@ -20,7 +22,7 @@ export class HttpUserRepository implements UserRepository {
       url: `/users/${id}`,
       method: 'get'
     })
-    return response.body
+    return this.mapToDomain(response.body)
   }
 
   async add(params: AddUserParams): Promise<User> {
@@ -29,12 +31,7 @@ export class HttpUserRepository implements UserRepository {
       method: 'post',
       body: params
     })
-    const remoteUser = response.body
-    return {
-      ...remoteUser,
-      role: remoteUser.login?.role || 'STUDENT',
-      status: remoteUser.status || 'INACTIVE'
-    }
+    return this.mapToDomain(response.body)
   }
 
   async update(params: UpdateUserParams): Promise<User> {
@@ -44,7 +41,7 @@ export class HttpUserRepository implements UserRepository {
       method: 'put',
       body: data
     })
-    return response.body
+    return this.mapToDomain(response.body)
   }
 
   async delete(id: string): Promise<void> {
@@ -53,4 +50,21 @@ export class HttpUserRepository implements UserRepository {
       method: 'delete'
     })
   }
+
+  private mapToDomain(remoteUser: unknown): User {
+    const user = remoteUser as RemoteUserDto
+    return {
+      ...user,
+      role: (
+        user.login?.role ||
+        user.role ||
+        'STUDENT'
+      ).toUpperCase() as User['role'],
+      status: (user.status || 'ACTIVE').toUpperCase() as User['status']
+    }
+  }
+}
+
+type RemoteUserDto = User & {
+  login?: { role?: string }
 }

@@ -4,16 +4,14 @@ import { Input, FormSection } from '@/presentation/react/components/ui'
 import { maskZipCode } from '@/presentation/react/helpers/mask-utils'
 import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
 import { Button, Icon } from '@/presentation/react/components/ui'
-import { UserFormData } from '../../user-schema'
+import { UserFormData } from '@/presentation/react/components/forms/user-schema'
 import { NotFoundError } from '@/domain/errors'
 
 interface UserAddressProps {
   loadAddressByZipCode: LoadAddressByZipCode
 }
 
-export const UserAddress: React.FC<UserAddressProps> = ({
-  loadAddressByZipCode
-}) => {
+export function UserAddress({ loadAddressByZipCode }: UserAddressProps) {
   const {
     register,
     setValue,
@@ -29,14 +27,17 @@ export const UserAddress: React.FC<UserAddressProps> = ({
   const watchedAddress = watch('address')
 
   React.useEffect(() => {
-    if (watchedAddress?.street && watchedAddress.street.trim().length > 0 && watchedZipCode.replace(/\D/g, '').length === 8) {
+    if (
+      watchedAddress?.street &&
+      watchedAddress.street.trim().length > 0 &&
+      watchedZipCode.replace(/\D/g, '').length === 8
+    ) {
       setIsZipCodeResolved(true)
     }
   }, [watchedAddress?.street, watchedZipCode])
 
   const handleZipCodeLookup = async () => {
     const cleanZip = watchedZipCode.replace(/\D/g, '')
-
 
     setIsLoading(true)
     setSearchError(null)
@@ -57,7 +58,7 @@ export const UserAddress: React.FC<UserAddressProps> = ({
         shouldDirty: true,
         shouldValidate: true
       })
-      setValue('address.state', address.state, {
+      setValue('address.state', address.state.toUpperCase(), {
         shouldDirty: true,
         shouldValidate: true
       })

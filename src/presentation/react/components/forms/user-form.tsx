@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
+import { Icon } from '@/presentation/react/components/ui'
 import {
   maskCpf,
   maskRg,
@@ -28,7 +28,7 @@ interface UserFormProps {
   loadNeighborhoodById: LoadNeighborhoodById
 }
 
-export const UserForm: React.FC<UserFormProps> = ({
+export function UserForm({
   initialData,
   onCancel,
   onSave,
@@ -36,7 +36,7 @@ export const UserForm: React.FC<UserFormProps> = ({
   loadCityById,
   loadStateById,
   loadNeighborhoodById
-}) => {
+}: UserFormProps) {
   const methods = useCustomForm<UserFormData>({
     schema: userSchema,
     mode: 'onChange',
@@ -68,27 +68,34 @@ export const UserForm: React.FC<UserFormProps> = ({
         email: initialData.email,
         cpf: maskCpf(initialData.cpf),
         rg: maskRg(initialData.rg),
-        role: initialData.role as
+        role: (initialData.role?.toUpperCase() || 'STUDENT') as
           | 'ADMIN'
           | 'LIBRARIAN'
           | 'PROFESSOR'
           | 'STUDENT',
-        status: initialData.status as 'ACTIVE' | 'INACTIVE' | 'BLOCKED',
-        gender: (initialData.gender as 'MALE' | 'FEMALE' | 'OTHER') || 'OTHER',
+        status: (initialData.status?.toUpperCase() || 'ACTIVE') as
+          | 'ACTIVE'
+          | 'INACTIVE'
+          | 'BLOCKED',
+        gender: (initialData.gender?.toUpperCase() || 'OTHER') as
+          | 'MALE'
+          | 'FEMALE'
+          | 'OTHER',
         address: initialData.address
           ? {
-            ...initialData.address,
-            zipCode: maskZipCode(initialData.address.zipCode)
-          }
+              ...initialData.address,
+              state: initialData.address.state?.toUpperCase() || '',
+              zipCode: maskZipCode(initialData.address.zipCode)
+            }
           : {
-            street: '',
-            number: '',
-            neighborhood: '',
-            city: '',
-            state: '',
-            zipCode: '',
-            complement: ''
-          }
+              street: '',
+              number: '',
+              neighborhood: '',
+              city: '',
+              state: '',
+              zipCode: '',
+              complement: ''
+            }
       })
 
       if (initialData.address?.cityId && !initialData.address.city) {
@@ -101,7 +108,7 @@ export const UserForm: React.FC<UserFormProps> = ({
             city.stateId
           ) {
             loadStateById.perform(city.stateId).then((state) => {
-              methods.setValue('address.state', state.acronym)
+              methods.setValue('address.state', state.acronym.toUpperCase())
               methods.setValue('address.stateId', state.id)
             })
           }
@@ -110,7 +117,7 @@ export const UserForm: React.FC<UserFormProps> = ({
 
       if (initialData.address?.stateId && !initialData.address.state) {
         loadStateById.perform(initialData.address.stateId).then((state) => {
-          methods.setValue('address.state', state.acronym)
+          methods.setValue('address.state', state.acronym.toUpperCase())
         })
       }
 

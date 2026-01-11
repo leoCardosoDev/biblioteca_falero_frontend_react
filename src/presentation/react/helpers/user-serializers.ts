@@ -21,6 +21,7 @@ export const getUserRoleColor = (
   | 'danger'
   | 'purple'
   | 'cyan' => {
+  if (!role) return 'neutral'
   const colorMap: Record<
     User['role'],
     'primary' | 'success' | 'warning' | 'neutral' | 'danger' | 'purple' | 'cyan'
