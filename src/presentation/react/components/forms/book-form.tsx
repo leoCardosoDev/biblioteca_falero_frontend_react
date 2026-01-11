@@ -13,11 +13,7 @@ interface BookFormProps {
   onSave: (data: BookFormData) => void
 }
 
-export const BookForm: React.FC<BookFormProps> = ({
-  initialData,
-  onCancel,
-  onSave
-}) => {
+export function BookForm({ initialData, onCancel, onSave }: BookFormProps) {
   const methods = useCustomForm<BookFormData>({
     schema: bookSchema,
     mode: 'onChange',

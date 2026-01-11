@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { AccountModel } from '@/domain/models'
+import { AccountModel } from '@/domain/models'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import { LoginFormData } from '@/presentation/react/components/forms/login-schema'

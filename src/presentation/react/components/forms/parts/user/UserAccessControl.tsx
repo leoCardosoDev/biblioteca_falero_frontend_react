@@ -1,9 +1,9 @@
 import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form'
 import { Select, FormSection } from '@/presentation/react/components/ui'
-import { UserFormData } from '../../user-schema'
+import { UserFormData } from '@/presentation/react/components/forms/user-schema'
 
-export const UserAccessControl: React.FC = () => {
+export function UserAccessControl() {
   const {
     register,
     formState: { errors }

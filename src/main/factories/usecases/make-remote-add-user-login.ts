@@ -1,6 +1,8 @@
-import { RemoteAddUserLogin } from '@/infra/http/remote-add-user-login'
+import { RemoteAddUserLogin } from '@/application/usecases'
+import { HttpUserLoginRepository } from '@/infra/http/http-user-login-repository'
 import { makeHttpClient } from '@/main/factories/http/api-client-factory'
 
 export const makeRemoteAddUserLogin = (): RemoteAddUserLogin => {
-  return new RemoteAddUserLogin(makeHttpClient())
+  const repository = new HttpUserLoginRepository(makeHttpClient())
+  return new RemoteAddUserLogin(repository)
 }

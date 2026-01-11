@@ -26,7 +26,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <div className="pointer-events-none absolute left-3.5 flex items-center">
               <Icon
                 name={icon}
-                className="text-[20px] text-slate-400 transition-colors group-focus-within:text-primary dark:text-slate-500"
+                className="h-5 w-5 text-slate-400 transition-colors group-focus-within:text-primary dark:text-slate-500"
               />
             </div>
           )}

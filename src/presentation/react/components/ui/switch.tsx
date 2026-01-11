@@ -1,26 +1,36 @@
-import React from 'react';
+import React from 'react'
 
 interface SwitchProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label?: string;
-  description?: string;
+  checked: boolean
+  onChange: (checked: boolean) => void
+  label?: string
+  description?: string
 }
-export const Switch: React.FC<SwitchProps> = ({ checked, onChange, label, description }) => (
-  <div className="flex items-center justify-between py-3">
-    <div className="flex flex-col">
-      {label && <span className="text-sm font-medium text-white">{label}</span>}
-      {description && <span className="text-xs text-slate-400">{description}</span>}
+export function Switch({ checked, onChange, label, description }: SwitchProps) {
+  return (
+    <div className="flex items-center justify-between py-3">
+      <div className="flex flex-col">
+        {label && (
+          <span className="text-sm font-medium text-white">{label}</span>
+        )}
+        {description && (
+          <span className="text-xs text-slate-400">{description}</span>
+        )}
+      </div>
+      <label className="relative flex cursor-pointer items-center">
+        <input
+          type="checkbox"
+          className="sr-only"
+          checked={checked}
+          onChange={(e) => onChange(e.target.checked)}
+        />
+        <div
+          className={`h-6 w-11 rounded-full transition-colors ${checked ? 'bg-primary' : 'bg-slate-700'}`}
+        ></div>
+        <div
+          className={`absolute left-1 top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${checked ? 'translate-x-5' : 'translate-x-0'}`}
+        ></div>
+      </label>
     </div>
-    <label className="flex items-center cursor-pointer relative">
-      <input
-        type="checkbox"
-        className="sr-only"
-        checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
-      />
-      <div className={`w-11 h-6 rounded-full transition-colors ${checked ? 'bg-primary' : 'bg-slate-700'}`}></div>
-      <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform shadow-sm ${checked ? 'translate-x-5' : 'translate-x-0'}`}></div>
-    </label>
-  </div>
-);
+  )
+}

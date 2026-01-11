@@ -1,9 +1,9 @@
 import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form/context'
 import { Input, Select, FormSection } from '@/presentation/react/components/ui'
-import { BookFormData } from '../../book-schema'
+import { BookFormData } from '@/presentation/react/components/forms/book-schema'
 
-export const BookCategorization: React.FC = () => {
+export function BookCategorization() {
   const {
     register,
     formState: { errors }

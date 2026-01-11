@@ -8,13 +8,13 @@ import { Reports } from '@/presentation/react/pages/reports/reports'
 import { Settings } from '@/presentation/react/pages/settings/settings'
 import { MakeLogin } from '@/main/factories/pages/login/login-factory'
 import { MakeUserList } from '@/main/factories/pages/user-list/user-list-factory'
-import { MakeBooks } from '@/main/factories/pages/books/books-factory'
-import { MakeLoans } from '@/main/factories/pages/loans/loans-factory'
+import { MakeBooksCallback as MakeBooks } from '@/main/factories/pages/books/books-factory'
+import { MakeLoansCallback as MakeLoans } from '@/main/factories/pages/loans/loans-factory'
 import { PrivateRoute } from '@/presentation/react/components/private-route'
 import { AuthProvider } from '@/presentation/react/contexts/auth-context'
 import { makeAuthFacade } from '@/main/factories/auth/auth-facade-factory'
 
-const App: React.FC = () => {
+function App() {
   const authFacade = makeAuthFacade()
 
   return (

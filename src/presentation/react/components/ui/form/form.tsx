@@ -15,13 +15,13 @@ interface FormProps<T extends FieldValues> extends Omit<
   children: React.ReactNode
 }
 
-export const Form = <T extends FieldValues>({
+export function Form<T extends FieldValues>({
   form,
   onSubmit,
   children,
   className,
   ...props
-}: FormProps<T>) => {
+}: FormProps<T>) {
   return (
     <FormProvider {...form}>
       <form

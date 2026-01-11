@@ -11,11 +11,7 @@ interface LoanFormProps {
   onSave: (data: LoanFormData) => void
 }
 
-export const LoanForm: React.FC<LoanFormProps> = ({
-  initialData,
-  onCancel,
-  onSave
-}) => {
+export function LoanForm({ initialData, onCancel, onSave }: LoanFormProps) {
   const methods = useCustomForm<LoanFormData>({
     schema: loanSchema,
     mode: 'onChange',

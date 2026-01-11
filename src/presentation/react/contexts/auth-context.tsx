@@ -1,50 +1,54 @@
-import React, { useEffect, useState, ReactNode } from 'react';
-import { AuthFacade } from '@/application/facades/auth-facade';
-import { AccountModel } from '@/domain/models/account-model';
-import { AuthenticationParams } from '@/domain/usecases/authentication';
-import { AuthContext } from './auth-context-base';
+import React, { useEffect, useState, ReactNode } from 'react'
+import { AuthFacade } from '@/application/facades/auth-facade'
+import { AccountModel } from '@/domain/models/account-model'
+import { AuthenticationParams } from '@/domain/usecases/authentication'
+import { AuthContext } from './auth-context-base'
 
 type Props = {
-  children: ReactNode;
-  authFacade: AuthFacade;
-};
+  children: ReactNode
+  authFacade: AuthFacade
+}
 
-export const AuthProvider: React.FC<Props> = ({ children, authFacade }) => {
-  const [user, setUser] = useState<AccountModel | undefined>();
-  const [isLoading, setIsLoading] = useState(true);
+export function AuthProvider({ children, authFacade }: Props) {
+  const [user, setUser] = useState<AccountModel | undefined>()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const loadAccount = async () => {
       try {
-        const account = await authFacade.getCurrentUser();
+        const account = await authFacade.getCurrentUser()
         if (account) {
-          setUser(account);
+          setUser(account)
         }
       } catch (error: unknown) {
-        console.error('Failed to load account from cache:', error);
+        console.error('Failed to load account from cache:', error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
-    loadAccount();
-  }, [authFacade]);
-
-  const login = async (params: AuthenticationParams): Promise<AccountModel | null> => {
-    const account = await authFacade.login(params);
-    if (account) {
-      setUser(account);
     }
-    return account;
-  };
+    loadAccount()
+  }, [authFacade])
+
+  const login = async (
+    params: AuthenticationParams
+  ): Promise<AccountModel | null> => {
+    const account = await authFacade.login(params)
+    if (account) {
+      setUser(account)
+    }
+    return account
+  }
 
   const signOut = async () => {
-    await authFacade.logout();
-    setUser(undefined);
-  };
+    await authFacade.logout()
+    setUser(undefined)
+  }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, signOut }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, isLoading, login, signOut }}
+    >
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}

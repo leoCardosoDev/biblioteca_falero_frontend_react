@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { LoginForm } from '@/presentation/react/components/forms/login-form'
 import { LoginFormData } from '@/presentation/react/components/forms/login-schema'
 
@@ -9,22 +7,16 @@ type Props = {
   error?: string
 }
 
-export const LoginView: React.FC<Props> = ({
-  onSubmit,
-  isLoading,
-  error
-}: Props) => {
+export function LoginView({ onSubmit, isLoading, error }: Props) {
   return (
     <div className="flex min-h-screen flex-col bg-slate-950 md:flex-row">
-      {/* Left Section - Form */}
       <div className="z-10 flex w-full flex-col justify-center bg-slate-950 p-8 md:w-[40%] md:p-16 lg:p-24">
         <div className="mx-auto w-full max-w-md space-y-12">
           <LoginForm isLoading={isLoading} error={error} onSubmit={onSubmit} />
         </div>
       </div>
 
-      {/* Right Section - Image & Quote */}
-      <div className="relative hidden overflow-hidden md:flex md:w-[60%]">
+      <div className="relative hidden w-full overflow-hidden md:flex md:w-[60%]">
         <div
           className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 hover:scale-105"
           style={{ backgroundImage: 'url(/library-bg.png)' }}

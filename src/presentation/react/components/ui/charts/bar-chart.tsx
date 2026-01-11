@@ -12,7 +12,7 @@ import {
 interface BarChartProps<T> {
   data: T[]
   xKey: keyof T
-  yKey: keyof T // Used for category axis in vertical layout
+  yKey: keyof T
   series: {
     key: keyof T
     color: string

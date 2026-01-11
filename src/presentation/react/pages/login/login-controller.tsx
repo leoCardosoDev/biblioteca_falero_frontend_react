@@ -1,4 +1,4 @@
-import React from 'react'
+import { useEffect } from 'react'
 
 import { useAuth } from '@/presentation/react/hooks/use-auth'
 import { Router } from '@/presentation/protocols/router-protocol'
@@ -8,10 +8,10 @@ type Props = {
   router: Router
 }
 
-export const LoginController: React.FC<Props> = ({ router }: Props) => {
+export function LoginController({ router }: Props) {
   const { loginSubmit, isLoading, error, isAuthenticated } = useAuth()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       router.navigate('/')
     }

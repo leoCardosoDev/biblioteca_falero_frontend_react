@@ -1,6 +1,8 @@
-import { RemoteUpdateUser } from '@/infra/http/remote-update-user'
+import { RemoteUpdateUser } from '@/application/usecases'
+import { HttpUserRepository } from '@/infra/http/http-user-repository'
 import { makeHttpClient } from '@/main/factories/http/api-client-factory'
 
 export const makeRemoteUpdateUser = (): RemoteUpdateUser => {
-  return new RemoteUpdateUser(makeHttpClient())
+  const repository = new HttpUserRepository(makeHttpClient())
+  return new RemoteUpdateUser(repository)
 }

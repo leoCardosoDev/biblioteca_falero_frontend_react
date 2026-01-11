@@ -26,13 +26,13 @@ interface CredentialModalProps {
   initialRole?: string
 }
 
-export const CredentialModal: React.FC<CredentialModalProps> = ({
+export function CredentialModal({
   isOpen,
   onClose,
   onSave,
   userName,
   initialRole
-}) => {
+}: CredentialModalProps) {
   const methods = useCustomForm<CredentialFormData>({
     schema: credentialSchema,
     mode: 'onChange',

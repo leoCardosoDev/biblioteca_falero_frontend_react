@@ -1,11 +1,10 @@
-import React from 'react'
-import { Books } from '@/presentation/react/pages/books/books'
-import { DbLoadBooks } from '@/application/usecases/db-load-books'
+import { RemoteLoadBooks } from '@/application/usecases'
 import { MockBookRepository } from '@/infra/mocks/mock-book-repository'
+import { Books } from '@/presentation/react/pages/books'
 
-export const MakeBooks: React.FC = () => {
+export const MakeBooksCallback = () => {
   const bookRepository = new MockBookRepository()
-  const loadBooks = new DbLoadBooks(bookRepository)
+  const loadBooks = new RemoteLoadBooks(bookRepository)
 
   return <Books loadBooks={loadBooks} />
 }

@@ -2,9 +2,9 @@ import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form'
 import { Input, FormSection, Select } from '@/presentation/react/components/ui'
 import { maskCpf, maskRg } from '@/presentation/react/helpers/mask-utils'
-import { UserFormData } from '../../user-schema'
+import { UserFormData } from '@/presentation/react/components/forms/user-schema'
 
-export const UserGeneralInfo: React.FC = () => {
+export function UserGeneralInfo() {
   const {
     register,
     setValue,

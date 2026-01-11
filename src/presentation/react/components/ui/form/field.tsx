@@ -6,7 +6,7 @@ interface FieldProps extends React.ComponentProps<typeof Input> {
   name: string
 }
 
-export const Field: React.FC<FieldProps> = ({ name, ...props }) => {
+export function Field({ name, ...props }: FieldProps) {
   const {
     register,
     formState: { errors }
