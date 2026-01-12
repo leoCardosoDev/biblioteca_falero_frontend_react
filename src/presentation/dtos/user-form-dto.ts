@@ -5,7 +5,6 @@ export type UserFormData = {
   rg: string
   gender: 'MALE' | 'FEMALE' | 'OTHER'
   role: 'ADMIN' | 'LIBRARIAN' | 'PROFESSOR' | 'STUDENT'
-  status: 'ACTIVE' | 'INACTIVE' | 'BLOCKED'
   address: {
     street: string
     number: string

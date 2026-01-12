@@ -9,7 +9,6 @@ export const userSchema = z.object({
   rg: z.string().min(5, 'RG inválido'),
   gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
   role: z.enum(['ADMIN', 'LIBRARIAN', 'PROFESSOR', 'STUDENT']),
-  status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
   address: z.object({
     street: z.string().min(1, 'Rua obrigatória'),
     number: z.string().min(1, 'Número obrigatório'),
