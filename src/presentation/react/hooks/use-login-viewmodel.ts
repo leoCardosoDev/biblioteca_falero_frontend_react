@@ -2,9 +2,19 @@ import { useState } from 'react'
 import { AccountModel } from '@/domain/models'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
-import { LoginFormData } from '@/presentation/react/components/forms/login-schema'
+import { LoginFormData } from '@/presentation/dtos/login-form-dto'
+import { ErrorMessages } from '@/presentation/constants/messages'
 
-export const useAuth = () => {
+export interface LoginViewModel {
+  loginSubmit: (
+    onSuccess: (account: AccountModel) => void
+  ) => (data: LoginFormData) => Promise<void>
+  isLoading: boolean
+  error?: string
+  isAuthenticated: boolean
+}
+
+export const useLoginViewModel = (): LoginViewModel => {
   const {
     login,
     isLoading: isContextLoading,
@@ -21,15 +31,15 @@ export const useAuth = () => {
       setError(undefined)
       const account = await login(data)
       if (!account) {
-        setError('Erro inesperado: Falha no login')
+        setError(ErrorMessages.UnexpectedLogin)
         return undefined
       }
       return account
-    } catch (error: unknown) {
-      if (error instanceof InvalidCredentialsError) {
-        setError(error.message)
+    } catch (err: unknown) {
+      if (err instanceof InvalidCredentialsError) {
+        setError(err.message)
       } else {
-        setError('Erro inesperado. Tente novamente mais tarde.')
+        setError(ErrorMessages.UnexpectedTryAgain)
       }
       return undefined
     } finally {
@@ -45,7 +55,6 @@ export const useAuth = () => {
     }
 
   return {
-    performLogin,
     loginSubmit,
     isLoading: isLoading || isContextLoading,
     error,

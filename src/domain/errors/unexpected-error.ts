@@ -1,6 +1,8 @@
+import { DomainErrorMessages } from '@/domain/constants/messages'
+
 export class UnexpectedError extends Error {
   constructor() {
-    super('Erro inesperado. Tente novamente mais tarde.')
+    super(DomainErrorMessages.UnexpectedTryAgain)
     this.name = 'UnexpectedError'
   }
 }

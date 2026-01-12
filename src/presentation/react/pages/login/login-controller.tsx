@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { useAuth } from '@/presentation/react/hooks/use-auth'
+import { useLoginViewModel } from '@/presentation/react/hooks/use-login-viewmodel'
 import { Router } from '@/presentation/protocols/router-protocol'
 import { LoginView } from '@/presentation/react/pages/login/login-view'
 
@@ -9,7 +9,7 @@ type Props = {
 }
 
 export function LoginController({ router }: Props) {
-  const { loginSubmit, isLoading, error, isAuthenticated } = useAuth()
+  const { loginSubmit, isLoading, error, isAuthenticated } = useLoginViewModel()
 
   useEffect(() => {
     if (isAuthenticated) {
