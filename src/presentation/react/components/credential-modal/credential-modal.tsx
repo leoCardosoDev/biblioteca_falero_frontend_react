@@ -6,14 +6,23 @@ import {
   Form,
   Field
 } from '@/presentation/react/components/ui/form'
+import { ZodValidatorAdapter } from '@/presentation/adapters/validation/zod-validator-adapter'
 
 const credentialSchema = z.object({
   role: z.enum(['ADMIN', 'LIBRARIAN', 'PROFESSOR', 'STUDENT']),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'BLOCKED']),
   password: z
     .string()
-    .min(8, 'A senha deve ter no mínimo 8 caracteres')
-    .regex(/[A-Z]/, 'Deve conter letra maiúscula')
-    .regex(/[0-9]/, 'Deve conter número')
+    .optional()
+    .refine((val) => !val || val.length >= 8, {
+      message: 'A senha deve ter no mínimo 8 caracteres'
+    })
+    .refine((val) => !val || /[A-Z]/.test(val), {
+      message: 'Deve conter letra maiúscula'
+    })
+    .refine((val) => !val || /[0-9]/.test(val), {
+      message: 'Deve conter número'
+    })
 })
 
 export type CredentialFormData = z.infer<typeof credentialSchema>
@@ -24,6 +33,7 @@ interface CredentialModalProps {
   onSave: (data: CredentialFormData) => void
   userName: string
   initialRole?: string
+  initialStatus?: string
 }
 
 export function CredentialModal({
@@ -31,13 +41,17 @@ export function CredentialModal({
   onClose,
   onSave,
   userName,
-  initialRole
+  initialRole,
+  initialStatus
 }: CredentialModalProps) {
   const methods = useCustomForm<CredentialFormData>({
-    schema: credentialSchema,
+    validator: new ZodValidatorAdapter(credentialSchema),
     mode: 'onChange',
     defaultValues: {
-      role: (initialRole as unknown as CredentialFormData['role']) || 'STUDENT'
+      role: (initialRole as unknown as CredentialFormData['role']) || 'STUDENT',
+      status:
+        (initialStatus as unknown as CredentialFormData['status']) || 'ACTIVE',
+      password: ''
     }
   })
 
@@ -46,10 +60,13 @@ export function CredentialModal({
       methods.reset({
         role:
           (initialRole as unknown as CredentialFormData['role']) || 'STUDENT',
+        status:
+          (initialStatus as unknown as CredentialFormData['status']) ||
+          'ACTIVE',
         password: ''
       })
     }
-  }, [initialRole, isOpen, methods])
+  }, [initialRole, initialStatus, isOpen, methods])
 
   const {
     formState: { isValid }
@@ -59,7 +76,7 @@ export function CredentialModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Configurar Credenciais"
+      title="Gerenciar Acesso"
       subtitle={`Defina o acesso para ${userName}`}
       maxWidth="max-w-md"
     >
@@ -76,13 +93,23 @@ export function CredentialModal({
           <option value="STUDENT">Estudante</option>
         </Select>
 
+        <Select
+          {...methods.register('status')}
+          id="status"
+          label="Status"
+          className="w-full"
+        >
+          <option value="ACTIVE">Ativo</option>
+          <option value="INACTIVE">Inativo</option>
+          <option value="BLOCKED">Bloqueado</option>
+        </Select>
+
         <Field
           name="password"
-          label="Senha"
+          label="Senha (Deixe em branco para manter)"
           type="password"
           placeholder="********"
           icon="lock"
-          required
         />
 
         <div className="flex items-center justify-end gap-3 border-t border-[#324d67] pt-4">
@@ -98,7 +125,7 @@ export function CredentialModal({
             disabled={!isValid}
             className="flex h-10 items-center gap-2 rounded-lg bg-primary px-4 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Salvar Senha
+            Salvar Alterações
           </button>
         </div>
       </Form>

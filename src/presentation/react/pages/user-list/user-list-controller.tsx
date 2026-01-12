@@ -6,13 +6,13 @@ import {
   AddUser,
   UpdateUser,
   DeleteUser,
-  AddUserLogin,
   LoadUserById,
   LoadAddressByZipCode,
   LoadCityById,
   LoadStateById,
   LoadNeighborhoodById
 } from '@/domain/usecases'
+import { ManageUserAccess } from '@/domain/usecases/manage-user-access'
 import { useUserManagement } from '@/presentation/react/hooks/use-user-management'
 import { UserListView } from '@/presentation/react/pages/user-list/user-list-view'
 import { UserFormData } from '@/presentation/react/components/forms'
@@ -23,7 +23,8 @@ interface UsersProps {
   addUser: AddUser
   updateUser: UpdateUser
   deleteUser: DeleteUser
-  addUserLogin: AddUserLogin
+
+  manageUserAccess: ManageUserAccess
   loadUserById: LoadUserById
   loadAddressByZipCode: LoadAddressByZipCode
   loadCityById: LoadCityById
@@ -36,7 +37,8 @@ export function UserListController({
   addUser,
   updateUser,
   deleteUser,
-  addUserLogin,
+
+  manageUserAccess,
   loadUserById,
   loadAddressByZipCode,
   loadCityById,
@@ -50,14 +52,18 @@ export function UserListController({
     handleAddUser,
     handleUpdateUser,
     handleDeleteUser,
+    handleManageAccess,
     handleLoadUserById
   } = useUserManagement({
     loadUsers,
     addUser,
     updateUser,
     deleteUser,
+    manageUserAccess,
     loadUserById
   })
+
+  // ... (rest of the component state)
 
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
   const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false)
@@ -115,21 +121,16 @@ export function UserListController({
   }
 
   const onSaveCredentials = async (data: CredentialFormData) => {
-    try {
-      if (data.role !== userForCredentials!.role) {
-        await handleUpdateUser({
-          id: userForCredentials!.id,
-          role: data.role
-        })
-      }
+    const success = await handleManageAccess({
+      id: userForCredentials!.id,
+      role: data.role === userForCredentials!.role ? undefined : data.role,
 
-      await addUserLogin.perform({
-        userId: userForCredentials!.id,
-        password: data.password
-      })
+      status: data.status,
+      password: data.password || undefined
+    })
+
+    if (success) {
       setIsCredentialModalOpen(false)
-    } catch (_error) {
-      // TODO: implement error handling
     }
   }
 

@@ -117,6 +117,7 @@ export function UserListView({
           onClose={onCloseCredentialModal}
           userName={userForCredentials.name}
           initialRole={userForCredentials.role}
+          initialStatus={userForCredentials.status}
           onSave={onSaveCredentials}
         />
       )}
