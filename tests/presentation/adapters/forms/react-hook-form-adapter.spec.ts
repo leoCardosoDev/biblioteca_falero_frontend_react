@@ -3,8 +3,8 @@ import { describe, it, expect } from 'vitest'
 import { z } from 'zod'
 import type { Validation } from '@/presentation/protocols/validation'
 
-import { useReactHookFormAdapter } from '@/infra/forms/react-hook-form-adapter'
-import { ZodValidatorAdapter } from '@/infra/validation/zod-validator-adapter'
+import { useReactHookFormAdapter } from '@/presentation/adapters/forms/react-hook-form-adapter'
+import { ZodValidatorAdapter } from '@/presentation/adapters/validation/zod-validator-adapter'
 
 describe('ReactHookFormAdapter', () => {
   it('should return form methods', () => {

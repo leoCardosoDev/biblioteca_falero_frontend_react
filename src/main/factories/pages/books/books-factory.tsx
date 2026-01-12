@@ -1,5 +1,5 @@
 import { RemoteLoadBooks } from '@/application/usecases'
-import { MockBookRepository } from '@/infra/mocks/mock-book-repository'
+import { MockBookRepository } from '@/presentation/mocks/mock-book-repository'
 import { Books } from '@/presentation/react/pages/books'
 
 export const MakeBooksCallback = () => {

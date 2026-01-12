@@ -1,5 +1,5 @@
 import { Validation } from '@/presentation/protocols/validation'
-import { ZodValidatorAdapter } from '@/infra/validation/zod-validator-adapter'
+import { ZodValidatorAdapter } from '@/presentation/adapters/validation/zod-validator-adapter'
 import { userSchema } from '@/infra/validation/schemas/user-schema'
 import { UserFormData } from '@/presentation/dtos/user-form-dto'
 

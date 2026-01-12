@@ -1,5 +1,5 @@
 // TODO: Replace with HttpRepository when Backend Dashboard Task is complete
-import { DASHBOARD_STATS } from '@/infra'
+import { DASHBOARD_STATS } from '@/presentation/mocks'
 import { DashboardView } from './dashboard-view'
 
 const data = [

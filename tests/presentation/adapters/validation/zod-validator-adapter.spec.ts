@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { z } from 'zod'
-import { ZodValidatorAdapter } from '@/infra/validation/zod-validator-adapter'
+import { ZodValidatorAdapter } from '@/presentation/adapters/validation/zod-validator-adapter'
 
 describe('ZodValidatorAdapter', () => {
   it('should return true if validation succeeds', () => {

@@ -14,7 +14,9 @@ export const MOCK_USERS: User[] = [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDzRlmmxN0hjp0HMm3Ln1ZaCSETnq0xkRc8ZxO7009MJ1Md-s24R1is5lgwxHUopkz_Yy7e6J-2MwfWK8hF02REkOrUzUEtDz2rx8RQrr2Dzcb6v4L7bpfy1lwQD94ls4AXz8CeJoA9Lm0Ni95DMzP7SOnFosDLo3MyFRsxKQC4tt5W_lNn-_wL8Xx6auhl4A3eWD3cxPuwVOgY_6TXliw0KES4iDWk9_CcFJa_tUSSSwBL1d8tjUBtCKbudLhXyBDd_I6uh65Ofdo3',
     role: 'STUDENT',
     status: 'ACTIVE',
-    enrollmentId: '2023001'
+    enrollmentId: '2023001',
+    gender: 'FEMALE',
+    createdAt: '2023-01-01T00:00:00Z'
   },
   {
     id: '2',
@@ -26,7 +28,9 @@ export const MOCK_USERS: User[] = [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAYJ53mQWhchr1DtByP6DY2wxF3lwmZZN8OyO30K8UVmRxfd5IFMIlZctg_7y5XTxptTn5J1tUbpb3JMgFSDq3okxLhpB7lcbflWa9Jyb7SDzAJahBUvsoHolOd6hbXZIeVlFDfaBxOEH_1n9JjgP90Kg6MulgKFRwMPSWoWVREkCKU9ReNr5UcJEfDEjefQZyimf6OMKPffo7zX4CzkUVoczkeHbvL4MksTjAK0lYAASXReRknIOzTRsjTyPLFtbBbEC9EPtbdKCPD',
     role: 'PROFESSOR',
     status: 'ACTIVE',
-    enrollmentId: '2021056'
+    enrollmentId: '2021056',
+    gender: 'MALE',
+    createdAt: '2021-01-01T00:00:00Z'
   },
   {
     id: '3',
@@ -38,7 +42,9 @@ export const MOCK_USERS: User[] = [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAR_blIyCzAyVpEnsM6xb7NTOP4JN_PaTr-Nw2GAcTWnX6afgK14VsVeNH9iupDprTuF34NVg3JWC0sZksC4-YLeYY0EwTtYyq_sKtun3JTtjWJ0OV_Xjn3I2RMATqUmSZ4pN86JdFhtClTVyNmqBg5AtD6Lblx2wJLUX7FPPxrJAKWy_2fmOtkEDb8J9hQmIvk20wDE2jIon79QgGg8gdc52LDsACwXsEU86Agj2Dduka11G0wnQsucR7s4ecefs57MxvSUd-lyvZc',
     role: 'LIBRARIAN',
     status: 'ACTIVE',
-    enrollmentId: 'ADM002'
+    enrollmentId: 'ADM002',
+    gender: 'FEMALE',
+    createdAt: '2020-01-01T00:00:00Z'
   },
   {
     id: '4',
@@ -50,7 +56,9 @@ export const MOCK_USERS: User[] = [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuD5_tqV5y6z7nL2wK8f9R3xQ1j4oM5pE6aS7bV8c9d0e1f2g3h4i5j6k7l8m9n0o1p2q3r4s5t6u7v8w9x0y1z2A3B4C5D6E7F8G9H0I1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y7Z8a9b0c1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9v0w1x2y3z',
     role: 'STUDENT',
     status: 'BLOCKED',
-    enrollmentId: '2023115'
+    enrollmentId: '2023115',
+    gender: 'MALE',
+    createdAt: '2023-05-01T00:00:00Z'
   },
   {
     id: '5',
@@ -62,7 +70,9 @@ export const MOCK_USERS: User[] = [
       'https://lh3.googleusercontent.com/aida-public/AB6AXuC1_d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9v0w1x2y3z4A5B6C7D8E9F0G1H2I3J4K5L6M7N8O9P0Q1R2S3T4U5V6W7X8Y9Z0a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z',
     role: 'STUDENT',
     status: 'ACTIVE',
-    enrollmentId: '2024042'
+    enrollmentId: '2024042',
+    gender: 'FEMALE',
+    createdAt: '2024-01-01T00:00:00Z'
   }
 ]
 
@@ -157,7 +167,7 @@ export const DASHBOARD_STATS = [
     title: 'Total Exemplares',
     value: '12,450',
     trend: '+12%',
-    trendDirection: 'up',
+    trendDirection: 'up' as const,
     icon: 'library_books',
     colorClass: 'text-slate-300'
   },
@@ -165,7 +175,7 @@ export const DASHBOARD_STATS = [
     title: 'Disponíveis',
     value: '8,200',
     trend: '65% Vol',
-    trendDirection: 'neutral',
+    trendDirection: 'neutral' as const,
     icon: 'check_circle',
     colorClass: 'text-slate-300'
   },
@@ -173,7 +183,7 @@ export const DASHBOARD_STATS = [
     title: 'Emprestados',
     value: '3,908',
     trend: '',
-    trendDirection: 'neutral',
+    trendDirection: 'neutral' as const,
     icon: 'outbound',
     colorClass: 'text-slate-300'
   },
@@ -181,7 +191,7 @@ export const DASHBOARD_STATS = [
     title: 'Empréstimos Ativos',
     value: '342',
     trend: '+5%',
-    trendDirection: 'up',
+    trendDirection: 'up' as const,
     icon: 'compare_arrows',
     colorClass: 'text-primary'
   },
@@ -189,7 +199,7 @@ export const DASHBOARD_STATS = [
     title: 'Reservas Ativas',
     value: '15',
     trend: 'Pendente',
-    trendDirection: 'neutral',
+    trendDirection: 'neutral' as const,
     icon: 'schedule',
     colorClass: 'text-warning'
   }

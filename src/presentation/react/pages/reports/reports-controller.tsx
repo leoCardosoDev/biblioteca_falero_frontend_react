@@ -3,7 +3,7 @@ import {
   CHART_LOANS_BY_CATEGORY,
   CHART_ACTIVITY_TRENDS,
   AVAILABLE_REPORTS
-} from '@/infra'
+} from '@/presentation/mocks'
 import { ReportsView } from './reports-view'
 
 export function ReportsController() {

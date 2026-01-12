@@ -1,5 +1,5 @@
 import { Validation } from '@/presentation/protocols/validation'
-import { ZodValidatorAdapter } from '@/infra/validation/zod-validator-adapter'
+import { ZodValidatorAdapter } from '@/presentation/adapters/validation/zod-validator-adapter'
 import { bookSchema } from '@/infra/validation/schemas/book-schema'
 import { BookFormData } from '@/presentation/dtos/book-form-dto'
 
