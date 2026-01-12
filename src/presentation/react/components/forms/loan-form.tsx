@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Icon } from '@/presentation/react/components/ui'
-import { loanSchema, LoanFormData } from './loan-schema'
+import { LoanFormData } from '@/presentation/dtos/loan-form-dto'
+import { makeLoanValidation } from '@/main/factories/validation/loan-validation-factory'
 import { LoanParticipants } from './parts/loan/LoanParticipants'
 import { LoanTerms } from './parts/loan/LoanTerms'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
@@ -13,7 +14,7 @@ interface LoanFormProps {
 
 export function LoanForm({ initialData, onCancel, onSave }: LoanFormProps) {
   const methods = useCustomForm<LoanFormData>({
-    schema: loanSchema,
+    validator: makeLoanValidation(),
     mode: 'onChange',
     defaultValues: initialData || {
       loanDate: new Date().toISOString().split('T')[0]

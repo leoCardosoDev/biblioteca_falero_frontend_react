@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { Icon } from '@/presentation/react/components/ui'
-import { bookSchema, BookFormData } from './book-schema'
+import { BookFormData } from '@/presentation/dtos/book-form-dto'
+import { makeBookValidation } from '@/main/factories/validation/book-validation-factory'
 import { BookCoverUpload } from './parts/book/BookCoverUpload'
 import { BookGeneralInfo } from './parts/book/BookGeneralInfo'
 import { BookTechnicalInfo } from './parts/book/BookTechnicalInfo'
@@ -15,7 +16,7 @@ interface BookFormProps {
 
 export function BookForm({ initialData, onCancel, onSave }: BookFormProps) {
   const methods = useCustomForm<BookFormData>({
-    schema: bookSchema,
+    validator: makeBookValidation(),
     mode: 'onChange',
     defaultValues: {
       language: 'Português',

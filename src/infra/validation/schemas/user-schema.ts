@@ -23,5 +23,3 @@ export const userSchema = z.object({
     zipCode: z.string().min(8, 'CEP inválido')
   })
 })
-
-export type UserFormData = z.infer<typeof userSchema>

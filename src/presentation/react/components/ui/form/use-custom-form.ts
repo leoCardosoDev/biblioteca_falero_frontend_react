@@ -1,4 +1,4 @@
-import { ZodType } from 'zod'
+import { Validation } from '@/presentation/protocols/validation'
 
 import {
   UseFormProps,
@@ -7,7 +7,7 @@ import {
 import { useReactHookFormAdapter } from '@/infra/forms/react-hook-form-adapter'
 
 export const useCustomForm = <T extends FieldValues>(
-  props?: UseFormProps<T> & { schema?: ZodType }
+  props?: UseFormProps<T> & { validator?: Validation<T> }
 ) => {
   return useReactHookFormAdapter<T>(props)
 }

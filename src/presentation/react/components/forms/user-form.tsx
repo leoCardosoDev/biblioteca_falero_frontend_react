@@ -13,7 +13,8 @@ import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code
 import { LoadCityById } from '@/domain/usecases/load-city-by-id'
 import { LoadStateById } from '@/domain/usecases/load-state-by-id'
 import { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
-import { userSchema, UserFormData } from './user-schema'
+import { UserFormData } from '@/presentation/dtos/user-form-dto'
+import { makeUserValidation } from '@/main/factories/validation/user-validation-factory'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
 export type { UserFormData }
@@ -38,7 +39,7 @@ export function UserForm({
   loadNeighborhoodById
 }: UserFormProps) {
   const methods = useCustomForm<UserFormData>({
-    schema: userSchema,
+    validator: makeUserValidation(),
     mode: 'onChange',
     defaultValues: {
       role: 'STUDENT',
