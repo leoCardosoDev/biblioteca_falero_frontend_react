@@ -9,10 +9,10 @@ import {
 export type LinkProps = RouterLinkProps
 export type NavLinkProps = RouterNavLinkProps
 
-export const Link: React.FC<LinkProps> = (props) => {
+export function Link(props: LinkProps) {
   return <RouterLink {...props} />
 }
 
-export const NavLink: React.FC<NavLinkProps> = (props) => {
+export function NavLink(props: NavLinkProps) {
   return <RouterNavLink {...props} />
 }

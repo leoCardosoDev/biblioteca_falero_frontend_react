@@ -1,5 +1,5 @@
-import { AddUserLoginParams } from '../usecases/add-user-login';
+import { AddUserLoginParams } from '@/domain/usecases/add-user-login'
 
 export interface UserLoginRepository {
-  addLogin: (params: AddUserLoginParams) => Promise<void>;
+  addLogin: (params: AddUserLoginParams) => Promise<void>
 }

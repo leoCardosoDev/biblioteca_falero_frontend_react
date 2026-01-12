@@ -1,10 +1,20 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
+import { Icon } from '@/presentation/react/components/ui'
+import {
+  maskCpf,
+  maskRg,
+  maskZipCode
+} from '@/presentation/react/helpers/mask-utils'
 import { User } from '@/domain/models/user'
 import { UserGeneralInfo } from './parts/user/UserGeneralInfo'
 import { UserAddress } from './parts/user/UserAddress'
 import { UserAccessControl } from './parts/user/UserAccessControl'
-import { userSchema, UserFormData } from './user-schema'
+import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
+import { LoadCityById } from '@/domain/usecases/load-city-by-id'
+import { LoadStateById } from '@/domain/usecases/load-state-by-id'
+import { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
+import { UserFormData } from '@/presentation/dtos/user-form-dto'
+import { makeUserValidation } from '@/main/factories/validation/user-validation-factory'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
 export type { UserFormData }
@@ -13,47 +23,124 @@ interface UserFormProps {
   initialData?: User
   onCancel: () => void
   onSave: (data: UserFormData) => void
+  loadAddressByZipCode: LoadAddressByZipCode
+  loadCityById: LoadCityById
+  loadStateById: LoadStateById
+  loadNeighborhoodById: LoadNeighborhoodById
 }
 
-export const UserForm: React.FC<UserFormProps> = ({
+export function UserForm({
   initialData,
   onCancel,
-  onSave
-}) => {
+  onSave,
+  loadAddressByZipCode,
+  loadCityById,
+  loadStateById,
+  loadNeighborhoodById
+}: UserFormProps) {
   const methods = useCustomForm<UserFormData>({
-    schema: userSchema,
+    validator: makeUserValidation(),
+    mode: 'onChange',
     defaultValues: {
-      role: 'PROFESSOR',
-      status: 'ACTIVE'
+      role: 'STUDENT',
+      status: 'ACTIVE',
+      gender: 'OTHER',
+      address: {
+        zipCode: '',
+        street: '',
+        number: '',
+        complement: '',
+        neighborhood: '',
+        city: '',
+        state: ''
+      }
     }
   })
 
-  const { reset } = methods
+  const {
+    reset,
+    formState: { isValid }
+  } = methods
 
   useEffect(() => {
     if (initialData) {
       reset({
         name: initialData.name,
         email: initialData.email,
-        cpf: initialData.cpf,
-        rg: initialData.rg,
-        role: initialData.role as
+        cpf: maskCpf(initialData.cpf),
+        rg: maskRg(initialData.rg),
+        role: (initialData.role?.toUpperCase() || 'STUDENT') as
           | 'ADMIN'
           | 'LIBRARIAN'
           | 'PROFESSOR'
           | 'STUDENT',
-        status: initialData.status as 'ACTIVE' | 'INACTIVE' | 'BLOCKED',
-        address: initialData.address || {
-          street: '',
-          number: '',
-          neighborhood: '',
-          city: '',
-          state: '',
-          zipCode: ''
-        }
+        status: (initialData.status?.toUpperCase() || 'ACTIVE') as
+          | 'ACTIVE'
+          | 'INACTIVE'
+          | 'BLOCKED',
+        gender: (initialData.gender?.toUpperCase() || 'OTHER') as
+          | 'MALE'
+          | 'FEMALE'
+          | 'OTHER',
+        address: initialData.address
+          ? {
+              ...initialData.address,
+              state: initialData.address.state?.toUpperCase() || '',
+              zipCode: maskZipCode(initialData.address.zipCode)
+            }
+          : {
+              street: '',
+              number: '',
+              neighborhood: '',
+              city: '',
+              state: '',
+              zipCode: '',
+              complement: ''
+            }
       })
+
+      if (initialData.address?.cityId && !initialData.address.city) {
+        loadCityById.perform(initialData.address.cityId).then((city) => {
+          methods.setValue('address.city', city.name)
+
+          if (
+            !initialData.address?.stateId &&
+            !initialData.address?.state &&
+            city.stateId
+          ) {
+            loadStateById.perform(city.stateId).then((state) => {
+              methods.setValue('address.state', state.acronym.toUpperCase())
+              methods.setValue('address.stateId', state.id)
+            })
+          }
+        })
+      }
+
+      if (initialData.address?.stateId && !initialData.address.state) {
+        loadStateById.perform(initialData.address.stateId).then((state) => {
+          methods.setValue('address.state', state.acronym.toUpperCase())
+        })
+      }
+
+      if (
+        initialData.address?.neighborhoodId &&
+        !initialData.address.neighborhood
+      ) {
+        loadNeighborhoodById
+          .perform(initialData.address.neighborhoodId)
+          .then((neighborhood) => {
+            methods.setValue('address.neighborhood', neighborhood.name)
+          })
+      }
     }
-  }, [initialData, reset])
+  }, [
+    initialData,
+    reset,
+    loadCityById,
+    loadStateById,
+    loadNeighborhoodById,
+    methods
+  ])
 
   return (
     <Form
@@ -64,7 +151,7 @@ export const UserForm: React.FC<UserFormProps> = ({
     >
       <div className="flex flex-col gap-8">
         <UserGeneralInfo />
-        <UserAddress />
+        <UserAddress loadAddressByZipCode={loadAddressByZipCode} />
         <UserAccessControl />
       </div>
 
@@ -78,10 +165,11 @@ export const UserForm: React.FC<UserFormProps> = ({
         </button>
         <button
           type="submit"
-          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+          disabled={!isValid}
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Icon name="save" />
-          Salvar Usuário
+          {initialData ? 'Salvar Alterações' : 'Salvar Usuário'}
         </button>
       </div>
     </Form>

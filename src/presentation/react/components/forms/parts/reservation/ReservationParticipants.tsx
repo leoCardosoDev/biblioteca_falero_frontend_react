@@ -1,9 +1,9 @@
 import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form/context'
 import { Input, Select, FormSection } from '@/presentation/react/components/ui'
-import { ReservationFormData } from '../../reservation-schema'
+import { ReservationFormData } from '@/presentation/react/components/forms/reservation-schema'
 
-export const ReservationParticipants: React.FC = () => {
+export function ReservationParticipants() {
   const {
     register,
     formState: { errors }

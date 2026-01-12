@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
-import { bookSchema, BookFormData } from './book-schema'
+import { Icon } from '@/presentation/react/components/ui'
+import { BookFormData } from '@/presentation/dtos/book-form-dto'
+import { makeBookValidation } from '@/main/factories/validation/book-validation-factory'
 import { BookCoverUpload } from './parts/book/BookCoverUpload'
 import { BookGeneralInfo } from './parts/book/BookGeneralInfo'
 import { BookTechnicalInfo } from './parts/book/BookTechnicalInfo'
@@ -13,20 +14,20 @@ interface BookFormProps {
   onSave: (data: BookFormData) => void
 }
 
-export const BookForm: React.FC<BookFormProps> = ({
-  initialData,
-  onCancel,
-  onSave
-}) => {
+export function BookForm({ initialData, onCancel, onSave }: BookFormProps) {
   const methods = useCustomForm<BookFormData>({
-    schema: bookSchema,
+    validator: makeBookValidation(),
+    mode: 'onChange',
     defaultValues: {
       language: 'Português',
       ...initialData
     }
   })
 
-  const { reset } = methods
+  const {
+    reset,
+    formState: { isValid }
+  } = methods
 
   useEffect(() => {
     if (initialData) {
@@ -45,10 +46,10 @@ export const BookForm: React.FC<BookFormProps> = ({
       noValidate
     >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-        {/* Upload Section */}
+        {}
         <BookCoverUpload />
 
-        {/* Fields Section */}
+        {}
         <div className="flex flex-col gap-8 lg:col-span-8">
           <BookGeneralInfo />
           <BookTechnicalInfo />
@@ -66,7 +67,8 @@ export const BookForm: React.FC<BookFormProps> = ({
         </button>
         <button
           type="submit"
-          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+          disabled={!isValid}
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Icon name="check" />
           Salvar Obra

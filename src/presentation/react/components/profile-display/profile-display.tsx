@@ -1,19 +1,19 @@
-import { useAuthContext } from '@/presentation/react/hooks/use-auth-context';
-import { Avatar } from '@/presentation/react/components/ui';
-import { formatUserRole } from '@/presentation/react/helpers/user-serializers';
-import { User } from '@/domain/models/user';
+import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
+import { Avatar } from '@/presentation/react/components/ui'
+import { formatUserRole } from '@/presentation/react/helpers/user-serializers'
+import { User } from '@/domain/models/user'
 
-export const ProfileDisplay: React.FC = () => {
-  const { user } = useAuthContext();
+export function ProfileDisplay() {
+  const { user } = useAuthContext()
 
   if (!user) {
-    return null;
+    return null
   }
 
   return (
-    <div className="flex items-center gap-3 cursor-pointer group">
-      <div className="text-right hidden sm:block">
-        <p className="text-sm font-semibold text-white group-hover:text-primary transition-colors">
+    <div className="group flex cursor-pointer items-center gap-3">
+      <div className="hidden text-right sm:block">
+        <p className="text-sm font-semibold text-white transition-colors group-hover:text-primary">
           {user.name}
         </p>
         <p className="text-xs text-slate-500">
@@ -22,5 +22,5 @@ export const ProfileDisplay: React.FC = () => {
       </div>
       <Avatar src={user.avatarUrl} />
     </div>
-  );
-};
+  )
+}

@@ -1,3 +1,3 @@
-export * from './Header';
-export * from './main-layout';
-export * from './Sidebar';
+export * from './header'
+export * from './sidebar'
+export * from './main-layout'

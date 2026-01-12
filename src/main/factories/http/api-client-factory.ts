@@ -1,23 +1,16 @@
-import axios, { AxiosInstance } from 'axios'
+import axios from 'axios'
+import { AxiosHttpClient } from '@/infra/http/axios-http-client'
+import { HttpClient } from '@/application/protocols/http/http-client'
 import { makeLocalStorageAdapter } from '@/main/factories/cache/cache-factory'
+import { AuthorizeHttpClientDecorator } from '@/main/decorators/authorize-http-client-decorator'
 
-export const makeHttpClient = (baseUrl?: string): AxiosInstance => {
+export const makeHttpClient = (baseUrl?: string): HttpClient => {
   const instance = axios.create({
-    baseURL: baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:5050/api'
+    baseURL:
+      baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:5050/api'
   })
 
-  instance.interceptors.request.use(async (config) => {
-    const cache = makeLocalStorageAdapter()
-    const token = await cache.get('accessToken')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-    }
-
-    return config
-  }, (error) => {
-    return Promise.reject(error)
-  })
-
-
-  return instance
+  const axiosHttpClient = new AxiosHttpClient(instance)
+  const localStorageAdapter = makeLocalStorageAdapter()
+  return new AuthorizeHttpClientDecorator(localStorageAdapter, axiosHttpClient)
 }

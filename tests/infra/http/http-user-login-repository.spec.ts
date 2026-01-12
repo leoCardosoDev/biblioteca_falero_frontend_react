@@ -1,43 +1,47 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { HttpUserLoginRepository } from '@/infra/http/http-user-login-repository'
-import type { AxiosInstance } from 'axios'
 import { faker } from '@faker-js/faker'
-
-const makeAxiosMock = (): AxiosInstance => {
-  return {
-    post: vi.fn()
-  } as unknown as AxiosInstance
-}
+import type { HttpClient } from '@/application/protocols/http/http-client'
 
 describe('HttpUserLoginRepository', () => {
   let sut: HttpUserLoginRepository
-  let axiosMock: AxiosInstance
+  let httpClientStub: HttpClient
 
   beforeEach(() => {
-    axiosMock = makeAxiosMock()
-    sut = new HttpUserLoginRepository(axiosMock)
+    httpClientStub = {
+      request: vi.fn()
+    }
+    sut = new HttpUserLoginRepository(httpClientStub)
   })
 
-  test('Should call axios.post with correct URL and body', async () => {
+  test('Should call HttpClient.request with correct URL, method and body', async () => {
     const userId = faker.string.uuid()
     const loginData = {
       email: faker.internet.email(),
       password: faker.internet.password()
     }
     const params = { userId, ...loginData }
+    vi.mocked(httpClientStub.request).mockResolvedValueOnce({
+      statusCode: 204,
+      body: null
+    })
 
     await sut.addLogin(params)
 
-    expect(axiosMock.post).toHaveBeenCalledWith(`/users/${userId}/login`, loginData)
+    expect(httpClientStub.request).toHaveBeenCalledWith({
+      url: `/users/${userId}/login`,
+      method: 'post',
+      body: loginData
+    })
   })
 
-  test('Should throw if axios.post fails', async () => {
+  test('Should throw if HttpClient fails', async () => {
     const params = {
       userId: faker.string.uuid(),
       email: faker.internet.email(),
       password: faker.internet.password()
     }
-    vi.spyOn(axiosMock, 'post').mockRejectedValueOnce(new Error())
+    vi.mocked(httpClientStub.request).mockRejectedValueOnce(new Error())
 
     const promise = sut.addLogin(params)
 

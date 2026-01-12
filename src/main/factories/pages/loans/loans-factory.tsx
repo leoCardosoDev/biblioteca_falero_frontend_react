@@ -1,12 +1,10 @@
-import React from 'react';
-import { Loans } from '@/presentation/react/pages/loans/loans';
-import { DbLoadLoans } from '@/application/usecases/db-load-loans';
-import { MockLoanRepository } from '@/infra/mocks/mock-loan-repository';
+import { RemoteLoadLoans } from '@/application/usecases'
+import { MockLoanRepository } from '@/presentation/mocks/mock-loan-repository'
+import { Loans } from '@/presentation/react/pages/loans'
 
-export const MakeLoans: React.FC = () => {
-  // In future, swap with HttpLoanRepository
-  const loanRepository = new MockLoanRepository();
-  const loadLoans = new DbLoadLoans(loanRepository);
+export const MakeLoansCallback = () => {
+  const loanRepository = new MockLoanRepository()
+  const loadLoans = new RemoteLoadLoans(loanRepository)
 
-  return <Loans loadLoans={loadLoans} />;
-};
+  return <Loans loadLoans={loadLoans} />
+}

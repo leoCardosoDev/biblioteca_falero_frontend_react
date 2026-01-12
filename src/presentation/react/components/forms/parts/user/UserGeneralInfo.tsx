@@ -1,10 +1,10 @@
 import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form'
-import { Input, FormSection } from '@/presentation/react/components/ui'
+import { Input, FormSection, Select } from '@/presentation/react/components/ui'
 import { maskCpf, maskRg } from '@/presentation/react/helpers/mask-utils'
-import { UserFormData } from '../../user-schema'
+import { UserFormData } from '@/presentation/react/components/forms/user-schema'
 
-export const UserGeneralInfo: React.FC = () => {
+export function UserGeneralInfo() {
   const {
     register,
     setValue,
@@ -54,6 +54,18 @@ export const UserGeneralInfo: React.FC = () => {
         error={errors.rg?.message}
         required
       />
+
+      <Select
+        {...register('gender')}
+        id="gender"
+        label="Gênero"
+        error={errors.gender?.message}
+        required
+      >
+        <option value="MALE">Masculino</option>
+        <option value="FEMALE">Feminino</option>
+        <option value="OTHER">Outro</option>
+      </Select>
 
       <Input
         {...register('email')}

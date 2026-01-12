@@ -1,8 +1,21 @@
-import React from 'react';
-import { cn } from '@/lib/utils';
+import React from 'react'
+import { cn } from '@/lib/utils'
 
-export const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className }) => (
-  <div className={cn("bg-card-dark rounded-xl border border-white/5 shadow-sm", className)}>
-    {children}
-  </div>
-);
+export function Card({
+  children,
+  className
+}: {
+  children: React.ReactNode
+  className?: string
+}) {
+  return (
+    <div
+      className={cn(
+        'rounded-xl border border-white/5 bg-card-dark shadow-sm',
+        className
+      )}
+    >
+      {children}
+    </div>
+  )
+}

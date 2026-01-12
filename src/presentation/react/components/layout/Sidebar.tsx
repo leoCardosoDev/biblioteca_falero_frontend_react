@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from '@/presentation/react/components/ui/link'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import { Icon } from '@/presentation/react/components/ui'
-import { SidebarItem } from '../../types'
+import { SidebarItem } from '@/presentation/react/types'
 
 const NAV_ITEMS: { category: string; items: SidebarItem[] }[] = [
   {
@@ -24,8 +24,8 @@ const NAV_ITEMS: { category: string; items: SidebarItem[] }[] = [
   }
 ]
 
-export const Sidebar: React.FC = () => {
-  const { user } = useAuthContext()
+export function Sidebar() {
+  const { user, signOut } = useAuthContext()
 
   const allowedRoles = ['ADMIN', 'LIBRARIAN']
   const canManageUsers = user && allowedRoles.includes(user.role)
@@ -95,7 +95,10 @@ export const Sidebar: React.FC = () => {
       </div>
 
       <div className="border-t border-white/5 p-4">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-400 transition-colors hover:bg-red-500/10 hover:text-red-400">
+        <button
+          onClick={signOut}
+          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-slate-400 transition-colors hover:bg-red-500/10 hover:text-red-400"
+        >
           <Icon name="logout" />
           <span className="text-sm font-medium">Sair</span>
         </button>

@@ -1,12 +1,10 @@
-import React from 'react';
-import { Books } from '@/presentation/react/pages/books/books';
-import { DbLoadBooks } from '@/application/usecases/db-load-books';
-import { MockBookRepository } from '@/infra/mocks/mock-book-repository';
+import { RemoteLoadBooks } from '@/application/usecases'
+import { MockBookRepository } from '@/presentation/mocks/mock-book-repository'
+import { Books } from '@/presentation/react/pages/books'
 
-export const MakeBooks: React.FC = () => {
-  // In future, swap with HttpBookRepository
-  const bookRepository = new MockBookRepository();
-  const loadBooks = new DbLoadBooks(bookRepository);
+export const MakeBooksCallback = () => {
+  const bookRepository = new MockBookRepository()
+  const loadBooks = new RemoteLoadBooks(bookRepository)
 
-  return <Books loadBooks={loadBooks} />;
-};
+  return <Books loadBooks={loadBooks} />
+}

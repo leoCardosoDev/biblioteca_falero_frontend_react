@@ -1,6 +1,6 @@
-import React from 'react'
+import { useEffect } from 'react'
 
-import { useAuth } from '@/presentation/react/hooks/use-auth'
+import { useLoginViewModel } from '@/presentation/react/hooks/use-login-viewmodel'
 import { Router } from '@/presentation/protocols/router-protocol'
 import { LoginView } from '@/presentation/react/pages/login/login-view'
 
@@ -8,11 +8,21 @@ type Props = {
   router: Router
 }
 
-export const LoginController: React.FC<Props> = ({ router }: Props) => {
-  const { loginSubmit, isLoading, error } = useAuth()
+export function LoginController({ router }: Props) {
+  const { loginSubmit, isLoading, error, isAuthenticated } = useLoginViewModel()
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.navigate('/')
+    }
+  }, [isAuthenticated, router])
 
   const handleLoginSuccess = () => {
     router.navigate('/')
+  }
+
+  if (isLoading && !error) {
+    return null
   }
 
   return (

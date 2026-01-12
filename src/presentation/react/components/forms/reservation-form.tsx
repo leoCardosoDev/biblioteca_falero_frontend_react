@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
-import { Icon } from '../ui'
-import { reservationSchema, ReservationFormData } from './reservation-schema'
+import { Icon } from '@/presentation/react/components/ui'
+import { ReservationFormData } from '@/presentation/dtos/reservation-form-dto'
+import { makeReservationValidation } from '@/main/factories/validation/reservation-validation-factory'
 import { ReservationParticipants } from './parts/reservation/ReservationParticipants'
 import { ReservationDetails } from './parts/reservation/ReservationDetails'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
@@ -11,20 +12,24 @@ interface ReservationFormProps {
   onSave: (data: ReservationFormData) => void
 }
 
-export const ReservationForm: React.FC<ReservationFormProps> = ({
+export function ReservationForm({
   initialData,
   onCancel,
   onSave
-}) => {
+}: ReservationFormProps) {
   const methods = useCustomForm<ReservationFormData>({
-    schema: reservationSchema,
+    validator: makeReservationValidation(),
+    mode: 'onChange',
     defaultValues: initialData || {
       reservationDate: new Date().toISOString().split('T')[0],
       priority: 'LOW'
     }
   })
 
-  const { reset } = methods
+  const {
+    reset,
+    formState: { isValid }
+  } = methods
 
   useEffect(() => {
     if (initialData) {
@@ -54,7 +59,8 @@ export const ReservationForm: React.FC<ReservationFormProps> = ({
         </button>
         <button
           type="submit"
-          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600"
+          disabled={!isValid}
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           <Icon name="check" />
           Confirmar Reserva

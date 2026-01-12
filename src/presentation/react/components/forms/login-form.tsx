@@ -5,8 +5,9 @@ import {
   useCustomForm,
   Form
 } from '@/presentation/react/components/ui/form'
-import { LoginHeader } from '../login-header'
-import { loginSchema, LoginFormData } from './login-schema'
+import { LoginHeader } from '@/presentation/react/components/login-header'
+import { LoginFormData } from '@/presentation/dtos/login-form-dto'
+import { makeLoginValidation } from '@/main/factories/validation/login-validation-factory'
 
 export type { LoginFormData }
 
@@ -16,15 +17,15 @@ interface LoginFormProps {
   onSubmit: (data: LoginFormData) => void
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({
-  isLoading,
-  error,
-  onSubmit
-}) => {
+export function LoginForm({ isLoading, error, onSubmit }: LoginFormProps) {
   const methods = useCustomForm<LoginFormData>({
-    schema: loginSchema,
+    validator: makeLoginValidation(),
     mode: 'onChange'
   })
+
+  const {
+    formState: { isValid }
+  } = methods
 
   return (
     <div className="w-full">
@@ -61,7 +62,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           type="submit"
           className="mt-2 h-12"
           icon={isLoading ? undefined : 'arrow_forward'}
-          disabled={isLoading}
+          disabled={isLoading || !isValid}
         >
           {isLoading ? 'Entrando...' : 'Entrar'}
         </Button>

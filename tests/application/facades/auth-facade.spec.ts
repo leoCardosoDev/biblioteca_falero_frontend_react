@@ -1,13 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import { AuthFacade } from '@/application/facades/auth-facade'
-import { Authentication } from '@/domain/usecases/authentication'
-import { CacheRepository } from '@/application/protocols/cache-repository'
-import { AccountModel } from '@/domain/models/account-model'
+import type { Authentication } from '@/domain/usecases/authentication'
+import type { CacheRepository } from '@/application/protocols/cache-repository'
+import type { AccountModel } from '@/domain/models/account-model'
+import type { Logout } from '@/domain/usecases/logout'
 
 interface SutTypes {
   sut: AuthFacade
   authenticationStub: Authentication
+  logoutStub: Logout
   cacheRepositoryStub: CacheRepository
 }
 
@@ -25,6 +27,10 @@ const makeCacheRepository = (): CacheRepository => {
   }
 }
 
+const makeLogout = (): Logout => ({
+  logout: vi.fn(async () => Promise.resolve())
+})
+
 const makeAccount = (): AccountModel => ({
   accessToken: 'any_token',
   name: 'any_name',
@@ -34,11 +40,17 @@ const makeAccount = (): AccountModel => ({
 
 const makeSut = (): SutTypes => {
   const authenticationStub = makeAuthentication()
+  const logoutStub = makeLogout()
   const cacheRepositoryStub = makeCacheRepository()
-  const sut = new AuthFacade(authenticationStub, cacheRepositoryStub)
+  const sut = new AuthFacade(
+    authenticationStub,
+    logoutStub,
+    cacheRepositoryStub
+  )
   return {
     sut,
     authenticationStub,
+    logoutStub,
     cacheRepositoryStub
   }
 }
@@ -66,8 +78,14 @@ describe('AuthFacade', () => {
         email: 'any_email@mail.com',
         password: 'any_password'
       })
-      expect(cacheRepositoryStub.set).toHaveBeenCalledWith('account', JSON.stringify(account))
-      expect(cacheRepositoryStub.set).toHaveBeenCalledWith('accessToken', account.accessToken)
+      expect(cacheRepositoryStub.set).toHaveBeenCalledWith(
+        'account',
+        JSON.stringify(account)
+      )
+      expect(cacheRepositoryStub.set).toHaveBeenCalledWith(
+        'accessToken',
+        account.accessToken
+      )
     })
 
     it('Should return account on success', async () => {
@@ -81,7 +99,9 @@ describe('AuthFacade', () => {
 
     it('Should return null if authentication fails', async () => {
       const { sut, authenticationStub } = makeSut()
-      vi.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve(null as unknown as AccountModel))
+      vi.spyOn(authenticationStub, 'auth').mockReturnValueOnce(
+        Promise.resolve(null as unknown as AccountModel)
+      )
       const account = await sut.login({
         email: 'any_email@mail.com',
         password: 'any_password'
@@ -91,7 +111,9 @@ describe('AuthFacade', () => {
 
     it('Should NOT call CacheRepository.set if authentication fails', async () => {
       const { sut, authenticationStub, cacheRepositoryStub } = makeSut()
-      vi.spyOn(authenticationStub, 'auth').mockReturnValueOnce(Promise.resolve(null as unknown as AccountModel))
+      vi.spyOn(authenticationStub, 'auth').mockReturnValueOnce(
+        Promise.resolve(null as unknown as AccountModel)
+      )
       await sut.login({
         email: 'any_email@mail.com',
         password: 'any_password'
@@ -101,6 +123,55 @@ describe('AuthFacade', () => {
   })
 
   describe('logout', () => {
+    it('Should call Logout.logout with correct values', async () => {
+      const { sut, logoutStub, cacheRepositoryStub } = makeSut()
+      const account = makeAccount()
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(JSON.stringify(account))
+      )
+      await sut.logout()
+      expect(logoutStub.logout).toHaveBeenCalledWith({
+        refreshToken: account.refreshToken
+      })
+    })
+
+    it('Should NOT call Logout.logout if refreshToken is not in cache', async () => {
+      const { sut, logoutStub, cacheRepositoryStub } = makeSut()
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(null)
+      )
+      await sut.logout()
+      expect(logoutStub.logout).not.toHaveBeenCalled()
+    })
+
+    it('Should NOT call Logout.logout if refreshToken is missing in account', async () => {
+      const { sut, logoutStub, cacheRepositoryStub } = makeSut()
+      const accountWithoutToken = { name: 'any_name' }
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(JSON.stringify(accountWithoutToken))
+      )
+      await sut.logout()
+      expect(logoutStub.logout).not.toHaveBeenCalled()
+    })
+
+    it('Should call console.error if Logout.logout throws', async () => {
+      const { sut, logoutStub, cacheRepositoryStub } = makeSut()
+      const account = makeAccount()
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(JSON.stringify(account))
+      )
+      vi.spyOn(logoutStub, 'logout').mockRejectedValueOnce(
+        new Error('any_error')
+      )
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+      await sut.logout()
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Logout failed:',
+        expect.any(Error)
+      )
+      consoleSpy.mockRestore()
+    })
+
     it('Should call CacheRepository.set with empty strings to clear session', async () => {
       const { sut, cacheRepositoryStub } = makeSut()
       await sut.logout()
@@ -119,21 +190,27 @@ describe('AuthFacade', () => {
     it('Should return account if it exists in cache', async () => {
       const { sut, cacheRepositoryStub } = makeSut()
       const account = makeAccount()
-      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(Promise.resolve(JSON.stringify(account)))
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(JSON.stringify(account))
+      )
       const currentUser = await sut.getCurrentUser()
       expect(currentUser).toEqual(account)
     })
 
     it('Should return null if account does not exist in cache', async () => {
       const { sut, cacheRepositoryStub } = makeSut()
-      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(Promise.resolve(null))
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve(null)
+      )
       const currentUser = await sut.getCurrentUser()
       expect(currentUser).toBeNull()
     })
 
     it('Should return null if JSON parse fails', async () => {
       const { sut, cacheRepositoryStub } = makeSut()
-      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(Promise.resolve('invalid_json'))
+      vi.spyOn(cacheRepositoryStub, 'get').mockReturnValueOnce(
+        Promise.resolve('invalid_json')
+      )
       const currentUser = await sut.getCurrentUser()
       expect(currentUser).toBeNull()
     })

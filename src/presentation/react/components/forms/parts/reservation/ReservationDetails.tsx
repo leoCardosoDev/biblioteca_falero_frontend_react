@@ -6,9 +6,9 @@ import {
   TextArea,
   FormSection
 } from '@/presentation/react/components/ui'
-import { ReservationFormData } from '../../reservation-schema'
+import { ReservationFormData } from '@/presentation/react/components/forms/reservation-schema'
 
-export const ReservationDetails: React.FC = () => {
+export function ReservationDetails() {
   const {
     register,
     formState: { errors }
