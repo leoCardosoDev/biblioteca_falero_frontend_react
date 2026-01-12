@@ -9,12 +9,11 @@ import { Validation } from '@/presentation/protocols/validation'
 
 const set = (obj: Record<string, unknown>, path: string, value: unknown) => {
   const parts = path.split('.')
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let current: Record<string, any> = obj
+  let current: Record<string, unknown> = obj
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i]
     if (!current[part]) current[part] = {}
-    current = current[part]
+    current = current[part] as Record<string, unknown>
   }
   current[parts[parts.length - 1]] = value
 }

@@ -19,21 +19,18 @@ describe('ReactHookFormAdapter', () => {
     const schema = z.object({
       name: z.string().min(1)
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const validator = new ZodValidatorAdapter(schema) as any
+    const validator = new ZodValidatorAdapter<{ name: string }>(schema)
 
     const { result } = renderHook(() => {
       const methods = useReactHookFormAdapter({
         validator,
         defaultValues: { name: '' }
       })
-      // Force subscription to errors
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      methods.formState.errors
+
+      expect(methods.formState.errors).toBeDefined()
       return methods
     })
 
-    // Trigger validation
     let validationResult: boolean
     await act(async () => {
       validationResult = await result.current.trigger()
@@ -48,8 +45,7 @@ describe('ReactHookFormAdapter', () => {
     const schema = z.object({
       name: z.string().min(1)
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const validator = new ZodValidatorAdapter(schema) as any
+    const validator = new ZodValidatorAdapter<{ name: string }>(schema)
 
     const { result } = renderHook(() =>
       useReactHookFormAdapter({
@@ -78,8 +74,9 @@ describe('ReactHookFormAdapter', () => {
         state: z.string().min(1)
       })
     })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const validator = new ZodValidatorAdapter(schema) as any
+    const validator = new ZodValidatorAdapter<{
+      address: { city: string; state: string }
+    }>(schema)
 
     const { result } = renderHook(() => {
       const methods = useReactHookFormAdapter({
@@ -94,8 +91,7 @@ describe('ReactHookFormAdapter', () => {
       methods.register('address.city')
       methods.register('address.state')
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      methods.formState.errors
+      expect(methods.formState.errors).toBeDefined()
       return methods
     })
 
@@ -137,8 +133,7 @@ describe('ReactHookFormAdapter', () => {
         validator,
         defaultValues: { name: 'test' }
       })
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      methods.formState.errors
+      expect(methods.formState.errors).toBeDefined()
       return methods
     })
 
@@ -146,7 +141,6 @@ describe('ReactHookFormAdapter', () => {
       await result.current.trigger()
     })
 
-    // RHF considers it valid if no errors are returned
     expect(result.current.formState.isValid).toBe(true)
     expect(result.current.formState.errors).toEqual({})
   })
