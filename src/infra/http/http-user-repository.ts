@@ -3,6 +3,7 @@ import { UserRepository } from '@/domain/contracts/user-repository'
 import { User } from '@/domain/models/user'
 import { AddUserParams } from '@/domain/usecases/add-user'
 import { UpdateUserParams } from '@/domain/usecases/update-user'
+import { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
 
 export class HttpUserRepository implements UserRepository {
   constructor(private readonly httpClient: HttpClient) {}
@@ -48,6 +49,15 @@ export class HttpUserRepository implements UserRepository {
     await this.httpClient.request({
       url: `/users/${id}`,
       method: 'delete'
+    })
+  }
+
+  async manageAccess(params: ManageUserAccessParams): Promise<void> {
+    const { id, ...data } = params
+    await this.httpClient.request({
+      url: `/users/${id}/access`,
+      method: 'post',
+      body: data
     })
   }
 

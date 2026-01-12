@@ -20,7 +20,7 @@ export interface AddUserParams {
     zipCode: string
   }
   role: User['role']
-  status: User['status']
+  status?: User['status']
 }
 
 export interface AddUser {

@@ -3,6 +3,7 @@ import { HttpUserRepository } from '@/infra/http/http-user-repository'
 import { faker } from '@faker-js/faker'
 import type { AddUserParams } from '@/domain/usecases/add-user'
 import type { UpdateUserParams } from '@/domain/usecases/update-user'
+import type { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
 import type { HttpClient } from '@/application/protocols/http/http-client'
 
 describe('HttpUserRepository', () => {
@@ -144,6 +145,24 @@ describe('HttpUserRepository', () => {
       expect(httpClientStub.request).toHaveBeenCalledWith({
         url: `/users/${id}`,
         method: 'delete'
+      })
+    })
+  })
+
+  describe('manageAccess', () => {
+    test('Should call HttpClient with correct URL, method and body', async () => {
+      const id = 'any_id'
+      const data = { roleId: 'any_role', status: 'ACTIVE' }
+      const params = { id, ...data } as unknown as ManageUserAccessParams
+      vi.mocked(httpClientStub.request).mockResolvedValueOnce({
+        statusCode: 204,
+        body: null
+      })
+      await sut.manageAccess(params)
+      expect(httpClientStub.request).toHaveBeenCalledWith({
+        url: `/users/${id}/access`,
+        method: 'post',
+        body: data
       })
     })
   })
