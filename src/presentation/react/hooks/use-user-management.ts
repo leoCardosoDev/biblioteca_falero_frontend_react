@@ -86,10 +86,15 @@ export function useUserManagement({
     try {
       await manageUserAccess.perform(params)
       await fetchUsers()
-      return true
-    } catch (_err: unknown) {
-      setError('Erro ao atualizar acesso.')
-      return false
+      return { success: true }
+    } catch (err: unknown) {
+      let errorMessage =
+        err instanceof Error ? err.message : 'Erro ao atualizar acesso.'
+      if (errorMessage === 'Login not found') {
+        errorMessage =
+          'Para alterar o perfil, é necessário definir uma senha primeiro.'
+      }
+      return { success: false, error: errorMessage }
     }
   }
 

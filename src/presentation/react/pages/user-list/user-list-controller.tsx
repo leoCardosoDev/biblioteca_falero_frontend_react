@@ -10,10 +10,10 @@ import {
   LoadAddressByZipCode,
   LoadCityById,
   LoadStateById,
-  LoadNeighborhoodById
+  LoadNeighborhoodById,
+  ManageUserAccess
 } from '@/domain/usecases'
-import { ManageUserAccess } from '@/domain/usecases/manage-user-access'
-import { useUserManagement } from '@/presentation/react/hooks/use-user-management'
+import { useUserManagement, useUserFilter } from '@/presentation/react/hooks'
 import { UserListView } from '@/presentation/react/pages/user-list/user-list-view'
 import { UserFormData } from '@/presentation/react/components/forms'
 import { CredentialFormData } from '@/presentation/react/components/credential-modal/credential-modal'
@@ -23,7 +23,6 @@ interface UsersProps {
   addUser: AddUser
   updateUser: UpdateUser
   deleteUser: DeleteUser
-
   manageUserAccess: ManageUserAccess
   loadUserById: LoadUserById
   loadAddressByZipCode: LoadAddressByZipCode
@@ -37,7 +36,6 @@ export function UserListController({
   addUser,
   updateUser,
   deleteUser,
-
   manageUserAccess,
   loadUserById,
   loadAddressByZipCode,
@@ -63,30 +61,23 @@ export function UserListController({
     loadUserById
   })
 
-  // ... (rest of the component state)
-
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
   const [isCredentialModalOpen, setIsCredentialModalOpen] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined)
   const [userForCredentials, setUserForCredentials] = useState<User | null>(
     null
   )
+  const [credentialError, setCredentialError] = useState<string | null>(null)
 
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('ALL')
   const [roleFilter, setRoleFilter] = useState('ALL')
 
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (user.cpf && user.cpf.includes(searchTerm)) ||
-      (user.enrollmentId && user.enrollmentId.includes(searchTerm))
-
-    const matchesStatus = statusFilter === 'ALL' || user.status === statusFilter
-    const matchesRole = roleFilter === 'ALL' || user.role === roleFilter
-
-    return matchesSearch && matchesStatus && matchesRole
+  const filteredUsers = useUserFilter({
+    users,
+    searchTerm,
+    statusFilter,
+    roleFilter
   })
 
   const handleOpenCreate = () => {
@@ -121,16 +112,20 @@ export function UserListController({
   }
 
   const onSaveCredentials = async (data: CredentialFormData) => {
-    const success = await handleManageAccess({
-      id: userForCredentials!.id,
-      role: data.role === userForCredentials!.role ? undefined : data.role,
+    if (!userForCredentials) return
 
+    const result = await handleManageAccess({
+      id: userForCredentials.id,
+      role: data.role === userForCredentials.role ? undefined : data.role,
       status: data.status,
       password: data.password || undefined
     })
 
-    if (success) {
+    if (result.success) {
       setIsCredentialModalOpen(false)
+      setCredentialError(null)
+    } else {
+      setCredentialError(result.error || 'Erro ao salvar credenciais')
     }
   }
 
@@ -163,9 +158,11 @@ export function UserListController({
       onCloseCredentialModal={() => {
         setIsCredentialModalOpen(false)
         setUserForCredentials(null)
+        setCredentialError(null)
       }}
       onSaveUser={onSaveUser}
       onSaveCredentials={onSaveCredentials}
+      credentialError={credentialError}
       loadAddressByZipCode={loadAddressByZipCode}
       loadCityById={loadCityById}
       loadStateById={loadStateById}

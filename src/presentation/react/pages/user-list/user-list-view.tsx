@@ -52,6 +52,7 @@ export type UserListViewProps = {
 
   onSaveUser: (data: UserFormData) => Promise<void>
   onSaveCredentials: (data: CredentialFormData) => Promise<void>
+  credentialError?: string | null
 
   loadAddressByZipCode: LoadAddressByZipCode
   loadCityById: LoadCityById
@@ -81,6 +82,7 @@ export function UserListView({
   onCloseCredentialModal,
   onSaveUser,
   onSaveCredentials,
+  credentialError,
   loadAddressByZipCode,
   loadCityById,
   loadStateById,
@@ -119,6 +121,7 @@ export function UserListView({
           initialRole={userForCredentials.role}
           initialStatus={userForCredentials.status}
           onSave={onSaveCredentials}
+          error={credentialError}
         />
       )}
       <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">

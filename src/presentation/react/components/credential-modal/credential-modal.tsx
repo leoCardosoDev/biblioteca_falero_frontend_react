@@ -34,6 +34,7 @@ interface CredentialModalProps {
   userName: string
   initialRole?: string
   initialStatus?: string
+  error?: string | null
 }
 
 export function CredentialModal({
@@ -42,15 +43,15 @@ export function CredentialModal({
   onSave,
   userName,
   initialRole,
-  initialStatus
+  initialStatus,
+  error
 }: CredentialModalProps) {
   const methods = useCustomForm<CredentialFormData>({
     validator: new ZodValidatorAdapter(credentialSchema),
-    mode: 'onChange',
+    mode: 'all',
     defaultValues: {
-      role: (initialRole as unknown as CredentialFormData['role']) || 'STUDENT',
-      status:
-        (initialStatus as unknown as CredentialFormData['status']) || 'ACTIVE',
+      role: (initialRole || 'STUDENT') as CredentialFormData['role'],
+      status: (initialStatus || 'ACTIVE') as CredentialFormData['status'],
       password: ''
     }
   })
@@ -58,11 +59,8 @@ export function CredentialModal({
   React.useEffect(() => {
     if (isOpen) {
       methods.reset({
-        role:
-          (initialRole as unknown as CredentialFormData['role']) || 'STUDENT',
-        status:
-          (initialStatus as unknown as CredentialFormData['status']) ||
-          'ACTIVE',
+        role: (initialRole || 'STUDENT') as CredentialFormData['role'],
+        status: (initialStatus || 'ACTIVE') as CredentialFormData['status'],
         password: ''
       })
     }
@@ -81,6 +79,12 @@ export function CredentialModal({
       maxWidth="max-w-md"
     >
       <Form form={methods} onSubmit={onSave} className="flex flex-col gap-6">
+        {error && (
+          <div className="rounded-lg bg-red-500/10 p-3 text-sm font-medium text-red-500">
+            {error}
+          </div>
+        )}
+
         <Select
           {...methods.register('role')}
           id="role"

@@ -13,9 +13,10 @@ export class HttpUserRepository implements UserRepository {
       url: '/users',
       method: 'get'
     })
-    return ((response.body as unknown[]) || []).map((user: unknown) =>
-      this.mapToDomain(user)
-    )
+    const body = response.body || []
+    if (!Array.isArray(body)) return []
+
+    return body.map((user) => this.mapToDomain(user))
   }
 
   async loadById(id: string): Promise<User> {
@@ -54,27 +55,54 @@ export class HttpUserRepository implements UserRepository {
 
   async manageAccess(params: ManageUserAccessParams): Promise<void> {
     const { id, ...data } = params
-    await this.httpClient.request({
+    const response = await this.httpClient.request({
       url: `/users/${id}/access`,
       method: 'post',
       body: data
     })
+
+    if (response.statusCode >= 400) {
+      const body = response.body as HttpErrorResponse
+      const message =
+        body?.error?.message || body?.message || 'Erro ao atualizar acesso'
+      throw new Error(message)
+    }
   }
 
   private mapToDomain(remoteUser: unknown): User {
-    const user = remoteUser as RemoteUserDto
+    if (!this.isRemoteUserDto(remoteUser)) {
+      throw new Error('Invalid user data received from API')
+    }
+
     return {
-      ...user,
+      ...remoteUser,
       role: (
-        user.login?.role ||
-        user.role ||
+        remoteUser.login?.role ||
+        remoteUser.role ||
         'STUDENT'
       ).toUpperCase() as User['role'],
-      status: (user.status || 'ACTIVE').toUpperCase() as User['status']
+      status: (remoteUser.status || 'ACTIVE').toUpperCase() as User['status']
     }
+  }
+
+  private isRemoteUserDto(data: unknown): data is RemoteUserDto {
+    return (
+      typeof data === 'object' &&
+      data !== null &&
+      'id' in data &&
+      'name' in data &&
+      'email' in data
+    )
   }
 }
 
 type RemoteUserDto = User & {
   login?: { role?: string }
+}
+
+type HttpErrorResponse = {
+  error?: {
+    message?: string
+  }
+  message?: string
 }
