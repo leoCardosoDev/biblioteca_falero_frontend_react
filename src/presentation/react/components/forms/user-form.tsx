@@ -8,7 +8,6 @@ import {
 import { User } from '@/domain/models/user'
 import { UserGeneralInfo } from './parts/user/UserGeneralInfo'
 import { UserAddress } from './parts/user/UserAddress'
-import { UserAccessControl } from './parts/user/UserAccessControl'
 import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
 import { LoadCityById } from '@/domain/usecases/load-city-by-id'
 import { LoadStateById } from '@/domain/usecases/load-state-by-id'
@@ -43,7 +42,6 @@ export function UserForm({
     mode: 'onChange',
     defaultValues: {
       role: 'STUDENT',
-      status: 'ACTIVE',
       gender: 'OTHER',
       address: {
         zipCode: '',
@@ -74,10 +72,6 @@ export function UserForm({
           | 'LIBRARIAN'
           | 'PROFESSOR'
           | 'STUDENT',
-        status: (initialData.status?.toUpperCase() || 'ACTIVE') as
-          | 'ACTIVE'
-          | 'INACTIVE'
-          | 'BLOCKED',
         gender: (initialData.gender?.toUpperCase() || 'OTHER') as
           | 'MALE'
           | 'FEMALE'
@@ -152,7 +146,6 @@ export function UserForm({
       <div className="flex flex-col gap-8">
         <UserGeneralInfo />
         <UserAddress loadAddressByZipCode={loadAddressByZipCode} />
-        <UserAccessControl />
       </div>
 
       <div className="mt-8 flex items-center justify-end gap-3 border-t border-slate-200/10 pt-6 dark:border-slate-800/50">

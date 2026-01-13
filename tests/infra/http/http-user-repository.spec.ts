@@ -3,6 +3,7 @@ import { HttpUserRepository } from '@/infra/http/http-user-repository'
 import { faker } from '@faker-js/faker'
 import type { AddUserParams } from '@/domain/usecases/add-user'
 import type { UpdateUserParams } from '@/domain/usecases/update-user'
+import type { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
 import type { HttpClient } from '@/application/protocols/http/http-client'
 
 describe('HttpUserRepository', () => {
@@ -30,10 +31,18 @@ describe('HttpUserRepository', () => {
     })
 
     test('Should return user list on success', async () => {
-      const users = [{ id: 'any_id', role: 'STUDENT', status: 'ACTIVE' }]
+      const users = [
+        {
+          id: 'any_id',
+          role: 'STUDENT',
+          status: 'ACTIVE',
+          name: 'any_name',
+          email: 'any_email'
+        }
+      ]
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: [{ id: 'any_id' }]
+        body: [{ id: 'any_id', name: 'any_name', email: 'any_email' }]
       })
       const result = await sut.loadAll()
       expect(result).toEqual(users)
@@ -54,7 +63,7 @@ describe('HttpUserRepository', () => {
       const userId = faker.string.uuid()
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: {}
+        body: { id: userId, name: 'any_name', email: 'any_email' }
       })
       await sut.loadById(userId)
       expect(httpClientStub.request).toHaveBeenCalledWith({
@@ -69,11 +78,12 @@ describe('HttpUserRepository', () => {
         id: userId,
         name: faker.person.fullName(),
         role: 'STUDENT',
-        status: 'ACTIVE'
+        status: 'ACTIVE',
+        email: 'any_email'
       }
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: { id: userId, name: userData.name }
+        body: { id: userId, name: userData.name, email: 'any_email' }
       })
       const result = await sut.loadById(userId)
       expect(result).toEqual(userData)
@@ -94,7 +104,7 @@ describe('HttpUserRepository', () => {
       } as unknown as AddUserParams
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: {}
+        body: { id: 'any_id', name: 'any_name', email: 'any_email' }
       })
       await sut.add(params)
       expect(httpClientStub.request).toHaveBeenCalledWith({
@@ -105,10 +115,16 @@ describe('HttpUserRepository', () => {
     })
 
     test('Should return user on success', async () => {
-      const userData = { id: 'any_id', role: 'STUDENT', status: 'ACTIVE' }
+      const userData = {
+        id: 'any_id',
+        role: 'STUDENT',
+        status: 'ACTIVE',
+        name: 'any_name',
+        email: 'any_email'
+      }
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: { id: 'any_id' }
+        body: { id: 'any_id', name: 'any_name', email: 'any_email' }
       })
       const result = await sut.add({} as unknown as AddUserParams)
       expect(result).toEqual(userData)
@@ -122,7 +138,7 @@ describe('HttpUserRepository', () => {
       const params = { id, ...data } as unknown as UpdateUserParams
       vi.mocked(httpClientStub.request).mockResolvedValueOnce({
         statusCode: 200,
-        body: {}
+        body: { id: 'any_id', name: 'updated_name', email: 'any_email' }
       })
       await sut.update(params)
       expect(httpClientStub.request).toHaveBeenCalledWith({
@@ -145,6 +161,39 @@ describe('HttpUserRepository', () => {
         url: `/users/${id}`,
         method: 'delete'
       })
+    })
+  })
+
+  describe('manageAccess', () => {
+    test('Should call HttpClient with correct URL, method and body', async () => {
+      const id = 'any_id'
+      const data = { roleId: 'any_role', status: 'ACTIVE' }
+      const params = { id, ...data } as unknown as ManageUserAccessParams
+      vi.mocked(httpClientStub.request).mockResolvedValueOnce({
+        statusCode: 204,
+        body: null
+      })
+      await sut.manageAccess(params)
+      expect(httpClientStub.request).toHaveBeenCalledWith({
+        url: `/users/${id}/access`,
+        method: 'post',
+        body: data
+      })
+    })
+
+    test('Should throw with message from body if statusCode >= 400', async () => {
+      const id = 'any_id'
+      const data = { roleId: 'any_role', status: 'ACTIVE' }
+      const params = { id, ...data } as unknown as ManageUserAccessParams
+      const errorMessage = 'Custom error message'
+
+      vi.mocked(httpClientStub.request).mockResolvedValueOnce({
+        statusCode: 400,
+        body: { message: errorMessage }
+      })
+
+      const promise = sut.manageAccess(params)
+      await expect(promise).rejects.toThrow(errorMessage)
     })
   })
 })

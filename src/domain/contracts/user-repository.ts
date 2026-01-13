@@ -1,6 +1,7 @@
 import { User } from '@/domain/models/user'
 import { AddUserParams } from '@/domain/usecases/add-user'
 import { UpdateUserParams } from '@/domain/usecases/update-user'
+import { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
 
 export interface UserRepository {
   loadAll: () => Promise<User[]>
@@ -8,4 +9,5 @@ export interface UserRepository {
   add: (params: AddUserParams) => Promise<User>
   update: (params: UpdateUserParams) => Promise<User>
   delete: (id: string) => Promise<void>
+  manageAccess: (params: ManageUserAccessParams) => Promise<void>
 }

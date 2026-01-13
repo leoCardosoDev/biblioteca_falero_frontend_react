@@ -10,6 +10,10 @@ import {
   UpdateUserParams,
   DeleteUser
 } from '@/domain/usecases'
+import {
+  ManageUserAccess,
+  ManageUserAccessParams
+} from '@/domain/usecases/manage-user-access'
 
 export interface UseUserManagementProps {
   loadUsers: LoadUsers
@@ -17,6 +21,7 @@ export interface UseUserManagementProps {
   addUser: AddUser
   updateUser: UpdateUser
   deleteUser: DeleteUser
+  manageUserAccess: ManageUserAccess
 }
 
 export function useUserManagement({
@@ -24,7 +29,8 @@ export function useUserManagement({
   loadUserById,
   addUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  manageUserAccess
 }: UseUserManagementProps) {
   const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -76,6 +82,22 @@ export function useUserManagement({
     }
   }
 
+  const handleManageAccess = async (params: ManageUserAccessParams) => {
+    try {
+      await manageUserAccess.perform(params)
+      await fetchUsers()
+      return { success: true }
+    } catch (err: unknown) {
+      let errorMessage =
+        err instanceof Error ? err.message : 'Erro ao atualizar acesso.'
+      if (errorMessage === 'Login not found') {
+        errorMessage =
+          'Para alterar o perfil, é necessário definir uma senha primeiro.'
+      }
+      return { success: false, error: errorMessage }
+    }
+  }
+
   const handleLoadUserById = async (id: string) => {
     try {
       setIsLoading(true)
@@ -100,6 +122,7 @@ export function useUserManagement({
     handleAddUser,
     handleUpdateUser,
     handleDeleteUser,
+    handleManageAccess,
     handleLoadUserById
   }
 }
