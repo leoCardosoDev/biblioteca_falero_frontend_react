@@ -152,7 +152,12 @@ export function UserListView({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-3xl font-bold text-white">{users.length}</h3>
+              <h3
+                className="text-3xl font-bold text-white"
+                data-testid="total-users-count"
+              >
+                {users.length}
+              </h3>
               <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-sm font-medium text-emerald-500">
                 <Icon name="trending_up" className="mr-1 inline size-3" />
                 5%
@@ -168,7 +173,10 @@ export function UserListView({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-3xl font-bold text-white">
+              <h3
+                className="text-3xl font-bold text-white"
+                data-testid="new-users-count"
+              >
                 {
                   users.filter((user) => {
                     if (!user.createdAt) return false
@@ -196,7 +204,10 @@ export function UserListView({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-3xl font-bold text-white">
+              <h3
+                className="text-3xl font-bold text-white"
+                data-testid="blocked-users-count"
+              >
                 {users.filter((u) => u.status === 'BLOCKED').length}
               </h3>
               <span className="rounded bg-amber-500/10 px-1.5 py-0.5 text-sm font-medium text-amber-500">
@@ -303,6 +314,7 @@ export function UserListView({
                       <Badge
                         label={formatUserRole(user.role)}
                         color={getUserRoleColor(user.role)}
+                        data-testid={`user-role-${user.id}`}
                       />
                     </td>
                     <td className="px-6 py-4">
