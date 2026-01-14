@@ -28,4 +28,5 @@ export interface User {
   avatarUrl?: string
   address?: Address
   createdAt: string
+  deletedAt?: string
 }
