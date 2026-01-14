@@ -9,6 +9,7 @@ import type {
   ManageUserAccess,
   LoadUserById
 } from '@/domain/usecases'
+import type { User } from '@/domain/models/user'
 
 describe('useUserManagement', () => {
   const mockLoadUsers: LoadUsers = {
@@ -94,6 +95,22 @@ describe('useUserManagement', () => {
     expect(response).toEqual({
       success: false,
       error: 'Para alterar o perfil, é necessário definir uma senha primeiro.'
+    })
+  })
+
+  test('Should filter out deleted users', async () => {
+    const deletedUser = { id: '2', deletedAt: '2025-01-01' }
+    const activeUser = { id: '1' }
+    vi.mocked(mockLoadUsers.perform).mockResolvedValue([
+      activeUser,
+      deletedUser
+    ] as unknown as User[])
+
+    const { result } = renderHook(() => useUserManagement(defaultProps))
+
+    await waitFor(() => {
+      expect(result.current.users).toHaveLength(1)
+      expect(result.current.users[0].id).toBe('1')
     })
   })
 })

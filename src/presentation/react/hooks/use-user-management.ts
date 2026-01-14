@@ -41,7 +41,7 @@ export function useUserManagement({
     setError(null)
     try {
       const data = await loadUsers.perform()
-      setUsers(data)
+      setUsers(data.filter((user) => !user.deletedAt))
     } catch (_err: unknown) {
       setError('Erro ao carregar usuários.')
     } finally {
