@@ -43,7 +43,11 @@ const mockProps: UserListViewProps = {
   loadAddressByZipCode: { perform: vi.fn() },
   loadCityById: { perform: vi.fn() },
   loadStateById: { perform: vi.fn() },
-  loadNeighborhoodById: { perform: vi.fn() }
+  loadNeighborhoodById: { perform: vi.fn() },
+  isDeleteModalOpen: false,
+  userToDelete: null,
+  onCloseDeleteModal: vi.fn(),
+  onConfirmDelete: vi.fn()
 }
 
 describe('UserListView', () => {
@@ -210,5 +214,50 @@ describe('UserListView', () => {
     const userWithoutEnrollment = { ...mockUser, enrollmentId: undefined }
     render(<UserListView {...mockProps} users={[userWithoutEnrollment]} />)
     expect(screen.getByText(/ID:/)).toBeInTheDocument()
+  })
+
+  test('Should render delete confirmation modal when open', () => {
+    render(
+      <UserListView
+        {...mockProps}
+        isDeleteModalOpen={true}
+        userToDelete={mockUser}
+      />
+    )
+    expect(
+      screen.getByText(`Tem certeza que deseja excluir ${mockUser.name}?`)
+    ).toBeInTheDocument()
+  })
+
+  test('Should call onConfirmDelete when delete is confirmed', async () => {
+    const onConfirmDeleteMock = vi.fn().mockResolvedValue(undefined)
+
+    render(
+      <UserListView
+        {...mockProps}
+        isDeleteModalOpen={true}
+        userToDelete={mockUser}
+        onConfirmDelete={onConfirmDeleteMock}
+      />
+    )
+
+    const confirmBtn = screen.getByText('Confirmar')
+    fireEvent.click(confirmBtn)
+
+    expect(onConfirmDeleteMock).toHaveBeenCalled()
+  })
+
+  test('Should call onCloseDeleteModal when delete is cancelled', () => {
+    render(
+      <UserListView
+        {...mockProps}
+        isDeleteModalOpen={true}
+        userToDelete={mockUser}
+      />
+    )
+
+    const cancelBtn = screen.getByText('Cancelar')
+    fireEvent.click(cancelBtn)
+    expect(mockProps.onCloseDeleteModal).toHaveBeenCalled()
   })
 })

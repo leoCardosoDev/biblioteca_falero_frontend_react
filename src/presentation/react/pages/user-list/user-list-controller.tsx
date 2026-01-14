@@ -129,10 +129,27 @@ export function UserListController({
     }
   }
 
-  const onDeleteClick = async (user: User) => {
-    if (confirm(`Tem certeza que deseja excluir ${user.name}?`)) {
-      await handleDeleteUser(user.id)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<User | null>(null)
+
+  const onDeleteClick = (user: User) => {
+    setUserToDelete(user)
+    setIsDeleteModalOpen(true)
+  }
+
+  const onConfirmDelete = async () => {
+    if (userToDelete) {
+      const success = await handleDeleteUser(userToDelete.id)
+      if (success) {
+        // Modal will close automatically after success animation
+        setUserToDelete(null)
+      }
     }
+  }
+
+  const onCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false)
+    setUserToDelete(null)
   }
 
   return (
@@ -167,6 +184,10 @@ export function UserListController({
       loadCityById={loadCityById}
       loadStateById={loadStateById}
       loadNeighborhoodById={loadNeighborhoodById}
+      isDeleteModalOpen={isDeleteModalOpen}
+      userToDelete={userToDelete}
+      onCloseDeleteModal={onCloseDeleteModal}
+      onConfirmDelete={onConfirmDelete}
     />
   )
 }

@@ -5,7 +5,8 @@ import {
   Icon,
   Avatar,
   Badge,
-  Modal
+  Modal,
+  ConfirmationModal
 } from '@/presentation/react/components/ui'
 import { UserForm, UserFormData } from '@/presentation/react/components/forms'
 import {
@@ -58,6 +59,10 @@ export type UserListViewProps = {
   loadCityById: LoadCityById
   loadStateById: LoadStateById
   loadNeighborhoodById: LoadNeighborhoodById
+  isDeleteModalOpen: boolean
+  userToDelete: User | null
+  onCloseDeleteModal: () => void
+  onConfirmDelete: () => Promise<void>
 }
 
 export function UserListView({
@@ -86,7 +91,11 @@ export function UserListView({
   loadAddressByZipCode,
   loadCityById,
   loadStateById,
-  loadNeighborhoodById
+  loadNeighborhoodById,
+  isDeleteModalOpen,
+  userToDelete,
+  onCloseDeleteModal,
+  onConfirmDelete
 }: UserListViewProps) {
   return (
     <div className="mx-auto flex max-w-[1400px] flex-col gap-8">
@@ -142,6 +151,18 @@ export function UserListView({
           </Button>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={onCloseDeleteModal}
+        onConfirm={onConfirmDelete}
+        title="Excluir Usuário"
+        message={`Tem certeza que deseja excluir ${userToDelete?.name}?`}
+        successMessage="Usuário excluído com sucesso!"
+        errorMessage="Erro ao excluir usuário. Tente novamente."
+        confirmLabel="Confirmar"
+        cancelLabel="Cancelar"
+      />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card className="flex flex-col justify-between gap-2 border-slate-800 bg-[#161f2c] p-5">
           <div className="flex items-start justify-between">
