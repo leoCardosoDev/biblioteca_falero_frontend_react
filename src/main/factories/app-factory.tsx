@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { App } from '@/presentation/react/app'
+import { App } from '@/presentation/react/App'
 import { makeAuthFacade } from '@/main/factories/auth/auth-facade-factory'
 import { MakeLogin } from '@/main/factories/pages/login/login-factory'
 import { MakeUserList } from '@/main/factories/pages/user-list/user-list-factory'
