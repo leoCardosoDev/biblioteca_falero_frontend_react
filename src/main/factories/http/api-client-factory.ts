@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { AxiosHttpClient } from '@/infra/http/axios-http-client'
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 import { makeLocalStorageAdapter } from '@/main/factories/cache/cache-factory'
 import { AuthorizeHttpClientDecorator } from '@/main/decorators/authorize-http-client-decorator'
 

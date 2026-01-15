@@ -1,4 +1,4 @@
-import { Neighborhood } from '@/domain/models/neighborhood'
+import type { Neighborhood } from '@/domain/models/neighborhood'
 
 export type LoadNeighborhoodByIdModel = Neighborhood
 

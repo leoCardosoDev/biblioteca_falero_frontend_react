@@ -1,4 +1,4 @@
-import { User } from '@/domain/models/user'
+import type { User } from '@/domain/models/user'
 
 export const formatUserRole = (role: User['role']): string => {
   if (!role) return 'Desconhecido'

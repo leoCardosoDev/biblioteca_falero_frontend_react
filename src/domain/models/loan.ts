@@ -1,5 +1,5 @@
-import { Book } from '@/domain/models/book'
-import { User } from '@/domain/models/user'
+import type { Book } from '@/domain/models/book'
+import type { User } from '@/domain/models/user'
 
 export interface Loan {
   id: string

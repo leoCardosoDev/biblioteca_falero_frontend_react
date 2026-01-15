@@ -1,4 +1,4 @@
-import { State } from '@/domain/models/state'
+import type { State } from '@/domain/models/state'
 
 export type LoadStateByIdModel = State
 

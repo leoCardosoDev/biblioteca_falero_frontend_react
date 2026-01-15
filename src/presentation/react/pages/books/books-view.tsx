@@ -1,4 +1,4 @@
-import { Book } from '@/domain/models/book'
+import type { Book } from '@/domain/models/book'
 import {
   Button,
   Card,

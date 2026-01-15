@@ -5,7 +5,7 @@ import {
   FormSection,
   TextArea
 } from '@/presentation/react/components/ui'
-import { BookFormData } from '@/presentation/react/components/forms/book-schema'
+import type { BookFormData } from '@/presentation/dtos/book-form-dto'
 
 export function BookGeneralInfo() {
   const {

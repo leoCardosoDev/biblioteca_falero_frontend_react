@@ -2,8 +2,8 @@ import React from 'react'
 import {
   Link as RouterLink,
   NavLink as RouterNavLink,
-  LinkProps as RouterLinkProps,
-  NavLinkProps as RouterNavLinkProps
+  type LinkProps as RouterLinkProps,
+  type NavLinkProps as RouterNavLinkProps
 } from 'react-router-dom'
 
 export type LinkProps = RouterLinkProps

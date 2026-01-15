@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { LoadBooks } from '@/domain/usecases/load-books'
-import { Book } from '@/domain/models/book'
+import type { LoadBooks } from '@/domain/usecases/load-books'
+import type { Book } from '@/domain/models/book'
 import { BooksView } from './books-view'
 
 type Props = {

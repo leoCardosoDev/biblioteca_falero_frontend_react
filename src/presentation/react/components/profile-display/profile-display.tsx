@@ -1,7 +1,7 @@
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import { Avatar } from '@/presentation/react/components/ui'
 import { formatUserRole } from '@/presentation/react/helpers/user-serializers'
-import { User } from '@/domain/models/user'
+import type { User } from '@/domain/models/user'
 
 export function ProfileDisplay() {
   const { user } = useAuthContext()

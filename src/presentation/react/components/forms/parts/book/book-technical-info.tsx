@@ -1,7 +1,7 @@
 import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form/context'
 import { Input, FormSection } from '@/presentation/react/components/ui'
-import { BookFormData } from '@/presentation/react/components/forms/book-schema'
+import type { BookFormData } from '@/presentation/dtos/book-form-dto'
 
 export function BookTechnicalInfo() {
   const {

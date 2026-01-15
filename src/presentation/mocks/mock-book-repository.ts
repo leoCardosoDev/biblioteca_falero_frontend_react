@@ -1,5 +1,5 @@
-import { BookRepository } from '@/domain/contracts/book-repository'
-import { Book } from '@/domain/models/book'
+import type { BookRepository } from '@/domain/contracts/book-repository'
+import type { Book } from '@/domain/models/book'
 import { MOCK_BOOKS } from './mock-data'
 
 export class MockBookRepository implements BookRepository {

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 
-import { User } from '@/domain/models'
-import {
+import type { User } from '@/domain/models'
+import type {
   LoadUsers,
   LoadUserById,
   AddUser,
@@ -10,7 +10,7 @@ import {
   UpdateUserParams,
   DeleteUser
 } from '@/domain/usecases'
-import {
+import type {
   ManageUserAccess,
   ManageUserAccessParams
 } from '@/domain/usecases/manage-user-access'

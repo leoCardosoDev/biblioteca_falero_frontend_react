@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 import { Icon } from '@/presentation/react/components/ui'
-import { BookFormData } from '@/presentation/dtos/book-form-dto'
+import type { BookFormData } from '@/presentation/dtos/book-form-dto'
 import { makeBookValidation } from '@/main/factories/validation/book-validation-factory'
-import { BookCoverUpload } from './parts/book/BookCoverUpload'
-import { BookGeneralInfo } from './parts/book/BookGeneralInfo'
-import { BookTechnicalInfo } from './parts/book/BookTechnicalInfo'
-import { BookCategorization } from './parts/book/BookCategorization'
+import { BookCoverUpload } from './parts/book/book-cover-upload'
+import { BookGeneralInfo } from './parts/book/book-general-info'
+import { BookTechnicalInfo } from './parts/book/book-technical-info'
+import { BookCategorization } from './parts/book/book-categorization'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
 interface BookFormProps {
@@ -46,10 +46,10 @@ export function BookForm({ initialData, onCancel, onSave }: BookFormProps) {
       noValidate
     >
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-        {}
+        { }
         <BookCoverUpload />
 
-        {}
+        { }
         <div className="flex flex-col gap-8 lg:col-span-8">
           <BookGeneralInfo />
           <BookTechnicalInfo />

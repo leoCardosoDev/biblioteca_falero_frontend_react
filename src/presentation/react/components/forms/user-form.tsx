@@ -1,18 +1,18 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Icon } from '@/presentation/react/components/ui'
 import {
   maskCpf,
   maskRg,
   maskZipCode
 } from '@/presentation/react/helpers/mask-utils'
-import { User } from '@/domain/models/user'
-import { UserGeneralInfo } from './parts/user/UserGeneralInfo'
-import { UserAddress } from './parts/user/UserAddress'
-import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
-import { LoadCityById } from '@/domain/usecases/load-city-by-id'
-import { LoadStateById } from '@/domain/usecases/load-state-by-id'
-import { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
-import { UserFormData } from '@/presentation/dtos/user-form-dto'
+import type { User } from '@/domain/models/user'
+import { UserGeneralInfo } from './parts/user/user-general-info'
+import { UserAddress } from './parts/user/user-address'
+import type { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
+import type { LoadCityById } from '@/domain/usecases/load-city-by-id'
+import type { LoadStateById } from '@/domain/usecases/load-state-by-id'
+import type { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
+import type { UserFormData } from '@/presentation/dtos/user-form-dto'
 import { makeUserValidation } from '@/main/factories/validation/user-validation-factory'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
@@ -78,19 +78,19 @@ export function UserForm({
           | 'OTHER',
         address: initialData.address
           ? {
-              ...initialData.address,
-              state: initialData.address.state?.toUpperCase() || '',
-              zipCode: maskZipCode(initialData.address.zipCode)
-            }
+            ...initialData.address,
+            state: initialData.address.state?.toUpperCase() || '',
+            zipCode: maskZipCode(initialData.address.zipCode)
+          }
           : {
-              street: '',
-              number: '',
-              neighborhood: '',
-              city: '',
-              state: '',
-              zipCode: '',
-              complement: ''
-            }
+            street: '',
+            number: '',
+            neighborhood: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            complement: ''
+          }
       })
 
       if (initialData.address?.cityId && !initialData.address.city) {

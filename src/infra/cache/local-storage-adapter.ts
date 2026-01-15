@@ -1,4 +1,4 @@
-import { CacheRepository } from '@/application/protocols/cache-repository'
+import type { CacheRepository } from '@/application/protocols/cache-repository'
 
 export class LocalStorageAdapter implements CacheRepository {
   async set(key: string, value: string): Promise<void> {

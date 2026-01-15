@@ -1,11 +1,11 @@
 import {
   useForm,
-  UseFormProps,
-  UseFormReturn,
-  FieldValues,
-  Resolver
+  type UseFormProps,
+  type UseFormReturn,
+  type FieldValues,
+  type Resolver
 } from 'react-hook-form'
-import { Validation } from '@/presentation/protocols/validation'
+import type { Validation } from '@/presentation/protocols/validation'
 
 const set = (obj: Record<string, unknown>, path: string, value: unknown) => {
   const parts = path.split('.')
@@ -25,29 +25,29 @@ export const useReactHookFormAdapter = <T extends FieldValues>(
 
   const resolver: Resolver<T> | undefined = validator
     ? async (values) => {
-        const result = validator.validate(values)
-        if (result.isValid) {
-          return {
-            values: result.data || values,
-            errors: {}
-          }
-        }
-
-        const errors = {}
-        if (result.errors) {
-          Object.entries(result.errors).forEach(([key, message]) => {
-            set(errors, key, {
-              type: 'validation',
-              message: String(message)
-            })
-          })
-        }
-
+      const result = validator.validate(values)
+      if (result.isValid) {
         return {
-          values: {},
-          errors
+          values: result.data || values,
+          errors: {}
         }
       }
+
+      const errors = {}
+      if (result.errors) {
+        Object.entries(result.errors).forEach(([key, message]) => {
+          set(errors, key, {
+            type: 'validation',
+            message: String(message)
+          })
+        })
+      }
+
+      return {
+        values: {},
+        errors
+      }
+    }
     : undefined
 
   return useForm<T>({

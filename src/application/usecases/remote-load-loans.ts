@@ -1,9 +1,13 @@
-import { LoadLoans } from '@/domain/usecases'
-import { Loan } from '@/domain/models'
-import { LoanRepository } from '@/domain/contracts'
+import type { LoadLoans } from '@/domain/usecases'
+import type { Loan } from '@/domain/models'
+import type { LoanRepository } from '@/domain/contracts'
 
 export class RemoteLoadLoans implements LoadLoans {
-  constructor(private readonly loanRepository: LoanRepository) {}
+  private readonly loanRepository: LoanRepository
+
+  constructor(loanRepository: LoanRepository) {
+    this.loanRepository = loanRepository
+  }
 
   async load(): Promise<Loan[]> {
     return this.loanRepository.loadAll()

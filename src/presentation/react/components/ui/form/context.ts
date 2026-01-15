@@ -1,6 +1,6 @@
 import { useFormContext as useRHFContext } from 'react-hook-form'
 
-import {
+import type {
   FieldValues,
   UseFormReturn
 } from '@/presentation/protocols/form-protocol'

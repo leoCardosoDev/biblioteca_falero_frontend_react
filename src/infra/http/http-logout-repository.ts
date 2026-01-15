@@ -1,10 +1,10 @@
-import { LogoutRepository } from '@/domain/contracts/logout-repository'
-import { LogoutParams } from '@/domain/usecases/logout'
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { LogoutRepository } from '@/domain/contracts/logout-repository'
+import type { LogoutParams } from '@/domain/usecases/logout'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 import { UnexpectedError } from '@/domain/errors'
 
 export class HttpLogoutRepository implements LogoutRepository {
-  constructor(private readonly httpClient: HttpClient<void>) {}
+  constructor(private readonly httpClient: HttpClient<void>) { }
 
   async logout(params: LogoutParams): Promise<void> {
     try {

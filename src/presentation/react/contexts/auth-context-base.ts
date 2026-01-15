@@ -1,7 +1,7 @@
 import { createContext } from 'react';
-import { AccountModel } from '@/domain/models/account-model';
+import type { AccountModel } from '@/domain/models/account-model';
 
-import { AuthenticationParams } from '@/domain/usecases/authentication';
+import type { AuthenticationParams } from '@/domain/usecases/authentication';
 
 export type AuthContextData = {
   user: AccountModel | undefined;

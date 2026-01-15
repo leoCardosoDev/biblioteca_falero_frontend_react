@@ -1,10 +1,14 @@
-import { HttpClient } from '@/application/protocols/http/http-client'
-import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
-import { Address } from '@/domain/models/user'
+import type { HttpClient } from '@/application/protocols/http/http-client'
+import type { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
+import type { Address } from '@/domain/models/user'
 import { handleStatusCode } from './http-status-handler'
 
 export class RemoteLoadAddressByZipCode implements LoadAddressByZipCode {
-  constructor(private readonly httpClient: HttpClient) { }
+  private readonly httpClient: HttpClient
+
+  constructor(httpClient: HttpClient) {
+    this.httpClient = httpClient
+  }
 
   async perform(zipCode: string): Promise<Address> {
     const response = await this.httpClient.request({

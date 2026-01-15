@@ -1,4 +1,4 @@
-import { LoadBooks } from '@/domain/usecases/load-books'
+import type { LoadBooks } from '@/domain/usecases/load-books'
 import { BooksController } from './books-controller'
 
 type Props = {

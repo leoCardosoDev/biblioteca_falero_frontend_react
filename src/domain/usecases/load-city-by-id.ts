@@ -1,4 +1,4 @@
-import { City } from '@/domain/models/city'
+import type { City } from '@/domain/models/city'
 
 export type LoadCityByIdModel = City
 

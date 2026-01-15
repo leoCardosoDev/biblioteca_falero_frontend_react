@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormProvider } from 'react-hook-form'
 
-import {
+import type {
   UseFormReturn,
   FieldValues
 } from '@/presentation/protocols/form-protocol'

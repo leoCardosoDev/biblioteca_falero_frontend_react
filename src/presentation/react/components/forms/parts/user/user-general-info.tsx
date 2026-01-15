@@ -2,7 +2,7 @@ import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form'
 import { Input, FormSection, Select } from '@/presentation/react/components/ui'
 import { maskCpf, maskRg } from '@/presentation/react/helpers/mask-utils'
-import { UserFormData } from '@/presentation/react/components/forms/user-schema'
+import type { UserFormData } from '@/presentation/dtos/user-form-dto'
 
 export function UserGeneralInfo() {
   const {

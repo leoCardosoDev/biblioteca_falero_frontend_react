@@ -1,15 +1,21 @@
-import { CacheRepository } from '@/application/protocols/cache-repository'
-import {
+import type { CacheRepository } from '@/application/protocols/cache-repository'
+import type {
   HttpClient,
   HttpRequest,
   HttpResponse
 } from '@/application/protocols/http/http-client'
 
 export class AuthorizeHttpClientDecorator implements HttpClient {
+  private readonly getStorage: CacheRepository
+  private readonly httpClient: HttpClient
+
   constructor(
-    private readonly getStorage: CacheRepository,
-    private readonly httpClient: HttpClient
-  ) {}
+    getStorage: CacheRepository,
+    httpClient: HttpClient
+  ) {
+    this.getStorage = getStorage
+    this.httpClient = httpClient
+  }
 
   async request(data: HttpRequest): Promise<HttpResponse> {
     const accessToken = await this.getStorage.get('accessToken')

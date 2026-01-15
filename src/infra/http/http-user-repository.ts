@@ -1,12 +1,16 @@
-import { HttpClient } from '@/application/protocols/http/http-client'
-import { UserRepository } from '@/domain/contracts/user-repository'
-import { User } from '@/domain/models/user'
-import { AddUserParams } from '@/domain/usecases/add-user'
-import { UpdateUserParams } from '@/domain/usecases/update-user'
-import { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
+import type { HttpClient } from '@/application/protocols/http/http-client'
+import type { UserRepository } from '@/domain/contracts/user-repository'
+import type { User } from '@/domain/models/user'
+import type { AddUserParams } from '@/domain/usecases/add-user'
+import type { UpdateUserParams } from '@/domain/usecases/update-user'
+import type { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
 
 export class HttpUserRepository implements UserRepository {
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient: HttpClient
+
+  constructor(httpClient: HttpClient) {
+    this.httpClient = httpClient
+  }
 
   async loadAll(): Promise<User[]> {
     const response = await this.httpClient.request({

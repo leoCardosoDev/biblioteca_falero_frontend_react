@@ -6,7 +6,7 @@ import {
   TextArea,
   FormSection
 } from '@/presentation/react/components/ui'
-import { ReservationFormData } from '@/presentation/react/components/forms/reservation-schema'
+import type { ReservationFormData } from '@/presentation/dtos/reservation-form-dto'
 
 export function ReservationDetails() {
   const {

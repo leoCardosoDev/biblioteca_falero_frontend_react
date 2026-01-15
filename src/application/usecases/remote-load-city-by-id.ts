@@ -1,13 +1,19 @@
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 import { HttpStatusCode } from '@/application/protocols/http/http-response'
-import { LoadCityById, LoadCityByIdModel } from '@/domain/usecases/load-city-by-id'
+import type { LoadCityById, LoadCityByIdModel } from '@/domain/usecases/load-city-by-id'
 import { NotFoundError, UnexpectedError } from '@/domain/errors'
 
 export class RemoteLoadCityById implements LoadCityById {
+  private readonly url: string
+  private readonly httpClient: HttpClient<LoadCityByIdModel>
+
   constructor(
-    private readonly url: string,
-    private readonly httpClient: HttpClient<LoadCityByIdModel>
-  ) { }
+    url: string,
+    httpClient: HttpClient<LoadCityByIdModel>
+  ) {
+    this.url = url
+    this.httpClient = httpClient
+  }
 
   async perform(id: string): Promise<LoadCityByIdModel> {
     const httpResponse = await this.httpClient.request({

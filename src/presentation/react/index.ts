@@ -1,4 +1,4 @@
-export { default as App } from './app'
+export { App } from './app'
 export * from './types'
 export * from './components'
 export * from './contexts'

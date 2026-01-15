@@ -1,4 +1,4 @@
-import { User } from '@/domain/models'
+import type { User } from '@/domain/models'
 import {
   Button,
   Card,
@@ -8,10 +8,10 @@ import {
   Modal,
   ConfirmationModal
 } from '@/presentation/react/components/ui'
-import { UserForm, UserFormData } from '@/presentation/react/components/forms'
+import { UserForm, type UserFormData } from '@/presentation/react/components/forms'
 import {
   CredentialModal,
-  CredentialFormData
+  type CredentialFormData
 } from '@/presentation/react/components/credential-modal/credential-modal'
 import {
   formatUserRole,
@@ -20,7 +20,7 @@ import {
   formatEnrollmentId,
   formatCpf
 } from '@/presentation/react/helpers/user-serializers'
-import {
+import type {
   LoadAddressByZipCode,
   LoadCityById,
   LoadStateById,
@@ -312,7 +312,7 @@ export function UserListView({
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
-                        <Avatar src={user.avatarUrl} alt={user.name} />
+                        <Avatar src={user.avatarUrl ?? ''} alt={user.name} />
                         <div className="flex flex-col">
                           <span className="text-[15px] font-semibold text-white">
                             {user.name}
@@ -341,22 +341,20 @@ export function UserListView({
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
                         <div
-                          className={`size-1.5 rounded-full ${
-                            user.status === 'ACTIVE'
-                              ? 'bg-emerald-500'
-                              : user.status === 'INACTIVE'
-                                ? 'bg-amber-500'
-                                : 'bg-red-500'
-                          }`}
+                          className={`size-1.5 rounded-full ${user.status === 'ACTIVE'
+                            ? 'bg-emerald-500'
+                            : user.status === 'INACTIVE'
+                              ? 'bg-amber-500'
+                              : 'bg-red-500'
+                            }`}
                         ></div>
                         <span
-                          className={`text-sm font-medium ${
-                            user.status === 'ACTIVE'
-                              ? 'text-emerald-500'
-                              : user.status === 'INACTIVE'
-                                ? 'text-amber-500'
-                                : 'text-red-400'
-                          }`}
+                          className={`text-sm font-medium ${user.status === 'ACTIVE'
+                            ? 'text-emerald-500'
+                            : user.status === 'INACTIVE'
+                              ? 'text-amber-500'
+                              : 'text-red-400'
+                            }`}
                         >
                           {formatUserStatus(user.status)}
                         </span>

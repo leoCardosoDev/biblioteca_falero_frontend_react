@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-import { User } from '@/domain/models'
-import {
+import type { User } from '@/domain/models'
+import type {
   LoadUsers,
   AddUser,
   UpdateUser,
@@ -15,8 +15,8 @@ import {
 } from '@/domain/usecases'
 import { useUserManagement, useUserFilter } from '@/presentation/react/hooks'
 import { UserListView } from '@/presentation/react/pages/user-list/user-list-view'
-import { UserFormData } from '@/presentation/react/components/forms'
-import { CredentialFormData } from '@/presentation/react/components/credential-modal/credential-modal'
+import type { UserFormData } from '@/presentation/react/components/forms'
+import type { CredentialFormData } from '@/presentation/react/components/credential-modal/credential-modal'
 
 interface UsersProps {
   loadUsers: LoadUsers
@@ -101,9 +101,26 @@ export function UserListController({
   const onSaveUser = async (data: UserFormData) => {
     let success = false
     if (selectedUser) {
-      success = await handleUpdateUser({ id: selectedUser.id, ...data })
+      success = await handleUpdateUser({
+        id: selectedUser.id,
+        ...data,
+        address: {
+          ...data.address,
+          neighborhoodId: data.address.neighborhoodId ?? undefined,
+          cityId: data.address.cityId ?? undefined,
+          stateId: data.address.stateId ?? undefined
+        }
+      })
     } else {
-      success = await handleAddUser(data)
+      success = await handleAddUser({
+        ...data,
+        address: {
+          ...data.address,
+          neighborhoodId: data.address.neighborhoodId ?? undefined,
+          cityId: data.address.cityId ?? undefined,
+          stateId: data.address.stateId ?? undefined
+        }
+      })
     }
 
     if (success) {

@@ -1,4 +1,4 @@
-import { HttpResponse } from '@/application/protocols/http/http-client'
+import type { HttpResponse } from '@/application/protocols/http/http-client'
 import { NotFoundError, UnexpectedError } from '@/domain/errors'
 
 export const handleStatusCode = (response: HttpResponse): void => {

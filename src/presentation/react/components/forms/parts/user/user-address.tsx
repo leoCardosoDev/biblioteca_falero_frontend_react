@@ -2,9 +2,9 @@ import React from 'react'
 import { useFormContext } from '@/presentation/react/components/ui/form'
 import { Input, FormSection } from '@/presentation/react/components/ui'
 import { maskZipCode } from '@/presentation/react/helpers/mask-utils'
-import { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
+import type { LoadAddressByZipCode } from '@/domain/usecases/load-address-by-zip-code'
 import { Button, Icon } from '@/presentation/react/components/ui'
-import { UserFormData } from '@/presentation/react/components/forms/user-schema'
+import type { UserFormData } from '@/presentation/dtos/user-form-dto'
 import { NotFoundError } from '@/domain/errors'
 
 interface UserAddressProps {

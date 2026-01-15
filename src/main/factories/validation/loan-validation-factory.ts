@@ -1,7 +1,7 @@
-import { Validation } from '@/presentation/protocols/validation'
+import type { Validation } from '@/presentation/protocols/validation'
 import { ZodValidatorAdapter } from '@/presentation/adapters/validation/zod-validator-adapter'
 import { loanSchema } from '@/infra/validation/schemas/loan-schema'
-import { LoanFormData } from '@/presentation/dtos/loan-form-dto'
+import type { LoanFormData } from '@/presentation/dtos/loan-form-dto'
 
 export const makeLoanValidation = (): Validation<LoanFormData> => {
   return new ZodValidatorAdapter<LoanFormData>(loanSchema)

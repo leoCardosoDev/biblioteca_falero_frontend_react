@@ -1,7 +1,7 @@
-import { User } from '@/domain/models/user'
-import { AddUserParams } from '@/domain/usecases/add-user'
-import { UpdateUserParams } from '@/domain/usecases/update-user'
-import { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
+import type { User } from '@/domain/models/user'
+import type { AddUserParams } from '@/domain/usecases/add-user'
+import type { UpdateUserParams } from '@/domain/usecases/update-user'
+import type { ManageUserAccessParams } from '@/domain/usecases/manage-user-access'
 
 export interface UserRepository {
   loadAll: () => Promise<User[]>

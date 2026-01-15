@@ -1,5 +1,5 @@
 import { LoginForm } from '@/presentation/react/components/forms/login-form'
-import { LoginFormData } from '@/presentation/react/components/forms/login-schema'
+import type { LoginFormData } from '@/presentation/dtos/login-form-dto'
 
 type Props = {
   onSubmit: (data: LoginFormData) => Promise<void>

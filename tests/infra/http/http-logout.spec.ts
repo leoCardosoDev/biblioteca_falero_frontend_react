@@ -1,7 +1,7 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { HttpLogoutRepository } from '@/infra/http/http-logout-repository'
 import { UnexpectedError } from '@/domain/errors'
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 
 const makeHttpClient = (): HttpClient<void> => ({
   request: vi.fn()
@@ -19,7 +19,8 @@ describe('HttpLogoutRepository', () => {
   test('Should call HttpClient with correct values', async () => {
     const params = { refreshToken: 'any_refresh_token' }
     vi.mocked(httpClient.request).mockResolvedValueOnce({
-      statusCode: 204
+      statusCode: 204,
+      body: undefined
     })
 
     await sut.logout(params)
@@ -33,7 +34,8 @@ describe('HttpLogoutRepository', () => {
   test('Should throw UnexpectedError on 400', async () => {
     const params = { refreshToken: 'any_refresh_token' }
     vi.mocked(httpClient.request).mockResolvedValueOnce({
-      statusCode: 400
+      statusCode: 400,
+      body: undefined
     })
 
     const promise = sut.logout(params)
@@ -43,7 +45,8 @@ describe('HttpLogoutRepository', () => {
   test('Should throw UnexpectedError on 500', async () => {
     const params = { refreshToken: 'any_refresh_token' }
     vi.mocked(httpClient.request).mockResolvedValueOnce({
-      statusCode: 500
+      statusCode: 500,
+      body: undefined
     })
 
     const promise = sut.logout(params)

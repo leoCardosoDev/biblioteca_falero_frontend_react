@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest'
 import { RemoteLoadAddressByZipCode } from '@/infra/http/remote-load-address-by-zip-code'
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 import { faker } from '@faker-js/faker'
 
 describe('RemoteLoadAddressByZipCode', () => {

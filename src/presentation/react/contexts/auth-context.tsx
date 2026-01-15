@@ -1,8 +1,9 @@
-import React, { useEffect, useState, ReactNode } from 'react'
+import { useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
 import { AuthFacade } from '@/application/facades/auth-facade'
 export { AuthFacade }
-import { AccountModel } from '@/domain/models/account-model'
-import { AuthenticationParams } from '@/domain/usecases/authentication'
+import type { AccountModel } from '@/domain/models/account-model'
+import type { AuthenticationParams } from '@/domain/usecases/authentication'
 import { AuthContext } from './auth-context-base'
 
 type Props = {

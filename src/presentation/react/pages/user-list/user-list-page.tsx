@@ -1,5 +1,5 @@
 import { UserListController } from '@/presentation/react/pages/user-list/user-list-controller'
-import {
+import type {
   LoadUsers,
   AddUser,
   UpdateUser,
@@ -10,7 +10,7 @@ import {
   LoadStateById,
   LoadNeighborhoodById
 } from '@/domain/usecases'
-import { ManageUserAccess } from '@/domain/usecases/manage-user-access'
+import type { ManageUserAccess } from '@/domain/usecases/manage-user-access'
 
 interface UsersProps {
   loadUsers: LoadUsers

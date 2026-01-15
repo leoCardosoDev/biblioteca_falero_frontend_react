@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { User } from '@/domain/models'
+import type { User } from '@/domain/models'
 
 export interface UseUserFilterProps {
   users: User[]

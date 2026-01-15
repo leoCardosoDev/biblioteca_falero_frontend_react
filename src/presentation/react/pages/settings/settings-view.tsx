@@ -1,9 +1,7 @@
 import { Card, Icon } from '@/presentation/react/components/ui'
 import { ProfileSettings } from './components/profile-settings'
-import {
-  NotificationSettings,
-  NotificationToggles
-} from './components/notification-settings'
+import { NotificationSettings } from './components/notification-settings'
+import type { NotificationToggles } from './components/notification-settings'
 import { SystemSettings } from './components/system-settings'
 
 type Tab = 'profile' | 'notifications' | 'system'
@@ -29,11 +27,10 @@ export function SettingsView({
         <nav className="flex flex-col gap-1">
           <button
             onClick={() => onTabChange('profile')}
-            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${
-              activeTab === 'profile'
+            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${activeTab === 'profile'
                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
                 : 'text-slate-400 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <Icon
               name="person"
@@ -43,11 +40,10 @@ export function SettingsView({
           </button>
           <button
             onClick={() => onTabChange('notifications')}
-            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${
-              activeTab === 'notifications'
+            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${activeTab === 'notifications'
                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
                 : 'text-slate-400 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <Icon
               name="notifications"
@@ -57,11 +53,10 @@ export function SettingsView({
           </button>
           <button
             onClick={() => onTabChange('system')}
-            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${
-              activeTab === 'system'
+            className={`flex items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium transition-all duration-200 ${activeTab === 'system'
                 ? 'bg-primary text-white shadow-lg shadow-primary/20'
                 : 'text-slate-400 hover:bg-white/5 hover:text-white'
-            }`}
+              }`}
           >
             <Icon
               name="settings"

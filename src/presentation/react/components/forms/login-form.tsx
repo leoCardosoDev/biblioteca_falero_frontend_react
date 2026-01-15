@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { Button } from '@/presentation/react/components/ui'
 import {
   Field,
@@ -6,7 +6,7 @@ import {
   Form
 } from '@/presentation/react/components/ui/form'
 import { LoginHeader } from '@/presentation/react/components/login-header'
-import { LoginFormData } from '@/presentation/dtos/login-form-dto'
+import type { LoginFormData } from '@/presentation/dtos/login-form-dto'
 import { makeLoginValidation } from '@/main/factories/validation/login-validation-factory'
 
 export type { LoginFormData }

@@ -2,7 +2,7 @@ import React from 'react'
 import { NavLink } from '@/presentation/react/components/ui/link'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
 import { Icon } from '@/presentation/react/components/ui'
-import { SidebarItem } from '@/presentation/react/types'
+import type { SidebarItem } from '@/presentation/react/types'
 
 const NAV_ITEMS: { category: string; items: SidebarItem[] }[] = [
   {
@@ -65,10 +65,9 @@ export function Sidebar() {
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
-                  `group flex items-center gap-3 rounded-lg px-3 py-3 transition-all ${
-                    isActive
-                      ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                      : 'text-slate-400 hover:bg-card-hover hover:text-white'
+                  `group flex items-center gap-3 rounded-lg px-3 py-3 transition-all ${isActive
+                    ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                    : 'text-slate-400 hover:bg-card-hover hover:text-white'
                   } `
                 }
               >

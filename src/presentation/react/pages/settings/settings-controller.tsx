@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SettingsView } from './settings-view'
-import { NotificationToggles } from './components/notification-settings'
+import type { NotificationToggles } from './components/notification-settings'
 
 type Tab = 'profile' | 'notifications' | 'system'
 

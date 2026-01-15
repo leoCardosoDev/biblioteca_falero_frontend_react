@@ -1,11 +1,15 @@
-import { ZodType } from 'zod'
-import {
+import type { ZodType } from 'zod'
+import type {
   Validation,
   ValidationResult
 } from '@/presentation/protocols/validation'
 
 export class ZodValidatorAdapter<T = unknown> implements Validation<T> {
-  constructor(private readonly schema: ZodType) {}
+  private readonly schema: ZodType
+
+  constructor(schema: ZodType) {
+    this.schema = schema
+  }
 
   validate(input: unknown): ValidationResult<T> {
     const result = this.schema.safeParse(input)

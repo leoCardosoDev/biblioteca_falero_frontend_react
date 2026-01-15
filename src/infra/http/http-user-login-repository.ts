@@ -1,9 +1,13 @@
-import { HttpClient } from '@/application/protocols/http/http-client'
-import { UserLoginRepository } from '@/domain/contracts/user-login-repository'
-import { AddUserLoginParams } from '@/domain/usecases/add-user-login'
+import type { HttpClient } from '@/application/protocols/http/http-client'
+import type { UserLoginRepository } from '@/domain/contracts/user-login-repository'
+import type { AddUserLoginParams } from '@/domain/usecases/add-user-login'
 
 export class HttpUserLoginRepository implements UserLoginRepository {
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly httpClient: HttpClient
+
+  constructor(httpClient: HttpClient) {
+    this.httpClient = httpClient
+  }
 
   async addLogin(params: AddUserLoginParams): Promise<void> {
     const { userId, ...data } = params

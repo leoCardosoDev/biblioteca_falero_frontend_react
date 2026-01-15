@@ -1,5 +1,5 @@
-import { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
-import { Neighborhood } from '@/domain/models/neighborhood'
+import type { LoadNeighborhoodById } from '@/domain/usecases/load-neighborhood-by-id'
+import type { Neighborhood } from '@/domain/models/neighborhood'
 
 export class LoadNeighborhoodByIdSpy implements LoadNeighborhoodById {
   result: Neighborhood = {

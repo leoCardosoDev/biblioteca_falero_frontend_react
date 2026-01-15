@@ -1,4 +1,4 @@
-import { Loan } from '@/domain/models/loan'
+import type { Loan } from '@/domain/models/loan'
 import {
   Button,
   Card,
@@ -145,7 +145,7 @@ export function LoansView({
                 >
                   <td className="p-4">
                     <div className="flex items-center gap-3">
-                      <Avatar src={loan.user.avatarUrl} size="sm" />
+                      <Avatar src={loan.user.avatarUrl ?? ''} size="sm" />
                       <div>
                         <p className="font-medium text-white">
                           {loan.user.name}
@@ -176,11 +176,10 @@ export function LoansView({
                   </td>
                   <td className="p-4 text-text-secondary">{loan.loanDate}</td>
                   <td
-                    className={`p-4 ${
-                      loan.status === 'Atrasado'
-                        ? 'font-medium text-danger'
-                        : 'text-white'
-                    }`}
+                    className={`p-4 ${loan.status === 'Atrasado'
+                      ? 'font-medium text-danger'
+                      : 'text-white'
+                      }`}
                   >
                     {loan.dueDate}
                   </td>

@@ -2,10 +2,14 @@ import type { AuthenticationRepository } from '@/domain/contracts/authentication
 import type { AuthenticationParams } from '@/domain/usecases/authentication'
 import type { AccountModel } from '@/domain/models/account-model'
 import { InvalidCredentialsError, UnexpectedError } from '@/domain/errors'
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 
 export class HttpAuthenticationRepository implements AuthenticationRepository {
-  constructor(private readonly httpClient: HttpClient<AccountModel>) {}
+  private readonly httpClient: HttpClient<AccountModel>
+
+  constructor(httpClient: HttpClient<AccountModel>) {
+    this.httpClient = httpClient
+  }
 
   async auth(params: AuthenticationParams): Promise<AccountModel> {
     try {

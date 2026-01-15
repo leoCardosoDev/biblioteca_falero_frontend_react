@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Icon } from '@/presentation/react/components/ui'
-import { LoanFormData } from '@/presentation/dtos/loan-form-dto'
+import type { LoanFormData } from '@/presentation/dtos/loan-form-dto'
 import { makeLoanValidation } from '@/main/factories/validation/loan-validation-factory'
-import { LoanParticipants } from './parts/loan/LoanParticipants'
-import { LoanTerms } from './parts/loan/LoanTerms'
+import { LoanParticipants } from './parts/loan/loan-participants'
+import { LoanTerms } from './parts/loan/loan-terms'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
 interface LoanFormProps {

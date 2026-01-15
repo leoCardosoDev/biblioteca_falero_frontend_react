@@ -1,6 +1,6 @@
-import { Validation } from '@/presentation/protocols/validation'
+import type { Validation } from '@/presentation/protocols/validation'
 
-import {
+import type {
   UseFormProps,
   FieldValues
 } from '@/presentation/protocols/form-protocol'

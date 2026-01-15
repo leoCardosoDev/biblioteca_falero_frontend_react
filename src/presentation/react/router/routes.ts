@@ -1,4 +1,4 @@
-import { RouteConfig } from './types'
+import type { RouteConfig } from './types'
 import { MainLayout } from '@/presentation/react/components/layout'
 
 export const routes: RouteConfig[] = [

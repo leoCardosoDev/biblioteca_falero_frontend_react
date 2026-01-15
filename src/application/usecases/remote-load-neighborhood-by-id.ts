@@ -1,6 +1,6 @@
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 import { HttpStatusCode } from '@/application/protocols/http/http-response'
-import { LoadNeighborhoodById, LoadNeighborhoodByIdModel } from '@/domain/usecases/load-neighborhood-by-id'
+import type { LoadNeighborhoodById, LoadNeighborhoodByIdModel } from '@/domain/usecases/load-neighborhood-by-id'
 import { NotFoundError, UnexpectedError } from '@/domain/errors'
 
 export type RemoteNeighborhoodModel = {
@@ -10,10 +10,16 @@ export type RemoteNeighborhoodModel = {
 }
 
 export class RemoteLoadNeighborhoodById implements LoadNeighborhoodById {
+  private readonly url: string
+  private readonly httpClient: HttpClient<RemoteNeighborhoodModel>
+
   constructor(
-    private readonly url: string,
-    private readonly httpClient: HttpClient<RemoteNeighborhoodModel>
-  ) { }
+    url: string,
+    httpClient: HttpClient<RemoteNeighborhoodModel>
+  ) {
+    this.url = url
+    this.httpClient = httpClient
+  }
 
   async perform(id: string): Promise<LoadNeighborhoodByIdModel> {
     const httpResponse = await this.httpClient.request({

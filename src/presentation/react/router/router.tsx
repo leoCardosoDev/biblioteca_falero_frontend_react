@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { PrivateRoute } from '@/presentation/react/components/private-route'
 import { ErrorBoundary } from '@/presentation/react/components/ui'
-import { PageFactories, RouteConfig } from './types'
+import type { PageFactories, RouteConfig } from './types'
 import { routes } from './routes'
 
 interface RouterProps {

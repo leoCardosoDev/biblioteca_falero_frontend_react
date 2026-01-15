@@ -1,5 +1,5 @@
-import { FieldValues, UseFormReturn, UseFormProps } from 'react-hook-form'
-import { Validation } from '@/presentation/protocols/validation'
+import type { FieldValues, UseFormReturn, UseFormProps } from 'react-hook-form'
+import type { Validation } from '@/presentation/protocols/validation'
 
 export interface FormProtocol<T extends FieldValues = FieldValues> {
   useForm: (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { LoadLoans } from '@/domain/usecases/load-loans'
-import { Loan } from '@/domain/models/loan'
+import type { LoadLoans } from '@/domain/usecases/load-loans'
+import type { Loan } from '@/domain/models/loan'
 import { LoansView } from './loans-view'
 
 type Props = {

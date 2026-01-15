@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Icon } from '@/presentation/react/components/ui'
-import { ReservationFormData } from '@/presentation/dtos/reservation-form-dto'
+import type { ReservationFormData } from '@/presentation/dtos/reservation-form-dto'
 import { makeReservationValidation } from '@/main/factories/validation/reservation-validation-factory'
-import { ReservationParticipants } from './parts/reservation/ReservationParticipants'
-import { ReservationDetails } from './parts/reservation/ReservationDetails'
+import { ReservationParticipants } from './parts/reservation/reservation-participants'
+import { ReservationDetails } from './parts/reservation/reservation-details'
 import { useCustomForm, Form } from '@/presentation/react/components/ui/form'
 
 interface ReservationFormProps {

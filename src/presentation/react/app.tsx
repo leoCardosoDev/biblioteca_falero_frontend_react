@@ -1,10 +1,8 @@
-import React from 'react'
-import {
-  AuthProvider,
-  AuthFacade
-} from '@/presentation/react/contexts/auth-context'
+// import React from 'react' - Removed unused import
+import { AuthProvider } from '@/presentation/react/contexts/auth-context'
+import type { AuthFacade } from '@/presentation/react/contexts/auth-context'
 import { Router } from '@/presentation/react/router/router'
-import { PageFactories } from '@/presentation/react/router/types'
+import type { PageFactories } from '@/presentation/react/router/types'
 
 export type {
   FactoryComponent,

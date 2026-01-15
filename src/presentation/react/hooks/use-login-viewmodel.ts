@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { AccountModel } from '@/domain/models'
+import type { AccountModel } from '@/domain/models'
 import { InvalidCredentialsError } from '@/domain/errors'
 import { useAuthContext } from '@/presentation/react/hooks/use-auth-context'
-import { LoginFormData } from '@/presentation/dtos/login-form-dto'
+import type { LoginFormData } from '@/presentation/dtos/login-form-dto'
 import { ErrorMessages } from '@/presentation/constants/messages'
 
 export interface LoginViewModel {
@@ -49,10 +49,10 @@ export const useLoginViewModel = (): LoginViewModel => {
 
   const loginSubmit =
     (onSuccess: (account: AccountModel) => void) =>
-    async (data: LoginFormData) => {
-      const account = await performLogin(data)
-      if (account) onSuccess(account)
-    }
+      async (data: LoginFormData) => {
+        const account = await performLogin(data)
+        if (account) onSuccess(account)
+      }
 
   return {
     loginSubmit,

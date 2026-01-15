@@ -5,8 +5,8 @@ import { LocalStorageAdapter } from '@/infra/cache/local-storage-adapter'
 import { HttpAuthenticationRepository } from '@/infra/http/http-authentication-repository'
 import { HttpLogoutRepository } from '@/infra/http/http-logout-repository'
 import { makeHttpClient } from '@/main/factories/http/api-client-factory'
-import { AccountModel } from '@/domain/models/account-model'
-import { HttpClient } from '@/application/protocols/http/http-client'
+import type { AccountModel } from '@/domain/models/account-model'
+import type { HttpClient } from '@/application/protocols/http/http-client'
 
 export const makeAuthFacade = (): AuthFacade => {
   const httpClient = makeHttpClient()

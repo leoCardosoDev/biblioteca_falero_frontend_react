@@ -1,4 +1,5 @@
-import { Component, ErrorInfo, ReactNode } from 'react'
+import { Component } from 'react'
+import type { ErrorInfo, ReactNode } from 'react'
 import { Card, Button, Icon } from '@/presentation/react/components/ui'
 import { ErrorMessages } from '@/presentation/constants/messages'
 

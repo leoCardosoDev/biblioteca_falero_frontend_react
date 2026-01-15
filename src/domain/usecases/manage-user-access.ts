@@ -1,4 +1,4 @@
-import { UserStatus } from '@/domain/models/user'
+import type { UserStatus } from '@/domain/models/user'
 
 export interface ManageUserAccessParams {
   id: string

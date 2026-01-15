@@ -1,5 +1,5 @@
-import { LoadStateById } from '@/domain/usecases/load-state-by-id'
-import { State } from '@/domain/models/state'
+import type { LoadStateById } from '@/domain/usecases/load-state-by-id'
+import type { State } from '@/domain/models/state'
 
 export class LoadStateByIdSpy implements LoadStateById {
   result: State = {

@@ -1,17 +1,21 @@
-import {
+import type {
   AxiosInstance,
   AxiosResponse,
   AxiosError,
   AxiosRequestConfig
 } from 'axios'
-import {
+import type {
   HttpClient,
   HttpRequest,
   HttpResponse
 } from '@/application/protocols/http/http-client'
 
 export class AxiosHttpClient implements HttpClient {
-  constructor(private readonly axiosInstance: AxiosInstance) {}
+  private readonly axiosInstance: AxiosInstance
+
+  constructor(axiosInstance: AxiosInstance) {
+    this.axiosInstance = axiosInstance
+  }
 
   async request(data: HttpRequest): Promise<HttpResponse> {
     let axiosResponse: AxiosResponse
