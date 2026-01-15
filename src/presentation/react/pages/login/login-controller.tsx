@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 import { useLoginViewModel } from '@/presentation/react/hooks/use-login-viewmodel'
-import { Router } from '@/presentation/protocols/router-protocol'
+import type { Router } from '@/presentation/protocols/router-protocol'
 import { LoginView } from '@/presentation/react/pages/login/login-view'
 
 type Props = {

@@ -1,5 +1,5 @@
-import { LoadCityById } from '@/domain/usecases/load-city-by-id'
-import { City } from '@/domain/models/city'
+import type { LoadCityById } from '@/domain/usecases/load-city-by-id'
+import type { City } from '@/domain/models/city'
 
 export class LoadCityByIdSpy implements LoadCityById {
   result: City = {
