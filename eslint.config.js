@@ -28,10 +28,24 @@ export default defineConfig([
         }
       },
       'boundaries/elements': [
-        { type: 'domain', pattern: 'src/domain/**' },
-        { type: 'application', pattern: 'src/application/**' },
-        { type: 'presentation', pattern: 'src/presentation/**' },
-        { type: 'infrastructure', pattern: 'src/infra/**' }
+        { type: 'shared', pattern: 'src/shared/**', mode: 'full' },
+        { type: 'main', pattern: 'src/main/**', mode: 'full' },
+        {
+          type: 'module-public',
+          pattern: 'src/modules/*/public/**',
+          capture: ['moduleName'],
+          mode: 'full'
+        },
+        {
+          type: 'module-private',
+          pattern: 'src/modules/*/**',
+          capture: ['moduleName'],
+          mode: 'full'
+        },
+        { type: 'domain', pattern: 'src/domain/**', mode: 'full' },
+        { type: 'application', pattern: 'src/application/**', mode: 'full' },
+        { type: 'presentation', pattern: 'src/presentation/**', mode: 'full' },
+        { type: 'infrastructure', pattern: 'src/infra/**', mode: 'full' }
       ]
     },
     rules: {
@@ -40,11 +54,43 @@ export default defineConfig([
         {
           default: 'disallow',
           rules: [
+            {
+              from: 'shared',
+              allow: ['shared']
+            },
+            {
+              from: 'main',
+              allow: [
+                'shared',
+                'main',
+                'module-public',
+                'module-private',
+                'domain',
+                'application',
+                'presentation',
+                'infrastructure'
+              ]
+            },
+            {
+              from: 'module-public',
+              allow: [
+                'shared',
+                ['module-private', { moduleName: '${from.moduleName}' }]
+              ]
+            },
+            {
+              from: 'module-private',
+              allow: [
+                'shared',
+                'module-public',
+                ['module-private', { moduleName: '${from.moduleName}' }]
+              ]
+            },
             { from: 'domain', allow: ['domain'] },
             { from: 'application', allow: ['domain', 'application'] },
             {
               from: 'presentation',
-              allow: ['domain', 'application', 'presentation']
+              allow: ['domain', 'application', 'presentation', 'main']
             },
             {
               from: 'infrastructure',

@@ -17,7 +17,10 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(__dirname, './src'),
+      '@/modules': path.resolve(__dirname, './src/modules'),
+      '@/shared': path.resolve(__dirname, './src/shared'),
+      '@/main': path.resolve(__dirname, './src/main')
     }
   },
   build: {
@@ -25,7 +28,14 @@ export default defineConfig({
       output: {
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-ui': ['recharts', 'lucide-react', 'zod', 'react-hook-form', 'clsx', 'tailwind-merge']
+          'vendor-ui': [
+            'recharts',
+            'lucide-react',
+            'zod',
+            'react-hook-form',
+            'clsx',
+            'tailwind-merge'
+          ]
         }
       }
     }
