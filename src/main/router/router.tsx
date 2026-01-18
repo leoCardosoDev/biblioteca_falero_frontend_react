@@ -1,8 +1,13 @@
 import { createRouter } from '@tanstack/react-router'
 
 import { rootRoute } from './root-route'
+import { createIdentityRoutes } from '@/modules/identity/public'
+import { createGeographyRoutes } from '@/modules/geography/public'
 
-const routeTree = rootRoute
+const identityRouteTree = createIdentityRoutes(rootRoute)
+const geographyRouteTree = createGeographyRoutes(rootRoute)
+
+const routeTree = rootRoute.addChildren([identityRouteTree, geographyRouteTree])
 
 export const router = createRouter({
   routeTree,
