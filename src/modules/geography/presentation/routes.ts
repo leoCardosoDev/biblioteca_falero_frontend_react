@@ -7,16 +7,16 @@ import { LocationsListPage } from './pages/LocationsListPage'
 export function createGeographyRoutes<TParentRoute extends AnyRoute>(
   parentRoute: TParentRoute
 ) {
-  const geographyRoute = createRoute({
+  const geographyLayoutRoute = createRoute({
     getParentRoute: () => parentRoute,
-    path: 'geography'
+    id: 'geography-layout'
   })
 
   const locationsRoute = createRoute({
-    getParentRoute: () => geographyRoute,
+    getParentRoute: () => geographyLayoutRoute,
     path: 'locations',
     component: LocationsListPage
   })
 
-  return { geographyRoute, locationsRoute }
+  return geographyLayoutRoute.addChildren([locationsRoute])
 }

@@ -7,16 +7,16 @@ import { LoginPage } from './pages/LoginPage'
 export function createIdentityRoutes<TParentRoute extends AnyRoute>(
   parentRoute: TParentRoute
 ) {
-  const identityRoute = createRoute({
+  const identityLayoutRoute = createRoute({
     getParentRoute: () => parentRoute,
-    path: 'identity'
+    id: 'identity-layout'
   })
 
   const loginRoute = createRoute({
-    getParentRoute: () => identityRoute,
+    getParentRoute: () => identityLayoutRoute,
     path: 'login',
     component: LoginPage
   })
 
-  return { identityRoute, loginRoute }
+  return identityLayoutRoute.addChildren([loginRoute])
 }
