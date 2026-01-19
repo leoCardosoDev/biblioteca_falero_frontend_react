@@ -1,5 +1,9 @@
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios'
-import type { HttpClient } from './types'
+import axios, {
+  type AxiosError,
+  type InternalAxiosRequestConfig,
+  type AxiosResponse
+} from 'axios'
+import type { HttpClient, HttpRequest, HttpResponse } from './types'
 
 const ACCESS_TOKEN_KEY = 'accessToken'
 const LOGIN_PATH = '/login'
@@ -43,6 +47,25 @@ export class AxiosHttpClient implements HttpClient {
   private handleUnauthorized(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY)
     window.location.href = LOGIN_PATH
+  }
+
+  async request<R>(data: HttpRequest): Promise<HttpResponse<R>> {
+    let axiosResponse: AxiosResponse
+    try {
+      axiosResponse = await this.client.request({
+        url: data.url,
+        method: data.method,
+        data: data.body,
+        headers: data.headers as Record<string, string>
+      })
+    } catch (error) {
+      const axiosError = error as AxiosError
+      axiosResponse = axiosError.response as AxiosResponse
+    }
+    return {
+      statusCode: axiosResponse?.status || 500,
+      body: axiosResponse?.data as R
+    }
   }
 
   async get<T>(url: string): Promise<T> {

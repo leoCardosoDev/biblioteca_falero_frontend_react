@@ -1,4 +1,4 @@
-import type { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/shared/infra/http/types'
 
 import type {
   IdentityRepository,

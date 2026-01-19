@@ -83,6 +83,8 @@ export default defineConfig([
               allow: [
                 'shared',
                 'module-public',
+                'presentation',
+                'main',
                 ['module-private', { moduleName: '${from.moduleName}' }]
               ]
             },

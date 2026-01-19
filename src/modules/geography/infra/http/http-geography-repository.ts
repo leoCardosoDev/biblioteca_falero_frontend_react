@@ -1,4 +1,4 @@
-import type { HttpClient } from '@/application/protocols/http/http-client'
+import type { HttpClient } from '@/shared/infra/http/types'
 import type { GeographyRepository } from '../../application/protocols/geography-repository'
 import type { StateProps } from '../../domain/entities/state'
 import type { CityProps } from '../../domain/entities/city'
@@ -37,7 +37,7 @@ type AddressApiResponse = {
 }
 
 export class HttpGeographyRepository implements GeographyRepository {
-  constructor(private readonly httpClient: HttpClient) { }
+  constructor(private readonly httpClient: HttpClient) {}
 
   async getStates(): Promise<StateProps[]> {
     const response = await this.httpClient.request<StateApiResponse[]>({

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 
-import { LoginForm } from '@/presentation/react/components/forms/login-form'
-import type { LoginFormData } from '@/presentation/dtos/login-form-dto'
+import { LoginForm } from '../components/LoginForm'
+import type { LoginFormData } from '../../application/dtos/login-form-dto'
 
 import { useAuthStore } from '../../application/store'
 import type { IdentityRepository } from '../../application/protocols'
