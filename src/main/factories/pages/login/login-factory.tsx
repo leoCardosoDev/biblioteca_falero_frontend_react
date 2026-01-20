@@ -1,8 +1,8 @@
 import React from 'react'
-import { Login } from '@/presentation/react/pages/login'
-import { useReactRouterAdapter } from '@/presentation/adapters/router/react-router-adapter'
+import { Login } from '@/shared/presentation/react/pages/login'
+import { useTanStackRouterAdapter } from '@/shared/presentation/adapters/router/tanstack-router-adapter'
 
 export const MakeLogin: React.FC = () => {
-  const router = useReactRouterAdapter()
+  const router = useTanStackRouterAdapter()
   return <Login router={router} />
 }

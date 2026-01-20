@@ -1,6 +1,6 @@
-import { RemoteLoadLoans } from '@/application/usecases'
-import { MockLoanRepository } from '@/presentation/mocks/mock-loan-repository'
-import { Loans } from '@/presentation/react/pages/loans'
+import { RemoteLoadLoans } from '@/shared/application/usecases'
+import { MockLoanRepository } from '@/shared/presentation/mocks/mock-loan-repository'
+import { Loans } from '@/shared/presentation/react/pages/loans'
 
 export const MakeLoansCallback = () => {
   const loanRepository = new MockLoanRepository()

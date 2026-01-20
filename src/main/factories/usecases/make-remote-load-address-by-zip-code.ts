@@ -1,4 +1,4 @@
-import { RemoteLoadAddressByZipCode } from '@/infra/http/remote-load-address-by-zip-code'
+import { RemoteLoadAddressByZipCode } from '@/shared/infra/http/remote-load-address-by-zip-code'
 import { makeHttpClient } from '@/main/factories/http/api-client-factory'
 
 export const makeRemoteLoadAddressByZipCode =

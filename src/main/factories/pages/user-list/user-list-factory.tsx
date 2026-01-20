@@ -1,5 +1,5 @@
 import React from 'react'
-import { Users } from '@/presentation/react/pages/user-list/user-list-page'
+import { Users } from '@/shared/presentation/react/pages/user-list/user-list-page'
 import { makeRemoteAddUser } from '@/main/factories/usecases/make-remote-add-user'
 import { makeRemoteUpdateUser } from '@/main/factories/usecases/make-remote-update-user'
 import { makeRemoteDeleteUser } from '@/main/factories/usecases/make-remote-delete-user'
