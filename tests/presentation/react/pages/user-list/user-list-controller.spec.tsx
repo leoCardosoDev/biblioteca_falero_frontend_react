@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { render, screen } from '@testing-library/react'
 import { describe, test, expect, vi } from 'vitest'
 import { UserListController } from '@/presentation/react/pages/user-list/user-list-controller'

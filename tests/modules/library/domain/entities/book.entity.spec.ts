@@ -10,7 +10,7 @@ describe('Book Entity', () => {
       coverUrl: 'http://example.com/cover.jpg',
       isbn: '978-0-13-235088-4',
       category: 'Technology',
-      status: 'available',
+      status: 'Disponível',
       pages: 464
     })
 
@@ -18,11 +18,11 @@ describe('Book Entity', () => {
     expect(book.title).toBe('Clean Code')
     expect(book.author).toBe('Robert C. Martin')
     expect(book.isbn).toBe('978-0-13-235088-4')
-    expect(book.status).toBe('available')
+    expect(book.status).toBe('Disponível')
     expect(book.pages).toBe(464)
   })
 
-  test('Should return isAvailable as true when status is available', () => {
+  test('Should return true from isAvailable when status is Disponível', () => {
     const book = new Book({
       id: '1',
       title: 'Any Book',
@@ -30,14 +30,13 @@ describe('Book Entity', () => {
       coverUrl: 'http://example.com/cover.jpg',
       isbn: '123',
       category: 'Any',
-      status: 'available'
+      status: 'Disponível'
     })
 
-    expect(book.isAvailable).toBe(true)
-    expect(book.isBorrowed).toBe(false)
+    expect(book.isAvailable()).toBe(true)
   })
 
-  test('Should return isBorrowed as true when status is borrowed', () => {
+  test('Should return false from isAvailable when status is Emprestado', () => {
     const book = new Book({
       id: '1',
       title: 'Any Book',
@@ -45,10 +44,9 @@ describe('Book Entity', () => {
       coverUrl: 'http://example.com/cover.jpg',
       isbn: '123',
       category: 'Any',
-      status: 'borrowed'
+      status: 'Emprestado'
     })
 
-    expect(book.isAvailable).toBe(false)
-    expect(book.isBorrowed).toBe(true)
+    expect(book.isAvailable()).toBe(false)
   })
 })

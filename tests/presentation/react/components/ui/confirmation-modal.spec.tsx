@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { ConfirmationModal } from '@/presentation/react/components/ui/confirmation-modal'
 import { vi, expect, describe, it, beforeEach } from 'vitest'
@@ -60,7 +61,7 @@ describe('ConfirmationModal', () => {
     // Manually run the timeout callback to verify onClose
     // Find the call with 3000ms delay
     const call = setTimeoutSpy.mock.calls.find((c) => c[1] === 3000)
-    const timerCallback = call ? (call[0] as unknown as () => void) : () => {}
+    const timerCallback = call ? (call[0] as unknown as () => void) : () => { }
 
     act(() => {
       timerCallback()

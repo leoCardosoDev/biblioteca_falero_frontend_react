@@ -7,6 +7,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    restoreMocks: true,
+    setupFiles: ['./tests/setup.ts'],
     include: ['**/*.spec.{ts,tsx}'],
     exclude: [
       'node_modules/**',

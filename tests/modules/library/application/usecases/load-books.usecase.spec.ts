@@ -5,7 +5,7 @@ import { Book } from '@/modules/library/domain'
 
 function makeLibraryRepository(): LibraryRepository {
   return {
-    loadBooks: vi.fn().mockResolvedValue([
+    getBooks: vi.fn().mockResolvedValue([
       new Book({
         id: 'any_id',
         title: 'any_title',
@@ -16,9 +16,9 @@ function makeLibraryRepository(): LibraryRepository {
         status: 'available'
       })
     ]),
-    loadBookById: vi.fn(),
-    loadLoans: vi.fn(),
-    loadLoansByUser: vi.fn()
+    getBookById: vi.fn(),
+    getLoans: vi.fn(),
+    createLoan: vi.fn()
   }
 }
 
@@ -34,10 +34,10 @@ function makeSut(): SutTypes {
 }
 
 describe('LoadBooksUseCase', () => {
-  test('Should call LibraryRepository.loadBooks', async () => {
+  test('Should call LibraryRepository.getBooks', async () => {
     const { sut, repositoryStub } = makeSut()
     await sut.execute()
-    expect(repositoryStub.loadBooks).toHaveBeenCalled()
+    expect(repositoryStub.getBooks).toHaveBeenCalled()
   })
 
   test('Should return a list of books on success', async () => {
@@ -50,7 +50,7 @@ describe('LoadBooksUseCase', () => {
 
   test('Should throw if LibraryRepository throws', async () => {
     const { sut, repositoryStub } = makeSut()
-    vi.mocked(repositoryStub.loadBooks).mockRejectedValueOnce(
+    vi.mocked(repositoryStub.getBooks).mockRejectedValueOnce(
       new Error('repo_error')
     )
     await expect(sut.execute()).rejects.toThrow('repo_error')

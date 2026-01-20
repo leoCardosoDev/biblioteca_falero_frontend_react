@@ -1,54 +1,61 @@
 import { describe, test, expect } from 'vitest'
-import { Loan } from '@/modules/library/domain'
+import { Loan, Book } from '@/modules/library/domain'
 
 describe('Loan Entity', () => {
+  const mockBook = new Book({
+    id: 'B001',
+    title: 'Clean Code',
+    author: 'Robert C. Martin',
+    coverUrl: 'http://example.com/cover.jpg',
+    isbn: '978-0',
+    category: 'Technology',
+    status: 'Emprestado'
+  })
+
   test('Should create a Loan with correct properties', () => {
     const loan = new Loan({
       id: 'L001',
-      bookId: 'B001',
-      bookTitle: 'Clean Code',
+      book: mockBook,
       userId: 'U001',
       userName: 'John Doe',
-      loanDate: new Date('2023-10-10'),
-      dueDate: new Date('2023-10-24'),
-      status: 'onTime'
+      loanDate: '2023-10-10',
+      dueDate: '2023-10-24',
+      status: 'Em Dia'
     })
 
     expect(loan.id).toBe('L001')
-    expect(loan.bookId).toBe('B001')
-    expect(loan.bookTitle).toBe('Clean Code')
-    expect(loan.userId).toBe('U001')
-    expect(loan.status).toBe('onTime')
+    expect(loan.book.id).toBe('B001')
+    expect(loan.book.title).toBe('Clean Code')
+    expect(loan.user.id).toBe('U001')
+    expect(loan.status).toBe('Em Dia')
   })
 
-  test('Should return isActive as true for non-returned loan', () => {
+  test('Should return true from isActive for non-returned loan', () => {
     const loan = new Loan({
       id: 'L001',
-      bookId: 'B001',
-      bookTitle: 'Any Book',
+      book: mockBook,
       userId: 'U001',
       userName: 'Any User',
-      loanDate: new Date('2023-10-10'),
-      dueDate: new Date('2023-10-24'),
-      status: 'onTime'
+      loanDate: '2023-10-10',
+      dueDate: '2023-10-24',
+      status: 'Em Dia'
     })
 
-    expect(loan.isActive).toBe(true)
+    expect(loan.isActive()).toBe(true)
   })
 
-  test('Should return isActive as false for returned loan', () => {
+  test('Should return false from isActive for returned loan', () => {
     const loan = new Loan({
       id: 'L001',
-      bookId: 'B001',
-      bookTitle: 'Any Book',
+      book: mockBook,
       userId: 'U001',
       userName: 'Any User',
-      loanDate: new Date('2023-10-10'),
-      dueDate: new Date('2023-10-24'),
-      returnDate: new Date('2023-10-20'),
-      status: 'returned'
+      loanDate: '2023-10-10',
+      dueDate: '2023-10-24',
+      returnDate: '2023-10-20',
+      status: 'Devolvido'
     })
 
-    expect(loan.isActive).toBe(false)
+    expect(loan.isActive()).toBe(false)
   })
 })

@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { render, screen, fireEvent, within } from '@testing-library/react'
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest'
 import type { UserListViewProps } from '@/presentation/react/pages/user-list/user-list-view'
