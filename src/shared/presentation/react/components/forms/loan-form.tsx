@@ -1,0 +1,67 @@
+import { useEffect } from 'react'
+import { Icon } from '@/shared/presentation/ui'
+import type { LoanFormData } from '@/shared/presentation/dtos/loan-form-dto'
+import { ZodValidatorAdapter } from '@/shared/presentation/adapters/validation/zod-validator-adapter'
+import { loanSchema } from '@/shared/infra/validation/schemas/loan-schema'
+import { LoanParticipants } from './parts/loan/loan-participants'
+import { LoanTerms } from './parts/loan/loan-terms'
+import { useCustomForm, Form } from '@/shared/presentation/ui/form'
+
+interface LoanFormProps {
+  initialData?: Partial<LoanFormData>
+  onCancel: () => void
+  onSave: (data: LoanFormData) => void
+}
+
+export function LoanForm({ initialData, onCancel, onSave }: LoanFormProps) {
+  const methods = useCustomForm<LoanFormData>({
+    validator: new ZodValidatorAdapter(loanSchema),
+    mode: 'onChange',
+    defaultValues: initialData || {
+      loanDate: new Date().toISOString().split('T')[0]
+    }
+  })
+
+  const {
+    reset,
+    formState: { isValid }
+  } = methods
+
+  useEffect(() => {
+    if (initialData) {
+      reset(initialData)
+    }
+  }, [initialData, reset])
+
+  return (
+    <Form
+      form={methods}
+      onSubmit={onSave}
+      className="flex flex-col gap-6"
+      noValidate
+    >
+      <div className="flex flex-col gap-8">
+        <LoanParticipants />
+        <LoanTerms />
+      </div>
+
+      <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-200/10 pt-6 dark:border-slate-800/50">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="h-11 rounded-lg border border-slate-200/10 px-6 font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-900 dark:border-slate-800/50 dark:text-[#92adc9] dark:hover:bg-[#192633] dark:hover:text-white"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          disabled={!isValid}
+          className="flex h-11 items-center gap-2 rounded-lg bg-primary px-6 font-medium text-white shadow-lg shadow-primary/20 transition-all hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Icon name="check" />
+          Confirmar Empréstimo
+        </button>
+      </div>
+    </Form>
+  )
+}

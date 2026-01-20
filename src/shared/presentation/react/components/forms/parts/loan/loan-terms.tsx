@@ -1,0 +1,46 @@
+import React from 'react'
+import { useFormContext } from '@/shared/presentation/react/components/ui/form/context'
+import {
+  Input,
+  TextArea,
+  FormSection
+} from '@/shared/presentation/react/components/ui'
+import type { LoanFormData } from '@/shared/presentation/dtos/loan-form-dto'
+
+export function LoanTerms() {
+  const {
+    register,
+    formState: { errors }
+  } = useFormContext<LoanFormData>()
+
+  return (
+    <FormSection title="Prazos e Condições">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <Input
+          {...register('loanDate')}
+          id="loanDate"
+          label="Data do Empréstimo"
+          type="date"
+          error={errors.loanDate?.message}
+          required
+        />
+        <Input
+          {...register('expectedReturnDate')}
+          id="expectedReturnDate"
+          label="Previsão de Devolução"
+          type="date"
+          error={errors.expectedReturnDate?.message}
+          required
+        />
+      </div>
+
+      <TextArea
+        {...register('observations')}
+        id="observations"
+        label="Observações"
+        placeholder="Registre as condições do livro na entrega..."
+        error={errors.observations?.message}
+      />
+    </FormSection>
+  )
+}

@@ -1,4 +1,4 @@
-export * from './ui'
+export * from './presentation/ui'
 export * from './infra'
-export * from './store'
-export * from './lib'
+export * from './infra/store'
+export * from './application/common'

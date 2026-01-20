@@ -1,6 +1,0 @@
-export * from './button'
-export * from './button-variants'
-export * from './icon'
-export * from './input'
-export * from './lib/utils'
-export * from './form'
