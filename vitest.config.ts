@@ -8,7 +8,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
-    include: ['**/*.spec.{ts,tsx}'],
+    include: ['**/*.spec.{ts,tsx}', '**/*.test.{ts,tsx}'],
+    exclude: ['node_modules/**', 'dist/**', 'tests/e2e/**'],
     coverage: {
       provider: 'v8',
       exclude: [
@@ -20,20 +21,7 @@ export default defineConfig({
         'src/domain/models/**',
         'src/domain/usecases/**',
         'src/**/index.ts',
-        // Mocked pages
-        'src/presentation/react/pages/dashboard/**',
-        'src/presentation/react/pages/books/**',
-        'src/presentation/react/pages/loans/**',
-        'src/presentation/react/pages/reports/**',
-        'src/presentation/react/pages/reservations/**',
-        'src/presentation/react/pages/settings/**',
-        // Mocked factories
-        'src/main/factories/pages/dashboard/**',
-        'src/main/factories/pages/books/**',
-        'src/main/factories/pages/loans/**',
-        'src/main/factories/pages/reports/**',
-        'src/main/factories/pages/reservations/**',
-        'src/main/factories/pages/settings/**'
+        'src/main/**'
       ],
       thresholds: {
         lines: 100,
