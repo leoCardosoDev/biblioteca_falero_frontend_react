@@ -5,7 +5,7 @@ import type {
   LoginRequestDto,
   CreateUserDto,
   UpdateUserDto
-} from '../protocols'
+} from '../../application/protocols'
 import { useAuthStore } from '../store'
 
 const USERS_QUERY_KEY = ['users']

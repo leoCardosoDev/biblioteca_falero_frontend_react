@@ -4,9 +4,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { LoginForm } from '../components/LoginForm'
 import type { LoginFormData } from '../../application/dtos/login-form-dto'
 
-import { useAuthStore } from '../../application/store'
+import { useAuthStore, createIdentityHooks } from '../../infra'
 import type { IdentityRepository } from '../../application/protocols'
-import { createIdentityHooks } from '../../application/hooks'
 
 interface LoginPageProps {
   repository: IdentityRepository

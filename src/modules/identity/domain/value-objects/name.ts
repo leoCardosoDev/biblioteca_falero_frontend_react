@@ -1,5 +1,5 @@
-import { left, right } from '@/shared/lib/either'
-import type { Either } from '@/shared/lib/either'
+import { left, right } from '@/shared/application/common/either'
+import type { Either } from '@/shared/application/common/either'
 
 import { InvalidNameError } from '../errors'
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import type { IdentityRepository, UserDto } from '../../application/protocols'
-import { createIdentityHooks } from '../../application/hooks'
+import { createIdentityHooks } from '../../infra'
 
 interface UserListPageProps {
   repository: IdentityRepository

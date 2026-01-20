@@ -1,7 +1,7 @@
-import type { GenderType } from '../domain'
-import type { UserRoleType } from '../domain/value-objects/user-role'
-import type { UserStatusType } from '../domain/value-objects/user-status'
-import type { AddressProps } from '../domain/value-objects/address'
+import type { GenderType } from '../../domain'
+import type { UserRoleType } from '../../domain/value-objects/user-role'
+import type { UserStatusType } from '../../domain/value-objects/user-status'
+import type { AddressProps } from '../../domain/value-objects/address'
 
 export interface UserDto {
   id: string

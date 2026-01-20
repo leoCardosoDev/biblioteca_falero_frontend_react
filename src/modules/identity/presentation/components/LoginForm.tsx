@@ -1,12 +1,9 @@
-import { Button } from '@/presentation/react/components/ui'
-import {
-  Field,
-  useCustomForm,
-  Form
-} from '@/presentation/react/components/ui/form'
-import { LoginHeader } from '@/presentation/react/components/login-header'
-import type { LoginFormData } from '@/presentation/dtos/login-form-dto'
-import { makeLoginValidation } from '@/main/factories/validation/login-validation-factory'
+import { Button, Icon } from '@/shared/presentation/ui'
+import { Field, useCustomForm, Form } from '@/shared/presentation/ui/form'
+import { LoginHeader } from '@/modules/identity/presentation/components/login-header'
+import type { LoginFormData } from '@/shared/presentation/dtos/login-form-dto'
+import { ZodValidatorAdapter } from '@/shared/presentation/adapters/validation/zod-validator-adapter'
+import { loginSchema } from '@/shared/infra/validation/schemas/login-schema'
 
 export type { LoginFormData }
 
@@ -18,7 +15,7 @@ interface LoginFormProps {
 
 export function LoginForm({ isLoading, error, onSubmit }: LoginFormProps) {
   const methods = useCustomForm<LoginFormData>({
-    validator: makeLoginValidation(),
+    validator: new ZodValidatorAdapter(loginSchema),
     mode: 'onChange'
   })
 
@@ -60,9 +57,9 @@ export function LoginForm({ isLoading, error, onSubmit }: LoginFormProps) {
         <Button
           type="submit"
           className="mt-2 h-12"
-          icon={isLoading ? undefined : 'arrow_forward'}
           disabled={isLoading || !isValid}
         >
+          {!isLoading && <Icon name="arrow_forward" className="mr-2 h-5 w-5" />}
           {isLoading ? 'Entrando...' : 'Entrar'}
         </Button>
       </Form>
