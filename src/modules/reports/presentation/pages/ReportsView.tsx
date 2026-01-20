@@ -4,8 +4,8 @@ import type {
   ActivityChartDataPoint
 } from '../../domain'
 
-import { BarChart, LineChart } from '@/presentation/react/components/ui/charts'
-import { Button, Card, Icon } from '@/presentation/react/components/ui'
+import { BarChart, LineChart } from '@/shared/presentation/ui/charts'
+import { Button, Card, Icon } from '@/shared/presentation/ui'
 
 interface ReportsViewProps {
   reports: Report[]

@@ -1,14 +1,28 @@
-import { createReportsHooks } from '../../application'
-import { MockReportsRepository } from '../../infra'
-
+import { useReports, useCategoryChart, useActivityChart } from '../hooks'
 import { ReportsView } from './ReportsView'
 
-const reportsRepository = new MockReportsRepository()
-const reportsHooks = createReportsHooks(reportsRepository)
-
 export function ReportsPage() {
-  const { reports, categoryData, activityData, isLoading, isError } =
-    reportsHooks.useReportsFacade()
+  const {
+    data: reports,
+    isLoading: isLoadingReports,
+    isError: isErrorReports
+  } = useReports()
+
+  const {
+    data: categoryData,
+    isLoading: isLoadingCategory,
+    isError: isErrorCategory
+  } = useCategoryChart()
+
+  const {
+    data: activityData,
+    isLoading: isLoadingActivity,
+    isError: isErrorActivity
+  } = useActivityChart()
+
+  const isLoading = isLoadingReports || isLoadingCategory || isLoadingActivity
+
+  const isError = isErrorReports || isErrorCategory || isErrorActivity
 
   if (isLoading) {
     return (
@@ -28,9 +42,9 @@ export function ReportsPage() {
 
   return (
     <ReportsView
-      reports={reports}
-      categoryData={categoryData}
-      activityData={activityData}
+      reports={reports ?? []}
+      categoryData={categoryData ?? []}
+      activityData={activityData ?? []}
     />
   )
 }
