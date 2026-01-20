@@ -41,11 +41,7 @@ export default defineConfig([
           pattern: 'src/modules/*/**',
           capture: ['moduleName'],
           mode: 'full'
-        },
-        { type: 'domain', pattern: 'src/domain/**', mode: 'full' },
-        { type: 'application', pattern: 'src/application/**', mode: 'full' },
-        { type: 'presentation', pattern: 'src/presentation/**', mode: 'full' },
-        { type: 'infrastructure', pattern: 'src/infra/**', mode: 'full' }
+        }
       ]
     },
     rules: {
@@ -60,16 +56,7 @@ export default defineConfig([
             },
             {
               from: 'main',
-              allow: [
-                'shared',
-                'main',
-                'module-public',
-                'module-private',
-                'domain',
-                'application',
-                'presentation',
-                'infrastructure'
-              ]
+              allow: ['shared', 'main', 'module-public', 'module-private']
             },
             {
               from: 'module-public',
@@ -83,20 +70,8 @@ export default defineConfig([
               allow: [
                 'shared',
                 'module-public',
-                'presentation',
-                'main',
                 ['module-private', { moduleName: '${from.moduleName}' }]
               ]
-            },
-            { from: 'domain', allow: ['domain'] },
-            { from: 'application', allow: ['domain', 'application'] },
-            {
-              from: 'presentation',
-              allow: ['domain', 'application', 'presentation', 'main']
-            },
-            {
-              from: 'infrastructure',
-              allow: ['domain', 'application', 'infrastructure']
             }
           ]
         }
@@ -114,54 +89,6 @@ export default defineConfig([
         {
           prefer: 'type-imports',
           fixStyle: 'separate-type-imports'
-        }
-      ]
-    }
-  },
-  {
-    files: ['src/domain/**'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: [
-                'react',
-                'react-dom',
-                'react-router-dom',
-                'axios',
-                'zod',
-                'typeorm',
-                '@prisma/*',
-                'express',
-                'next/*',
-                '@/application/*',
-                '@/infra/*',
-                '@/presentation/*'
-              ],
-              message:
-                'Domain layer can only import from domain (no external libraries or outer layers)'
-            }
-          ]
-        }
-      ]
-    }
-  },
-  {
-    files: ['src/application/**'],
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            'axios',
-            'zod',
-            'typeorm',
-            '@prisma/*',
-            'express',
-            'next/*'
-          ]
         }
       ]
     }
