@@ -9,6 +9,6 @@ export class LoadBooksUseCase {
   }
 
   async execute(): Promise<Book[]> {
-    return this.repository.loadBooks()
+    return this.repository.getBooks()
   }
 }

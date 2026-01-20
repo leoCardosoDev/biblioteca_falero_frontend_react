@@ -1,9 +1,9 @@
 import { useParams } from '@tanstack/react-router'
-import { useBookDetails } from '@/modules/library/application/useBookDetails'
+import { useGetBookById } from '@/modules/library/presentation/hooks'
 
 export function BookDetailsPage() {
   const { bookId } = useParams({ from: '/_library/library/books/$bookId' })
-  const { data: book, isLoading } = useBookDetails(bookId)
+  const { data: book, isLoading } = useGetBookById(bookId)
 
   if (isLoading) return <div>Loading...</div>
   if (!book) return <div>Book not found</div>

@@ -1,12 +1,6 @@
 import { useState } from 'react'
 
-import {
-  Button,
-  Card,
-  Icon,
-  Badge,
-  Modal
-} from '@/presentation/react/components/ui'
+import { Button, Card, Icon, Badge, Modal } from '@/shared/presentation/ui'
 
 import { useBooks } from '@/modules/library/presentation/hooks'
 import type { LibraryRepository } from '@/modules/library/application'

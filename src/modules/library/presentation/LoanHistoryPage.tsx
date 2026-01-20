@@ -1,8 +1,8 @@
-import { useLoans } from '@/modules/library/application/useLoans'
-import { Button, Card, Badge } from '@/presentation/react/components/ui'
+import { useGetLoans } from '@/modules/library/presentation/hooks'
+import { Button, Card, Badge } from '@/shared/presentation/ui'
 
 export function LoanHistoryPage() {
-  const { data: loans, isLoading } = useLoans()
+  const { data: loans, isLoading } = useGetLoans()
 
   if (isLoading) return <div>Loading...</div>
 

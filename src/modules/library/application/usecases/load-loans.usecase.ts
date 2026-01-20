@@ -9,6 +9,6 @@ export class LoadLoansUseCase {
   }
 
   async execute(): Promise<Loan[]> {
-    return this.repository.loadLoans()
+    return this.repository.getLoans()
   }
 }

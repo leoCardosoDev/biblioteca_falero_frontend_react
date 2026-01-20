@@ -1,11 +1,8 @@
-import { useBooks } from '@/modules/library/application/useBooks'
-// Importing UI components - assuming they are in shared/ui or local components.
-// For this migration, I will use the structure from the legacy view but update imports.
-import { Button, Card, Badge } from '@/presentation/react/components/ui' // Keeping legacy import path for shared UI components as per consolidation state
-// import { BookForm } from '@/presentation/react/components/forms' // Commented out until form forms are migrated or stubbed
+import { useGetBooks } from '@/modules/library/presentation/hooks'
+import { Button, Card, Badge } from '@/shared/presentation/ui'
 
 export function BookListPage() {
-  const { data: books, isLoading } = useBooks()
+  const { data: books, isLoading } = useGetBooks()
   // const [isModalOpen, setIsModalOpen] = useState(false) // Simplified for first pass
 
   if (isLoading) return <div>Loading...</div>

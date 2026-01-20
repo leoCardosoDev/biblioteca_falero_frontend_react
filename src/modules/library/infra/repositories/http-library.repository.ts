@@ -5,39 +5,40 @@ import type { BookApiModel, LoanApiModel } from '@/modules/library/infra/models'
 import { BookMapper, LoanMapper } from '@/modules/library/infra/mappers'
 
 export class HttpLibraryRepository implements LibraryRepository {
-  private readonly httpClient: HttpClient
-  private readonly baseUrl: string
+  readonly #httpClient: HttpClient
+  readonly #baseUrl: string
 
   constructor(httpClient: HttpClient, baseUrl: string) {
-    this.httpClient = httpClient
-    this.baseUrl = baseUrl
+    this.#httpClient = httpClient
+    this.#baseUrl = baseUrl
   }
 
-  async loadBooks(): Promise<Book[]> {
-    const response = await this.httpClient.get<BookApiModel[]>(
-      `${this.baseUrl}/books`
+  async getBooks(): Promise<Book[]> {
+    const response = await this.#httpClient.get<BookApiModel[]>(
+      `${this.#baseUrl}/books`
     )
     return BookMapper.toDomainList(response)
   }
 
-  async loadBookById(id: string): Promise<Book | undefined> {
-    const response = await this.httpClient.get<BookApiModel>(
-      `${this.baseUrl}/books/${id}`
-    )
-    return response ? BookMapper.toDomain(response) : undefined
+  async getBookById(id: string): Promise<Book | null> {
+    try {
+      const response = await this.#httpClient.get<BookApiModel>(
+        `${this.#baseUrl}/books/${id}`
+      )
+      return response ? BookMapper.toDomain(response) : null
+    } catch {
+      return null
+    }
   }
 
-  async loadLoans(): Promise<Loan[]> {
-    const response = await this.httpClient.get<LoanApiModel[]>(
-      `${this.baseUrl}/loans`
+  async getLoans(): Promise<Loan[]> {
+    const response = await this.#httpClient.get<LoanApiModel[]>(
+      `${this.#baseUrl}/loans`
     )
     return LoanMapper.toDomainList(response)
   }
 
-  async loadLoansByUser(userId: string): Promise<Loan[]> {
-    const response = await this.httpClient.get<LoanApiModel[]>(
-      `${this.baseUrl}/loans?userId=${userId}`
-    )
-    return LoanMapper.toDomainList(response)
+  async createLoan(bookId: string, userId: string): Promise<void> {
+    await this.#httpClient.post(`${this.#baseUrl}/loans`, { bookId, userId })
   }
 }

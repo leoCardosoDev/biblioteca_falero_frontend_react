@@ -8,7 +8,7 @@ export class LoadBookByIdUseCase {
     this.repository = repository
   }
 
-  async execute(id: string): Promise<Book | undefined> {
-    return this.repository.loadBookById(id)
+  async execute(id: string): Promise<Book | null> {
+    return this.repository.getBookById(id)
   }
 }
