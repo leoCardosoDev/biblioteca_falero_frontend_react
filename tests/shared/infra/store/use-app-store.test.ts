@@ -1,8 +1,8 @@
 import { act, renderHook } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { createAppStore } from '@/shared/store/adapter'
-import type { Session } from '@/shared/store'
+import { createAppStore } from '@/shared/infra/store/adapter'
+import type { Session } from '@/shared/infra/store'
 
 const createTestStore = () => createAppStore()
 
