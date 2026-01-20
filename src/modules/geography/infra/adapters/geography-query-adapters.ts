@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
-import type { GeographyRepository } from '../protocols/geography-repository'
+
+import type { GeographyRepository } from '../../application/protocols/geography-repository'
 import type { StateProps } from '../../domain/entities/state'
 import type { CityProps } from '../../domain/entities/city'
 import type { NeighborhoodProps } from '../../domain/entities/neighborhood'
@@ -8,8 +9,10 @@ import type { AddressProps } from '../../domain/value-objects/address'
 export const geographyQueryKeys = {
   states: ['geography', 'states'] as const,
   cities: (stateId: string) => ['geography', 'cities', stateId] as const,
-  neighborhoods: (cityId: string) => ['geography', 'neighborhoods', cityId] as const,
-  addressByZipCode: (zipCode: string) => ['geography', 'address', zipCode] as const
+  neighborhoods: (cityId: string) =>
+    ['geography', 'neighborhoods', cityId] as const,
+  addressByZipCode: (zipCode: string) =>
+    ['geography', 'address', zipCode] as const
 }
 
 export function createGeographyHooks(repository: GeographyRepository) {

@@ -52,6 +52,19 @@ export class HttpGeographyRepository implements GeographyRepository {
     }))
   }
 
+  async getStateById(id: string): Promise<StateProps> {
+    const response = await this.httpClient.request<StateApiResponse>({
+      url: `/states/${id}`,
+      method: 'get'
+    })
+
+    return {
+      id: response.body.id,
+      name: response.body.name,
+      abbreviation: response.body.acronym
+    }
+  }
+
   async getCities(stateId: string): Promise<CityProps[]> {
     const response = await this.httpClient.request<CityApiResponse[]>({
       url: `/states/${stateId}/cities`,
@@ -65,6 +78,19 @@ export class HttpGeographyRepository implements GeographyRepository {
     }))
   }
 
+  async getCityById(id: string): Promise<CityProps> {
+    const response = await this.httpClient.request<CityApiResponse>({
+      url: `/cities/${id}`,
+      method: 'get'
+    })
+
+    return {
+      id: response.body.id,
+      name: response.body.name,
+      stateId: response.body.stateId
+    }
+  }
+
   async getNeighborhoods(cityId: string): Promise<NeighborhoodProps[]> {
     const response = await this.httpClient.request<NeighborhoodApiResponse[]>({
       url: `/cities/${cityId}/neighborhoods`,
@@ -76,6 +102,19 @@ export class HttpGeographyRepository implements GeographyRepository {
       name: neighborhood.name,
       cityId: neighborhood.cityId
     }))
+  }
+
+  async getNeighborhoodById(id: string): Promise<NeighborhoodProps> {
+    const response = await this.httpClient.request<NeighborhoodApiResponse>({
+      url: `/neighborhoods/${id}`,
+      method: 'get'
+    })
+
+    return {
+      id: response.body.id,
+      name: response.body.name,
+      cityId: response.body.cityId
+    }
   }
 
   async loadAddressByZipCode(zipCode: string): Promise<AddressProps> {
