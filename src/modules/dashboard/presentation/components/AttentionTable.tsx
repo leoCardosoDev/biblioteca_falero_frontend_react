@@ -1,6 +1,6 @@
 import type { AttentionItem } from '../../domain'
 
-import { Icon, Badge } from '@/presentation/react/components/ui'
+import { Icon, Badge } from '@/shared/presentation/ui'
 
 interface AttentionTableProps {
   items: AttentionItem[]

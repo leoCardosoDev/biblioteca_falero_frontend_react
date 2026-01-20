@@ -1,4 +1,4 @@
-import { Icon } from '@/presentation/react/components/ui'
+import { Icon } from '@/shared/presentation/ui'
 
 interface QuickAction {
   label: string

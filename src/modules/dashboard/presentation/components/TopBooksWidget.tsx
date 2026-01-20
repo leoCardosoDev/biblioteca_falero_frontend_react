@@ -1,6 +1,6 @@
 import type { TopBookItem } from '../../domain'
 
-import { Card } from '@/presentation/react/components/ui'
+import { Card } from '@/shared/presentation/ui'
 
 interface TopBooksWidgetProps {
   books: TopBookItem[]

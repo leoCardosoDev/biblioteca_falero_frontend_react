@@ -5,7 +5,7 @@ import type {
   AttentionItem
 } from '../../domain'
 
-import { Button } from '@/presentation/react/components/ui'
+import { Button } from '@/shared/presentation/ui'
 
 import {
   StatCard,

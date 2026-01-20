@@ -1,6 +1,6 @@
 import type { DashboardStat } from '../../domain'
 
-import { Card, Icon } from '@/presentation/react/components/ui'
+import { Card, Icon } from '@/shared/presentation/ui'
 
 interface StatCardProps {
   stat: DashboardStat

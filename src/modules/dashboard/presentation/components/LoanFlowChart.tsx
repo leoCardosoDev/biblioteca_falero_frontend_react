@@ -1,6 +1,6 @@
 import type { LoanFlowDataPoint } from '../../domain'
 
-import { AreaChart } from '@/presentation/react/components/ui/charts'
+import { AreaChart } from '@/shared/presentation/ui/charts'
 
 interface LoanFlowChartProps {
   data: LoanFlowDataPoint[]
