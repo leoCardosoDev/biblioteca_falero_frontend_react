@@ -1,0 +1,146 @@
+[
+  {
+    "type": "dependency",
+    "from": "src/modules/dashboard/presentation/components/AttentionTable.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/dashboard/presentation/components/LoanFlowChart.tsx",
+    "to": "src/presentation/react/components/ui/charts/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/dashboard/presentation/components/QuickActionsWidget.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/dashboard/presentation/components/StatCard.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/dashboard/presentation/components/TopBooksWidget.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/dashboard/presentation/pages/DashboardView.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/identity/presentation/components/LoginForm.tsx",
+    "to": "src/presentation/dtos/login-form-dto.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/identity/presentation/components/LoginForm.tsx",
+    "to": "src/presentation/react/components/login-header.tsx",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/identity/presentation/components/LoginForm.tsx",
+    "to": "src/presentation/react/components/ui/form/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/identity/presentation/components/LoginForm.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/identity/presentation/components/LoginHeader.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/library/presentation/BookListPage.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/library/presentation/LoanHistoryPage.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/library/presentation/pages/book-list.page.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/reports/presentation/pages/ReportsView.tsx",
+    "to": "src/presentation/react/components/ui/charts/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  },
+  {
+    "type": "dependency",
+    "from": "src/modules/reports/presentation/pages/ReportsView.tsx",
+    "to": "src/presentation/react/components/ui/index.ts",
+    "rule": {
+      "severity": "error",
+      "name": "no-modules-to-legacy-root"
+    }
+  }
+]
