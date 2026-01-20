@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import type { DashboardRepository } from '../protocols'
+import type { DashboardRepository } from '../../application/protocols'
 
 const DASHBOARD_STATS_KEY = ['dashboard', 'stats']
 const LOAN_FLOW_KEY = ['dashboard', 'loan-flow']

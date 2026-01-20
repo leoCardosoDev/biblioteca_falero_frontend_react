@@ -1,5 +1,4 @@
-import { createDashboardFacade } from '../../application'
-import { MockDashboardRepository } from '../../infra'
+import { createDashboardFacade, MockDashboardRepository } from '../../infra'
 
 import { DashboardView } from './DashboardView'
 

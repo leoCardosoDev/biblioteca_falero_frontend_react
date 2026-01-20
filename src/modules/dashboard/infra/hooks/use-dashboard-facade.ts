@@ -1,4 +1,4 @@
-import type { DashboardRepository } from '../protocols'
+import type { DashboardRepository } from '../../application/protocols'
 import { createDashboardHooks } from './use-dashboard-hooks'
 
 export function createDashboardFacade(repository: DashboardRepository) {
