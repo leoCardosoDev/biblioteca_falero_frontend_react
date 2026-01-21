@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
 import { Card, Button, Icon } from '@/shared/presentation/react/components/ui'
-import { ErrorMessages } from '@/shared/presentation/constants/messages'
+import { ErrorMessages } from '@/shared/domain/constants/messages'
 
 interface Props {
   children: ReactNode
